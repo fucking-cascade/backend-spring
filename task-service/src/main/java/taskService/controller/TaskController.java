@@ -5,10 +5,10 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.web.bind.annotation.*;
-import taskService.domain.Task;
-import taskService.domain.TaskWrapper;
-import taskService.domain.UpdateUsersWrapper;
+import taskService.domain.*;
 import taskService.service.TaskService;
+
+import java.util.Date;
 
 @Controller
 public class TaskController {
@@ -35,7 +35,15 @@ public class TaskController {
         );
         taskService.createTask(task);
         //return new ResponseEntity<Task>(task, HttpStatus.OK);
-        return task;
+        return new ResponseWrapper(200, "Task Created", task);
+    }
+
+    @PostMapping("/createTutorial/v1")
+    @ResponseBody
+    public int createTutorialV1(
+            @RequestBody Integer ownerId
+    ) {
+        return taskService.createTutorial(ownerId);
     }
 
     @PostMapping("/updateTask/addUserToTask/v1")
@@ -72,9 +80,17 @@ public class TaskController {
 
     @GetMapping("/getTask/{id}")
     @ResponseBody
-    public ResponseEntity<Task> getTask(
+    public Object getTask(
             @PathVariable int id
     ) {
-        return new ResponseEntity<Task>(taskService.getTaskById(id), HttpStatus.OK);
+        //return new ResponseEntity<Task>(taskService.getTaskById(id), HttpStatus.OK);
+        return new ResponseWrapper(200, "Request Accepted", taskService.getTaskById(id));
+    }
+
+    @GetMapping("/deleteTask/test")
+    @ResponseBody
+    public Object deleteTask() {
+        taskService.deleteAllTasks();
+        return new ResponseWrapper(200, "Task Deleted", null);
     }
 }

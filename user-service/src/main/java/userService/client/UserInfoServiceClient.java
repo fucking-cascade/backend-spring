@@ -12,7 +12,7 @@ import userService.domain.UserInfoWrapper;
 @FeignClient(name = "user-info-service")
 public interface UserInfoServiceClient {
     @RequestMapping(value = "/createUserInfo/v3", method = RequestMethod.POST)
-    public void createUserInfoV3(
+    public Object createUserInfoV3(
             @RequestBody UserInfoWrapper userInfoWrapper
     );
 

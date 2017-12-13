@@ -53,7 +53,7 @@ public class UserInfoController {
     }
 
     @PostMapping("/createUserInfo/v3")
-    public void createUserInfoV3(
+    public Object createUserInfoV3(
             @RequestBody UserInfoWrapper userInfoWrapper
     ) {
         UserInfo userInfo = new UserInfo(
@@ -67,6 +67,7 @@ public class UserInfoController {
                 userInfoWrapper.getAvatar()
         );
         userInfoService.createUserInfo(userInfo);
+        return userInfo;
     }
 
     @PostMapping("/updateUserInfo/v1")

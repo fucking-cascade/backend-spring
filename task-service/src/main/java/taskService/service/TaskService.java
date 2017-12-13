@@ -20,4 +20,8 @@ public interface TaskService {
     public Boolean deleteTask(int id, int userId);
 
     public Boolean updateTask(Task task);
+
+    public void deleteAllTasks();
+
+    public int createTutorial(int ownerId);
 }

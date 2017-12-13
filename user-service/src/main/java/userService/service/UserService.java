@@ -3,8 +3,10 @@ package userService.service;
 import userService.domain.User;
 import userService.domain.UserInfoWrapper;
 
+import java.util.ArrayList;
+
 public interface UserService {
-    public void createUser(User user, UserInfoWrapper userInfoWrapper);
+    public Object createUser(User user, UserInfoWrapper userInfoWrapper);
 
     public void updateUser(User user);
 

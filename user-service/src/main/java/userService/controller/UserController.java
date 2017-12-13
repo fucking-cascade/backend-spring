@@ -17,14 +17,15 @@ public class UserController {
 
     @PostMapping("/createUser/v1")
     @ResponseBody
-    public ResponseEntity<User> createUserV1(
+    public Object createUserV1(
             @RequestBody UserWrapper userWrapper
     ) {
         int id = userService.generateNewId();
         User user = new User(
                 id,
                 userWrapper.getEmail(),
-                userWrapper.getPassword()
+                userWrapper.getPassword(),
+                null
         );
         UserInfoWrapper userInfoWrapper = new UserInfoWrapper(
                 id,
@@ -36,8 +37,8 @@ public class UserController {
                 userWrapper.getJob(),
                 userWrapper.getAvatar()
         );
-        userService.createUser(user, userInfoWrapper);
-        return new ResponseEntity<User>(user, HttpStatus.OK);
+        return new ResponseWrapper(200, "User Created", userService.createUser(user, userInfoWrapper));
+        //return new ResponseEntity<User>(user, HttpStatus.OK);
     }
 
     @PostMapping("/createUser/v2")
@@ -54,7 +55,7 @@ public class UserController {
             @RequestParam(value = "avatar", required = false) String avatar
     ) {
         int id = userService.generateNewId();
-        User user = new User(id, email, password);
+        User user = new User(id, email, password, null);
         UserInfoWrapper userInfoWrapper = new UserInfoWrapper(id, name, gender, phoneNumber, address, website, job, avatar);
         userService.createUser(user, userInfoWrapper);
         return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -68,7 +69,8 @@ public class UserController {
         User user = new User(
                 userWrapper.getId(),
                 userWrapper.getEmail(),
-                userWrapper.getPassword()
+                userWrapper.getPassword(),
+                null
         );
         userService.updateUser(user);
         return new ResponseEntity<User>(user, HttpStatus.OK);
@@ -81,7 +83,7 @@ public class UserController {
             @RequestParam(value = "email", required = true) String email,
             @RequestParam(value = "password", required = true) String password
     ) {
-        User user = new User(id, email, password);
+        User user = new User(id, email, password, null);
         userService.updateUser(user);
         return new ResponseEntity<User>(user, HttpStatus.OK);
     }

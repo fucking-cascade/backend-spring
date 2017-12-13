@@ -2,10 +2,10 @@ package taskService.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import taskService.domain.Constants;
-import taskService.domain.Task;
-import taskService.repository.SubtaskRepository;
+import taskService.domain.*;
 import taskService.repository.TaskRepository;
+
+import java.util.Date;
 
 @Service
 public class TaskServiceImpl implements TaskService {
@@ -13,7 +13,7 @@ public class TaskServiceImpl implements TaskService {
     private TaskRepository taskRepository;
 
     @Autowired
-    private SubtaskRepository subtaskRepository;
+    private SubtaskService subtaskService;
 
     @Override
     public int generateTaskId() {
@@ -88,5 +88,51 @@ public class TaskServiceImpl implements TaskService {
             taskRepository.save(task);
             return true;
         }
+    }
+
+    @Override
+    public void deleteAllTasks() {
+        taskRepository.deleteAll();
+        subtaskService.deleteAllSubtasks();
+    }
+
+    @Override
+    public int createTutorial(int ownerId) {
+        int id = generateTaskId();
+        Task task = new Task(
+                id,
+                "Tutorial",
+                "This is a tutorial task for newcomers to get used to the system.",
+                ownerId,
+                TaskState.INPROCESS,
+                Priority.HIGH,
+                new Date(),
+                null,
+                null
+        );
+        task.getUsers().add(ownerId);
+        int subtaskId = subtaskService.generateSubtaskId();
+        Subtask subtask = new Subtask(
+                subtaskId,
+                "Check out the news!",
+                TaskState.INPROCESS,
+                ownerId,
+                id
+        );
+        subtaskService.createSubtask(subtask);
+        task.getSubtasks().add(subtaskId);
+        subtaskId = subtaskService.generateSubtaskId();
+        subtask = new Subtask(
+                subtaskId,
+                "Join a discussion!",
+                TaskState.INPROCESS,
+                ownerId,
+                id
+        );
+        task.getSubtasks().add(subtaskId);
+        subtaskService.createSubtask(subtask);
+
+        taskRepository.save(task);
+        return id;
     }
 }

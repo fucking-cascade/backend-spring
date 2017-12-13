@@ -2,14 +2,18 @@ package userService.service;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
+import userService.client.TaskServiceClient;
 import userService.client.UserInfoServiceClient;
-import userService.domain.Constants;
-import userService.domain.User;
-import userService.domain.UserInfoWrapper;
+import userService.domain.*;
 import userService.repository.UserRepository;
+
+import java.util.ArrayList;
 
 @Service
 public class UserServiceImpl implements UserService {
+    @Autowired
+    private TaskServiceClient taskServiceClient;
+
     @Autowired
     private UserInfoServiceClient userInfoServiceClient;
 
@@ -17,11 +21,21 @@ public class UserServiceImpl implements UserService {
     private UserRepository userRepository;
 
     @Override
-    public void createUser(User user, UserInfoWrapper userInfoWrapper) {
-        userInfoServiceClient.createUserInfoV3(
-                userInfoWrapper
+    public Object createUser(User user, UserInfoWrapper userInfoWrapper) {
+        Integer ownerId = user.getId();
+        user.addTask(taskServiceClient.createTutorialV1(ownerId));
+
+        UserDataWrapper userDataWrapper = new UserDataWrapper(
+                new UserReturnDataWrapper(
+                        user.getId(),
+                        user.getEmail(),
+                        user.getTasks()
+                ),
+                userInfoServiceClient.createUserInfoV3(userInfoWrapper)
         );
+
         userRepository.save(user);
+        return userDataWrapper;
     }
 
     @Override
