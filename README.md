@@ -38,7 +38,7 @@
    Project> mvn clean package
    ```
 
-   - You may need to export bin directory of Maven to PATH in order to main this happening.
+   - You may need to export bin directory of Maven to PATH in order to make this happen.
 
 4. Start registry application in a terminal,
 
