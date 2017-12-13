@@ -1,0 +1,12 @@
+spring:
+  application:
+    name: task-service
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/  #注册中心地址
+  instance:
+    hostname: localhost
+    instance-id: localhost:8085
+server:
+  port: 8085

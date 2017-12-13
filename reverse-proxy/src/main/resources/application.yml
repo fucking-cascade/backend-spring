@@ -1,0 +1,16 @@
+eureka:
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
+spring:
+  application:
+    name: reverse-proxy
+server:
+  port: 8089
+zuul:
+  routes:
+    canonization-service0: /service0/**
+    canonization-service1: /service1/**
+    user-info-service: /user/info/**
+    user-service: /user/**
+    task-service: /task/**
