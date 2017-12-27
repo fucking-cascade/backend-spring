@@ -1,6 +1,6 @@
 package org.latheild.user.api.dto;
 
-import org.latheild.user.api.constant.Gender;
+import org.latheild.common.constant.Gender;
 
 public class RegisterDTO {
     private Long userId;

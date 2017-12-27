@@ -36,6 +36,12 @@
             <artifactId>jackson-annotations</artifactId>
             <version>${jackson.version}</version>
         </dependency>
+
+        <dependency>
+            <groupId>org.latheild.cascade</groupId>
+            <artifactId>common</artifactId>
+            <version>0.2.0.snapshot</version>
+        </dependency>
     </dependencies>
 
 </project>

@@ -1,6 +1,6 @@
 package org.latheild.userinfo.domain;
 
-import org.latheild.user.api.constant.Gender;
+import org.latheild.common.constant.Gender;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;

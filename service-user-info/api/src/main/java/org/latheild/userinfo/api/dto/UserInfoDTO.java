@@ -1,6 +1,6 @@
 package org.latheild.userinfo.api.dto;
 
-import org.latheild.user.api.constant.Gender;
+import org.latheild.common.constant.Gender;
 
 public class UserInfoDTO {
     private String name;

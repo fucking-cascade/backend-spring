@@ -9,7 +9,7 @@
 
     <parent>
         <groupId>org.latheild.cascade</groupId>
-        <artifactId>base</artifactId>
+        <artifactId>user-info-service</artifactId>
         <version>0.2.0.snapshot</version>
     </parent>
 

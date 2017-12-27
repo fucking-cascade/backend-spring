@@ -9,11 +9,17 @@
 
     <parent>
         <groupId>org.latheild.cascade</groupId>
-        <artifactId>base</artifactId>
+        <artifactId>user-service</artifactId>
         <version>0.2.0.snapshot</version>
     </parent>
 
     <dependencies>
+        <dependency>
+            <groupId>org.latheild.cascade</groupId>
+            <artifactId>user-info-service-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
         <dependency>
             <groupId>org.latheild.cascade</groupId>
             <artifactId>user-service-api</artifactId>

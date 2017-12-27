@@ -1,4 +1,4 @@
-package org.latheild.user.api.constant;
+package org.latheild.common.constant;
 
 public enum  Gender {
     FEMALE(0),
