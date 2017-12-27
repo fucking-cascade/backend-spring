@@ -15,9 +15,10 @@
         <module>common</module>
         <module>eureka</module>
         <module>config</module>
+        <module>zuul</module>
         <module>turbine</module>
         <module>service-user</module>
-        <module>service-userinfo</module>
+        <module>service-user-info</module>
     </modules>
 
     <properties>

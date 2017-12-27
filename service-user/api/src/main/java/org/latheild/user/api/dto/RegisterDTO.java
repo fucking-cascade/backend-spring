@@ -3,6 +3,7 @@ package org.latheild.user.api.dto;
 import org.latheild.user.api.constant.Gender;
 
 public class RegisterDTO {
+    private Long userId;
     private String email;
     private String password;
     private String name;
@@ -12,6 +13,14 @@ public class RegisterDTO {
     private String website;
     private String job;
     private String avatar;
+
+    public void setUserId(Long userId) {
+        this.userId = userId;
+    }
+
+    public Long getUserId() {
+        return userId;
+    }
 
     public String getEmail() {
         return email;

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>user-service-api</artifactId>
+    <artifactId>user-info-service-core</artifactId>
     <packaging>jar</packaging>
 
     <parent>
@@ -22,9 +22,18 @@
 
         <dependency>
             <groupId>org.latheild.cascade</groupId>
-            <artifactId>apiutils</artifactId>
+            <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
     </dependencies>
+
+    <build>
+        <plugins>
+            <plugin>
+                <groupId>org.springframework.boot</groupId>
+                <artifactId>spring-boot-maven-plugin</artifactId>
+            </plugin>
+        </plugins>
+    </build>
 
 </project>

@@ -4,7 +4,7 @@
          xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
     <modelVersion>4.0.0</modelVersion>
 
-    <artifactId>user-service-api</artifactId>
+    <artifactId>zuul</artifactId>
     <packaging>jar</packaging>
 
     <parent>
@@ -15,15 +15,13 @@
 
     <dependencies>
         <dependency>
-            <groupId>org.latheild.cascade</groupId>
-            <artifactId>user-info-service-api</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-zuul</artifactId>
         </dependency>
 
         <dependency>
-            <groupId>org.latheild.cascade</groupId>
-            <artifactId>apiutils</artifactId>
-            <version>${project.version}</version>
+            <groupId>org.springframework.cloud</groupId>
+            <artifactId>spring-cloud-starter-eureka-server</artifactId>
         </dependency>
     </dependencies>
 
