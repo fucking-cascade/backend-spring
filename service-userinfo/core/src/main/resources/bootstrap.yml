@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: userinfo-service
+  cloud:
+    config:
+      uri: http://localhost:8081
+      failFast: true
+
+encrypt:
+  failOnError: true

@@ -1,0 +1,32 @@
+server:
+  port: 8081
+
+spring:
+  application:
+    name: config
+  cloud:
+    config:
+      server:
+        git:
+          uri: https://github.com/fucking-cascade/backend-config
+          basedir: target/config
+          searchPaths: "*"
+
+management:
+  contextPath: /admin
+
+logging:
+  level:
+    com.netflix.discovery: "OFF"
+    org.springframework.cloud: "DEBUG"
+
+eureka:
+  instance:
+    hostname: localhost
+    instanceId: ${server.port}
+    leaseRenewalIntervalInSeconds: 30
+    statusPageUrlPath: /admin/info
+    healthCheckUrlPath: /admin/health
+  client:
+    serviceUrl:
+      defaultZone: http://localhost:8080/eureka/
