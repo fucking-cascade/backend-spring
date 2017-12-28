@@ -7,13 +7,19 @@ import org.latheild.user.client.UserInfoClient;
 import org.latheild.user.dao.UserRepository;
 import org.latheild.user.domain.User;
 import org.latheild.userinfo.api.dto.UserInfoDTO;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
+import static org.latheild.common.constant.RabbitMQExchange.USER_CREATED_FAN_OUT_EXCHANGE;
+
 @Service
 public class UserServiceImpl implements UserService {
+    @Autowired
+    private RabbitTemplate rabbitTemplate;
+
     @Autowired
     private UserInfoClient userInfoClient;
 
@@ -35,6 +41,10 @@ public class UserServiceImpl implements UserService {
             user.setEmail(registerDTO.getEmail());
             user.setPassword(registerDTO.getPassword());
             userRepository.save(user);
+
+            registerDTO.setUserId(user.getId());
+            rabbitTemplate.convertAndSend(USER_CREATED_FAN_OUT_EXCHANGE,"", registerDTO);
+
             return user;
         } else {
             throw new AppBusinessException(

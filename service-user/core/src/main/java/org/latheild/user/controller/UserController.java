@@ -25,17 +25,17 @@ public class UserController {
     ) {
         User user = userService.register(registerDTO);
         registerDTO.setUserId(user.getId());
-        UserInfoDTO userInfo = userService.createUserInfo(registerDTO);
+        //UserInfoDTO userInfo = userService.createUserInfo(registerDTO);
         UserProfileDTO userProfileDTO = new UserProfileDTO();
         userProfileDTO.setUserId(user.getId());
         userProfileDTO.setEmail(user.getEmail());
-        userProfileDTO.setAddress(userInfo.getAddress());
-        userProfileDTO.setAvatar(userInfo.getAvatar());
-        userProfileDTO.setGender(userInfo.getGender());
-        userProfileDTO.setJob(userInfo.getJob());
-        userProfileDTO.setPhoneNumber(userInfo.getPhoneNumber());
-        userProfileDTO.setWebsite(userInfo.getWebsite());
-        userProfileDTO.setName(userInfo.getName());
+        userProfileDTO.setAddress(registerDTO.getAddress());
+        userProfileDTO.setAvatar(registerDTO.getAvatar());
+        userProfileDTO.setGender(registerDTO.getGender());
+        userProfileDTO.setJob(registerDTO.getJob());
+        userProfileDTO.setPhoneNumber(registerDTO.getPhoneNumber());
+        userProfileDTO.setWebsite(registerDTO.getWebsite());
+        userProfileDTO.setName(registerDTO.getName());
         return userProfileDTO;
     }
 

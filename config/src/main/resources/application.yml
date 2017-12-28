@@ -10,6 +10,11 @@ spring:
         git:
           uri: https://github.com/fucking-cascade/backend-config
           searchPahts: '*'
+  rabbitmq:
+    host: localhost
+    port: 5672
+    username: guest
+    password: guest
 
 management:
   context-path: /admin
