@@ -13,8 +13,8 @@ import org.springframework.context.annotation.Import;
         ServiceClientConfiguration.class
 })
 @Configuration
-public class UserinfoApplication {
+public class UserInfoApplication {
     public static void main(String[] args) {
-        SpringApplication.run(UserinfoApplication.class, args);
+        SpringApplication.run(UserInfoApplication.class, args);
     }
 }

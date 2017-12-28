@@ -5,22 +5,24 @@ import org.latheild.userinfo.api.dto.UserInfoDTO;
 import org.latheild.userinfo.domain.UserInfo;
 import org.latheild.userinfo.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.stereotype.Controller;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.*;
 
-@Controller
+import java.util.ArrayList;
+
+import static org.latheild.userinfo.api.UserInfoURL.GET_USER_INFOS_URL;
+import static org.latheild.userinfo.api.UserInfoURL.USER_INFO_CREATE_URL;
+
+@RestController
 public class UserInfoController {
     @Autowired
-    UserInfoService userinfoService;
+    private UserInfoService userInfoService;
 
-    @RequestMapping
+    @RequestMapping(value = USER_INFO_CREATE_URL, method = RequestMethod.POST)
     @ResponseBody
     public UserInfoDTO register(
             @RequestBody RegisterDTO registerDTO
     ) {
-        UserInfo userInfo = userinfoService.register(registerDTO);
+        UserInfo userInfo = userInfoService.register(registerDTO);
         UserInfoDTO userInfoDTO = new UserInfoDTO();
         userInfoDTO.setAddress(userInfo.getAddress());
         userInfoDTO.setAvatar(userInfo.getAvatar());
@@ -30,5 +32,11 @@ public class UserInfoController {
         userInfoDTO.setPhoneNumber(userInfo.getPhoneNumber());
         userInfoDTO.setWebsite(userInfo.getWebsite());
         return userInfoDTO;
+    }
+
+    @RequestMapping(value = GET_USER_INFOS_URL, method = RequestMethod.GET)
+    @ResponseBody
+    public ArrayList<UserInfo> listUsers() {
+        return userInfoService.listUsers();
     }
 }

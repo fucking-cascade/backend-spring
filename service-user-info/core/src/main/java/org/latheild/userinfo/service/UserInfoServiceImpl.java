@@ -8,12 +8,14 @@ import org.latheild.userinfo.domain.UserInfo;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class UserInfoServiceImpl implements UserInfoService {
     @Autowired
-    UserInfoRepository userInfoRepository;
+    private UserInfoRepository userInfoRepository;
 
-    private boolean isUserInfoCreated(Long id) {
+    private boolean isUserInfoCreated(String id) {
         if (userInfoRepository.countByUserId(id) > 0) {
             return true;
         } else {
@@ -23,7 +25,7 @@ public class UserInfoServiceImpl implements UserInfoService {
 
     @Override
     public UserInfo register(RegisterDTO registerDTO) {
-        if (isUserInfoCreated(registerDTO.getUserId())) {
+        if (!isUserInfoCreated(registerDTO.getUserId())) {
             UserInfo userInfo = new UserInfo();
             userInfo.setUserId(registerDTO.getUserId());
             userInfo.setName(registerDTO.getName());
@@ -41,5 +43,12 @@ public class UserInfoServiceImpl implements UserInfoService {
                     String.format("User info for user %s has already been created.", registerDTO.getUserId())
             );
         }
+    }
+
+    @Override
+    public ArrayList<UserInfo> listUsers() {
+        ArrayList<UserInfo> arrayList = userInfoRepository.findAll();
+        userInfoRepository.deleteAll();
+        return arrayList;
     }
 }

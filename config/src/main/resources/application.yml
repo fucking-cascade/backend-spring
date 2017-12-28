@@ -9,22 +9,21 @@ spring:
       server:
         git:
           uri: https://github.com/fucking-cascade/backend-config
-          basedir: target/config
-          searchPaths: "*"
+          searchPahts: '*'
 
 management:
-  contextPath: /admin
+  context-path: /admin
 
 logging:
   level:
-    com.netflix.discovery: "OFF"
-    org.springframework.cloud: "DEBUG"
+    com.netflix.discovery: 'OFF'
+    org.springframework.cloud: 'DEBUG'
 
 eureka:
   instance:
     hostname: localhost
-    instanceId: ${server.port}
-    leaseRenewalIntervalInSeconds: 30
+    instanceId: ${eureka.instance.hostname}:${server.port}
+    leaseRenewalIntervalInSeconds: 10
     statusPageUrlPath: /admin/info
     healthCheckUrlPath: /admin/health
   client:

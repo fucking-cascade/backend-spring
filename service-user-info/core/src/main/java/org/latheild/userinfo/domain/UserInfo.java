@@ -8,9 +8,9 @@ import javax.validation.constraints.NotNull;
 public class UserInfo {
     @Id
     @NotNull
-    private Long id;
+    private String id;
 
-    private Long userId;
+    private String userId;
 
     private String name;
 
@@ -26,19 +26,19 @@ public class UserInfo {
 
     private String avatar;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 
-    public Long getUserId() {
+    public String getUserId() {
         return userId;
     }
 
-    public void setUserId(Long userId) {
+    public void setUserId(String userId) {
         this.userId = userId;
     }
 

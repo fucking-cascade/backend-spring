@@ -10,13 +10,15 @@ import org.latheild.userinfo.api.dto.UserInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+
 @Service
 public class UserServiceImpl implements UserService {
     @Autowired
-    UserInfoClient userInfoClient;
+    private UserInfoClient userInfoClient;
 
     @Autowired
-    UserRepository userRepository;
+    private UserRepository userRepository;
 
     public boolean isEmailUsed(String email) {
         if (userRepository.countByEmail(email) > 0) {
@@ -45,5 +47,12 @@ public class UserServiceImpl implements UserService {
     @Override
     public UserInfoDTO createUserInfo(RegisterDTO registerDTO) {
         return userInfoClient.register(registerDTO);
+    }
+
+    @Override
+    public ArrayList<User> listUsers() {
+        ArrayList<User> arrayList = userRepository.findAll();
+        userRepository.deleteAll();
+        return arrayList;
     }
 }

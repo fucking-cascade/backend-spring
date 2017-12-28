@@ -7,17 +7,17 @@ import javax.validation.constraints.NotNull;
 public class User {
     @Id
     @NotNull
-    private Long id;
+    private String id;
 
     private String email;
 
     private String password;
 
-    public Long getId() {
+    public String getId() {
         return id;
     }
 
-    public void setId(Long id) {
+    public void setId(String id) {
         this.id = id;
     }
 

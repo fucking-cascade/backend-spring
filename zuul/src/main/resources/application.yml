@@ -8,7 +8,7 @@ spring:
 eureka:
   instance:
     hostname: localhost
-    instanceId: ${server.port}
+    instanceId: ${eureka.instance.hostname}:${server.port}
   client:
     serviceUrl:
       defaultZone: http://localhost:8080/eureka/
