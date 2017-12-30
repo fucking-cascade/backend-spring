@@ -4,12 +4,12 @@ import org.latheild.user.api.dto.RegisterDTO;
 import org.latheild.user.api.dto.UserProfileDTO;
 import org.latheild.user.domain.User;
 import org.latheild.user.service.UserService;
-import org.latheild.userinfo.api.dto.UserInfoDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+import static org.latheild.apiutils.URLRequestSetting.PRODUCE_JSON;
 import static org.latheild.user.api.UserUrl.GET_USERS_URL;
 import static org.latheild.user.api.UserUrl.USER_REGISTER_URL;
 
@@ -18,7 +18,7 @@ public class UserController {
     @Autowired
     private UserService userService;
 
-    @RequestMapping(value = USER_REGISTER_URL, method = RequestMethod.POST)
+    @RequestMapping(value = USER_REGISTER_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
     @ResponseBody
     public UserProfileDTO register(
             @RequestBody RegisterDTO registerDTO
@@ -39,7 +39,7 @@ public class UserController {
         return userProfileDTO;
     }
 
-    @RequestMapping(value = GET_USERS_URL, method = RequestMethod.GET)
+    @RequestMapping(value = GET_USERS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public ArrayList<User> listUsers() {
         return userService.listUsers();

@@ -9,6 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
+import static org.latheild.apiutils.URLRequestSetting.PRODUCE_JSON;
 import static org.latheild.userinfo.api.UserInfoURL.GET_USER_INFOS_URL;
 import static org.latheild.userinfo.api.UserInfoURL.USER_INFO_CREATE_URL;
 
@@ -17,7 +18,7 @@ public class UserInfoController {
     @Autowired
     private UserInfoService userInfoService;
 
-    @RequestMapping(value = USER_INFO_CREATE_URL, method = RequestMethod.POST)
+    @RequestMapping(value = USER_INFO_CREATE_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
     @ResponseBody
     public UserInfoDTO register(
             @RequestBody RegisterDTO registerDTO
@@ -34,7 +35,7 @@ public class UserInfoController {
         return userInfoDTO;
     }
 
-    @RequestMapping(value = GET_USER_INFOS_URL, method = RequestMethod.GET)
+    @RequestMapping(value = GET_USER_INFOS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public ArrayList<UserInfo> listUsers() {
         return userInfoService.listUsers();

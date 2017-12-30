@@ -16,12 +16,6 @@
     <dependencies>
         <dependency>
             <groupId>org.latheild.cascade</groupId>
-            <artifactId>user-service-api</artifactId>
-            <version>${project.version}</version>
-        </dependency>
-
-        <dependency>
-            <groupId>org.latheild.cascade</groupId>
             <artifactId>apiutils</artifactId>
             <version>${project.version}</version>
         </dependency>
