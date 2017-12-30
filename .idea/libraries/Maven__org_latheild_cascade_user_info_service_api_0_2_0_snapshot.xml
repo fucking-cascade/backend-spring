@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Maven: org.latheild.cascade:user-info-service-api:0.2.0.snapshot">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/latheild/cascade/user-info-service-api/0.2.0.snapshot/user-info-service-api-0.2.0.snapshot.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/service-user-info/api/user-info-service-api-0.2.0.snapshot-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/latheild/cascade/user-info-service-api/0.2.0.snapshot/user-info-service-api-0.2.0.snapshot-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/service-user-info/api/user-info-service-api-0.2.0.snapshot-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/latheild/cascade/user-info-service-api/0.2.0.snapshot/user-info-service-api-0.2.0.snapshot-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

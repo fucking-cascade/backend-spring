@@ -1,0 +1,42 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="CompilerConfiguration">
+    <annotationProcessing>
+      <profile name="Maven default annotation processors profile" enabled="true">
+        <sourceOutputDir name="target/generated-sources/annotations" />
+        <sourceTestOutputDir name="target/generated-test-sources/test-annotations" />
+        <outputRelativeToContentRoot value="true" />
+        <module name="api" />
+        <module name="apiutils" />
+        <module name="common" />
+        <module name="config" />
+        <module name="core" />
+        <module name="eureka" />
+        <module name="turbine" />
+        <module name="user-info-service-api" />
+        <module name="user-info-service-core" />
+        <module name="user-service-api" />
+        <module name="user-service-core" />
+        <module name="zuul" />
+      </profile>
+    </annotationProcessing>
+    <bytecodeTargetLevel>
+      <module name="api" target="1.8" />
+      <module name="apiutils" target="1.8" />
+      <module name="common" target="1.8" />
+      <module name="config" target="1.8" />
+      <module name="core" target="1.8" />
+      <module name="eureka" target="1.8" />
+      <module name="Project Cascade" target="1.8" />
+      <module name="turbine" target="1.8" />
+      <module name="user-info-service" target="1.8" />
+      <module name="user-info-service-api" target="1.8" />
+      <module name="user-info-service-core" target="1.8" />
+      <module name="user-service" target="1.8" />
+      <module name="user-service-api" target="1.8" />
+      <module name="user-service-core" target="1.8" />
+      <module name="userinfo-service" target="1.8" />
+      <module name="zuul" target="1.8" />
+    </bytecodeTargetLevel>
+  </component>
+</project>

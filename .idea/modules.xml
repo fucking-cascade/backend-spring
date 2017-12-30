@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<project version="4">
+  <component name="ProjectModuleManager">
+    <modules>
+      <module fileurl="file://$PROJECT_DIR$/Project Cascade.iml" filepath="$PROJECT_DIR$/Project Cascade.iml" />
+      <module fileurl="file://$PROJECT_DIR$/apiutils/apiutils.iml" filepath="$PROJECT_DIR$/apiutils/apiutils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
+      <module fileurl="file://$PROJECT_DIR$/config/config.iml" filepath="$PROJECT_DIR$/config/config.iml" />
+      <module fileurl="file://$PROJECT_DIR$/eureka/eureka.iml" filepath="$PROJECT_DIR$/eureka/eureka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/turbine/turbine.iml" filepath="$PROJECT_DIR$/turbine/turbine.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-user-info/user-info-service.iml" filepath="$PROJECT_DIR$/service-user-info/user-info-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-user-info/api/user-info-service-api.iml" filepath="$PROJECT_DIR$/service-user-info/api/user-info-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-user-info/core/user-info-service-core.iml" filepath="$PROJECT_DIR$/service-user-info/core/user-info-service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-user/user-service.iml" filepath="$PROJECT_DIR$/service-user/user-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-user/api/user-service-api.iml" filepath="$PROJECT_DIR$/service-user/api/user-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-user/core/user-service-core.iml" filepath="$PROJECT_DIR$/service-user/core/user-service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/zuul/zuul.iml" filepath="$PROJECT_DIR$/zuul/zuul.iml" />
+    </modules>
+  </component>
+</project>

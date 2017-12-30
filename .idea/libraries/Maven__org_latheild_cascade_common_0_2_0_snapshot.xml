@@ -1,0 +1,13 @@
+<component name="libraryTable">
+  <library name="Maven: org.latheild.cascade:common:0.2.0.snapshot">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/LaTheild/cascade/common/0.2.0.snapshot/common-0.2.0.snapshot.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$MAVEN_REPOSITORY$/org/latheild/cascade/common/0.2.0.snapshot/common-0.2.0.snapshot-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/latheild/cascade/common/0.2.0.snapshot/common-0.2.0.snapshot-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>

@@ -1,0 +1,15 @@
+<component name="libraryTable">
+  <library name="Maven: org.latheild.cascade:apiutils:0.2.0.snapshot">
+    <CLASSES>
+      <root url="jar://$MAVEN_REPOSITORY$/org/LaTheild/cascade/apiutils/0.2.0.snapshot/apiutils-0.2.0.snapshot.jar!/" />
+    </CLASSES>
+    <JAVADOC>
+      <root url="jar://$PROJECT_DIR$/apiutils/apiutils-0.2.0.snapshot-javadoc.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/latheild/cascade/apiutils/0.2.0.snapshot/apiutils-0.2.0.snapshot-javadoc.jar!/" />
+    </JAVADOC>
+    <SOURCES>
+      <root url="jar://$PROJECT_DIR$/apiutils/apiutils-0.2.0.snapshot-sources.jar!/" />
+      <root url="jar://$MAVEN_REPOSITORY$/org/latheild/cascade/apiutils/0.2.0.snapshot/apiutils-0.2.0.snapshot-sources.jar!/" />
+    </SOURCES>
+  </library>
+</component>
