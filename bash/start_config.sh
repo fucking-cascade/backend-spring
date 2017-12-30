@@ -1,0 +1,1 @@
+java -jar ./config/target/config-0.2.0.snapshot.jar

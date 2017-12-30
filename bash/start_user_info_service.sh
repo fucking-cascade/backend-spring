@@ -1,0 +1,1 @@
+java -jar ./service-user-info/core/target/user-info-service-core-0.2.0.snapshot.jar

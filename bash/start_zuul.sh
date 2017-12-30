@@ -1,0 +1,1 @@
+java -jar ./zuul/target/zuul-0.2.0.snapshot.jar

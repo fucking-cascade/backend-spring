@@ -1,0 +1,1 @@
+java -jar ./eureka/target/eureka-0.2.0.snapshot.jar

@@ -1,0 +1,1 @@
+java -jar ./turbine/target/turbine-0.2.0.snapshot.jar
