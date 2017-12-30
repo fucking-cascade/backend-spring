@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.ArrayList;
 
-import static org.latheild.apiutils.URLRequestSetting.PRODUCE_JSON;
+import static org.latheild.apiutils.constant.URLRequestSetting.PRODUCE_JSON;
 import static org.latheild.user.api.UserUrl.GET_USERS_URL;
 import static org.latheild.user.api.UserUrl.USER_REGISTER_URL;
 

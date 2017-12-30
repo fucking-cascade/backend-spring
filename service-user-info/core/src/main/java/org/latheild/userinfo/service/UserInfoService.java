@@ -1,12 +1,25 @@
 package org.latheild.userinfo.service;
 
 import org.latheild.user.api.dto.RegisterDTO;
+import org.latheild.userinfo.api.dto.UserInfoDTO;
 import org.latheild.userinfo.domain.UserInfo;
 
 import java.util.ArrayList;
 
 public interface UserInfoService {
-    public UserInfo register(RegisterDTO registerDTO);
+    public UserInfoDTO register(RegisterDTO registerDTO);
 
-    public ArrayList<UserInfo> listUsers();
+    public UserInfoDTO updateUserInfo(UserInfoDTO userInfoDTO);
+
+    public UserInfoDTO getUserInfoByUserId(String userId);
+
+    public ArrayList<UserInfoDTO> getUserInfosByName(String name);
+
+    public ArrayList<UserInfoDTO> getAllUserInfos();
+
+    public void resetUserInfoById(String userId, String code);
+
+    public void deleteAllUserInfos(String code);
+
+    public void deleteUserInfoByUserId(String userId, String code);
 }
