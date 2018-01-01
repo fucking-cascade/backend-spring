@@ -40,7 +40,6 @@ public class UserInfoController {
         try {
             return new BaseResponseBody(CommonErrorCode.SUCCESS, userInfoService.updateUserInfo(userInfoDTO));
         } catch (AppBusinessException e) {
-            System.out.println(new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage()).toString());
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
         }
     }

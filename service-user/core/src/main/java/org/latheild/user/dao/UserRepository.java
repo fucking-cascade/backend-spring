@@ -13,4 +13,10 @@ public interface UserRepository extends MongoRepository<User, String> {
     public User findByEmail(String email);
 
     public int countByEmail(String email);
+
+    public int countById(String id);
+
+    public void deleteByEmail(String email);
+
+    public void deleteById(String id);
 }

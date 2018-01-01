@@ -2,6 +2,7 @@ package org.latheild.userinfo.service;
 
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
+import org.latheild.common.domain.Message;
 import org.latheild.user.api.dto.RegisterDTO;
 import org.latheild.userinfo.api.UserInfoErrorCode;
 import org.latheild.userinfo.api.dto.UserInfoDTO;
@@ -17,6 +18,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 import static org.latheild.apiutils.constant.Constants.ADMIN_CODE;
+import static org.latheild.apiutils.constant.Constants.ADMIN_DELETE_ALL;
 import static org.latheild.common.constant.RabbitMQQueue.USER_INFO_QUEUE;
 
 @Service
@@ -88,15 +90,39 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @RabbitHandler
-    public void createUserInfo(RegisterDTO registerDTO) {
-        if (!isUserInfoCreated(DAOQueryMode.QUERY_BY_USER_ID, registerDTO.getUserId())) {
-            UserInfo userInfo = convertFromRegisterDTOToUserInfoDTO(registerDTO);
-            userInfoRepository.save(userInfo);
-        } else {
-            throw new AppBusinessException(
-                    UserInfoErrorCode.UserInfoExist,
-                    String.format("User info for user %s has already been created.", registerDTO.getUserId())
-            );
+    public void createUserInfo(Message message) {
+        switch (message.getMessageType()) {
+            case USER_CREATED:
+                RegisterDTO registerDTO = (RegisterDTO) message.getMessageBody();
+                if (!isUserInfoCreated(DAOQueryMode.QUERY_BY_USER_ID, registerDTO.getUserId())) {
+                    UserInfo userInfo = convertFromRegisterDTOToUserInfoDTO(registerDTO);
+                    userInfoRepository.save(userInfo);
+                } else {
+                    throw new AppBusinessException(
+                            UserInfoErrorCode.UserInfoExist,
+                            String.format("User info for user %s has already been created", registerDTO.getUserId())
+                    );
+                }
+                break;
+            case USER_DELETED:
+                String userId = (String) message.getMessageBody();
+                if (userId.equals(ADMIN_DELETE_ALL)) {
+                    deleteAllUserInfos(ADMIN_CODE);
+                } else {
+                    if (isUserInfoCreated(DAOQueryMode.QUERY_BY_USER_ID, userId)) {
+                        userInfoRepository.deleteByUserId(userId);
+                    } else {
+                        throw new AppBusinessException(
+                                UserInfoErrorCode.UserInfoNotExist,
+                                String.format("User info for %s was not created", userId)
+                        );
+                    }
+                    break;
+                }
+            default:
+                throw new AppBusinessException(
+                        CommonErrorCode.INTERNAL_ERROR
+                );
         }
     }
 
@@ -131,7 +157,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         } else {
             throw new AppBusinessException(
                     UserInfoErrorCode.UserInfoNotExist,
-                    String.format("User info for user %s has not been created", userInfoDTO.getUserId())
+                    String.format("User info for user %s was not created", userInfoDTO.getUserId())
             );
         }
     }
@@ -143,7 +169,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         } else {
             throw new AppBusinessException(
                     UserInfoErrorCode.UserInfoNotExist,
-                    String.format("User info for user %s has not been created", userId)
+                    String.format("User info for user %s was not created", userId)
             );
         }
     }
@@ -155,7 +181,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         } else {
             throw new AppBusinessException(
                     UserInfoErrorCode.UserInfoNotExist,
-                    String.format("User info with name %s has not been created", name)
+                    String.format("User info with name %s was not created", name)
             );
         }
     }
@@ -167,7 +193,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         } else {
             throw new AppBusinessException(
                     UserInfoErrorCode.UserInfoNotExist,
-                    String.format("No user info has been created")
+                    String.format("No user info was created")
             );
         }
     }
@@ -211,7 +237,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             } else {
                 throw new AppBusinessException(
                         UserInfoErrorCode.UserInfoNotExist,
-                        String.format("No user info has been created")
+                        String.format("User info for %s was not created", userId)
                 );
             }
         } else {
