@@ -119,10 +119,6 @@ public class UserInfoServiceImpl implements UserInfoService {
                     }
                     break;
                 }
-            default:
-                throw new AppBusinessException(
-                        CommonErrorCode.INTERNAL_ERROR
-                );
         }
     }
 
