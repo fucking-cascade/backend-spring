@@ -3,7 +3,6 @@ package org.latheild.userinfo.dao;
 import org.latheild.userinfo.domain.UserInfo;
 import org.springframework.data.mongodb.repository.MongoRepository;
 
-import java.lang.reflect.Array;
 import java.util.ArrayList;
 
 public interface UserInfoRepository extends MongoRepository<UserInfo, String> {

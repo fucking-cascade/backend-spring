@@ -20,3 +20,5 @@ zuul:
   routes:
     user-info-service: /user/info/**
     user-service: /user/**
+    subtask-service: /task/subtask/**
+    comment-service: /comment/**

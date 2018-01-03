@@ -2,7 +2,6 @@ package org.latheild.userinfo.service;
 
 import org.latheild.user.api.dto.RegisterDTO;
 import org.latheild.userinfo.api.dto.UserInfoDTO;
-import org.latheild.userinfo.domain.UserInfo;
 
 import java.util.ArrayList;
 

@@ -8,7 +8,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestMethod;
 import org.springframework.web.bind.annotation.ResponseBody;
 
-import static org.latheild.userinfo.api.UserInfoURL.REGISTER_USER_INFO_URL;
+import static org.latheild.userinfo.api.constant.UserInfoURL.REGISTER_USER_INFO_URL;
 
 @FeignClient(name = "user-info-service")
 public interface UserInfoClient {

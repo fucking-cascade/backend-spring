@@ -4,7 +4,7 @@ import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
 import org.latheild.common.domain.Message;
 import org.latheild.user.api.dto.RegisterDTO;
-import org.latheild.userinfo.api.UserInfoErrorCode;
+import org.latheild.userinfo.api.constant.UserInfoErrorCode;
 import org.latheild.userinfo.api.dto.UserInfoDTO;
 import org.latheild.userinfo.api.util.UserInfoDTOCreator;
 import org.latheild.userinfo.constant.DAOQueryMode;
@@ -217,7 +217,13 @@ public class UserInfoServiceImpl implements UserInfoService {
     @Override
     public void deleteAllUserInfos(String code) {
         if (code.equals(ADMIN_CODE)) {
-            userInfoRepository.deleteAll();
+            if (userInfoRepository.count() > 0) {
+                userInfoRepository.deleteAll();
+            } else {
+                throw new AppBusinessException(
+                        UserInfoErrorCode.UserInfoNotExist
+                );
+            }
         } else {
             throw new AppBusinessException(
                     CommonErrorCode.UNAUTHORIZED

@@ -21,11 +21,11 @@
         <module>service-user-info</module>
         <!--<module>service-project</module>
         <module>service-progress</module>
-        <module>service-task</module>
+        <module>service-task</module>-->
         <module>service-subtask</module>
-        <module>service-schedule</module>
+        <!--<module>service-schedule</module>-->
         <module>service-comment</module>
-        <module>service-file</module>-->
+        <!--<module>service-file</module>-->
     </modules>
 
     <properties>

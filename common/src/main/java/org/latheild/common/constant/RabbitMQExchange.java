@@ -1,5 +1,7 @@
 package org.latheild.common.constant;
 
 public interface RabbitMQExchange {
-    String USER_CREATED_FAN_OUT_EXCHANGE = "UserCreatedFanOutExchange";
+    String USER_FAN_OUT_EXCHANGE = "UserFanOutExchange";
+
+    String TASK_FAN_OUT_EXCHANGE = "TaskFanOutExchange";
 }

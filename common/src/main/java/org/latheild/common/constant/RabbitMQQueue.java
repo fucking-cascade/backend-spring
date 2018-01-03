@@ -4,4 +4,6 @@ public interface RabbitMQQueue {
     String USER_INFO_QUEUE = "UserInfoQueue";
 
     String TASK_QUEUE = "TaskQueue";
+
+    String SUBTASK_QUEUE = "SubtaskQueue";
 }

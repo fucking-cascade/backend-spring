@@ -10,10 +10,8 @@ import org.latheild.userinfo.service.UserInfoService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
-import java.util.ArrayList;
-
 import static org.latheild.apiutils.constant.URLRequestSetting.PRODUCE_JSON;
-import static org.latheild.userinfo.api.UserInfoURL.*;
+import static org.latheild.userinfo.api.constant.UserInfoURL.*;
 
 @RestController
 public class UserInfoController {

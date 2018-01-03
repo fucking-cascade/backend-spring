@@ -8,13 +8,12 @@ import org.latheild.user.api.dto.RegisterDTO;
 import org.latheild.user.api.dto.ResetPasswordDTO;
 import org.latheild.user.api.dto.UserDTO;
 import org.latheild.user.api.dto.UserProfileDTO;
-import org.latheild.user.domain.User;
 import org.latheild.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
 
 import static org.latheild.apiutils.constant.URLRequestSetting.PRODUCE_JSON;
-import static org.latheild.user.api.UserUrl.*;
+import static org.latheild.user.api.constant.UserUrl.*;
 
 @RestController
 public class UserController {

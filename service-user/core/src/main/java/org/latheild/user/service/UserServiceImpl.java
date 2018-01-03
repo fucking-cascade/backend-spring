@@ -4,7 +4,7 @@ import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
 import org.latheild.common.api.RabbitMQMessageCreator;
 import org.latheild.common.constant.MessageType;
-import org.latheild.user.api.UserErrorCode;
+import org.latheild.user.api.constant.UserErrorCode;
 import org.latheild.user.api.dto.RegisterDTO;
 import org.latheild.user.api.dto.ResetPasswordDTO;
 import org.latheild.user.api.dto.UserDTO;
@@ -20,7 +20,7 @@ import java.util.ArrayList;
 
 import static org.latheild.apiutils.constant.Constants.ADMIN_CODE;
 import static org.latheild.apiutils.constant.Constants.ADMIN_DELETE_ALL;
-import static org.latheild.common.constant.RabbitMQExchange.USER_CREATED_FAN_OUT_EXCHANGE;
+import static org.latheild.common.constant.RabbitMQExchange.USER_FAN_OUT_EXCHANGE;
 
 @Service
 public class UserServiceImpl implements UserService {
@@ -73,13 +73,13 @@ public class UserServiceImpl implements UserService {
     public UserDTO register(RegisterDTO registerDTO) {
         if (!isUserCreated(DAOQueryMode.QUERY_BY_EMAIL, registerDTO.getEmail())) {
             User user = new User();
-            user.setEmail(registerDTO.getPassword());
+            user.setEmail(registerDTO.getEmail());
             user.setPassword(registerDTO.getPassword());
             userRepository.save(user);
 
             registerDTO.setUserId(user.getId());
             rabbitTemplate.convertAndSend(
-                    USER_CREATED_FAN_OUT_EXCHANGE,
+                    USER_FAN_OUT_EXCHANGE,
                     "",
                     RabbitMQMessageCreator.newInstance(MessageType.USER_CREATED, registerDTO)
             );
@@ -189,7 +189,7 @@ public class UserServiceImpl implements UserService {
                 userRepository.deleteByEmail(email);
 
                 rabbitTemplate.convertAndSend(
-                        USER_CREATED_FAN_OUT_EXCHANGE,
+                        USER_FAN_OUT_EXCHANGE,
                         "",
                         RabbitMQMessageCreator.newInstance(MessageType.USER_DELETED, userDTO.getUserId())
                 );
@@ -213,7 +213,7 @@ public class UserServiceImpl implements UserService {
                 userRepository.deleteById(userId);
 
                 rabbitTemplate.convertAndSend(
-                        USER_CREATED_FAN_OUT_EXCHANGE,
+                        USER_FAN_OUT_EXCHANGE,
                         "",
                         RabbitMQMessageCreator.newInstance(MessageType.USER_DELETED, userId)
                 );
@@ -233,13 +233,19 @@ public class UserServiceImpl implements UserService {
     @Override
     public void adminDeleteAllUsers(String code) {
         if (code.equals(ADMIN_CODE)) {
-            userRepository.deleteAll();
+            if (userRepository.count() > 0) {
+                userRepository.deleteAll();
 
-            rabbitTemplate.convertAndSend(
-                    USER_CREATED_FAN_OUT_EXCHANGE,
-                    "",
-                    RabbitMQMessageCreator.newInstance(MessageType.USER_DELETED, ADMIN_DELETE_ALL)
-            );
+                rabbitTemplate.convertAndSend(
+                        USER_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(MessageType.USER_DELETED, ADMIN_DELETE_ALL)
+                );
+            } else {
+                throw new AppBusinessException(
+                        UserErrorCode.UserNotExist
+                );
+            }
         } else {
             throw new AppBusinessException(
                     CommonErrorCode.UNAUTHORIZED
