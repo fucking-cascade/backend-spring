@@ -1,4 +1,4 @@
-package org.latheild.user.context;
+package org.latheild.project.context;
 
 import org.latheild.common.spring.config.BaseConfiguration;
 import org.latheild.common.spring.config.ServiceClientConfiguration;
@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Import;
         FanoutRabbitMQConfig.class
 })
 @Configuration
-public class UserApplication {
+public class ProjectApplication {
     public static void main(String[] args) {
-        SpringApplication.run(UserApplication.class, args);
+        SpringApplication.run(ProjectApplication.class, args);
     }
 }

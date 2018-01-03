@@ -23,7 +23,7 @@
         <dependency>
             <groupId>org.latheild.cascade</groupId>
             <artifactId>user-service-api</artifactId>
-            <version>0.2.0.snapshot</version>
+            <version>${project.version}</version>
         </dependency>
 
         <dependency>

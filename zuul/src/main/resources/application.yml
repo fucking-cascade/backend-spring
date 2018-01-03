@@ -22,3 +22,4 @@ zuul:
     user-service: /user/**
     subtask-service: /task/subtask/**
     comment-service: /comment/**
+    project-service: /project/**

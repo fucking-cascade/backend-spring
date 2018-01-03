@@ -90,7 +90,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     @RabbitHandler
-    public void createUserInfo(Message message) {
+    public void eventHandler(Message message) {
         switch (message.getMessageType()) {
             case USER_CREATED:
                 RegisterDTO registerDTO = (RegisterDTO) message.getMessageBody();
@@ -105,20 +105,20 @@ public class UserInfoServiceImpl implements UserInfoService {
                 }
                 break;
             case USER_DELETED:
-                String userId = (String) message.getMessageBody();
-                if (userId.equals(ADMIN_DELETE_ALL)) {
+                String messageBody = (String) message.getMessageBody();
+                if (messageBody.equals(ADMIN_DELETE_ALL)) {
                     deleteAllUserInfos(ADMIN_CODE);
                 } else {
-                    if (isUserInfoCreated(DAOQueryMode.QUERY_BY_USER_ID, userId)) {
-                        userInfoRepository.deleteByUserId(userId);
-                    } else {
+                    if (isUserInfoCreated(DAOQueryMode.QUERY_BY_USER_ID, messageBody)) {
+                        userInfoRepository.deleteByUserId(messageBody);
+                    }/* else {
                         throw new AppBusinessException(
                                 UserInfoErrorCode.UserInfoNotExist,
-                                String.format("User info for %s was not created", userId)
+                                String.format("User info for %s was not created", messageBody)
                         );
-                    }
-                    break;
+                    }*/
                 }
+                break;
         }
     }
 

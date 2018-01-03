@@ -80,7 +80,9 @@ public class CommentServiceImpl implements CommentService {
     public CommentDTO addComment(CommentDTO commentDTO) {
         if (userClient.checkUserExistance(commentDTO.getUserId())) {
             /*if (taskClient.checkTaskExistance(commentDTO.getTaskId())) {
-                commentRepository.save(convertFromCommentDTOToComment(commentDTO));
+                Comment comment = convertFromCommentDTOToComment(commentDTO);
+                commentRepository.save(comment);
+                commentDTO.setCommentId(comment.getId());
                 return commentDTO;
             } else {
                 throw new AppBusinessException(
@@ -88,7 +90,9 @@ public class CommentServiceImpl implements CommentService {
                         String.format("Task %s does not exist", commentDTO.getTaskId())
                 );
             }*/
-            commentRepository.save(convertFromCommentDTOToComment(commentDTO));
+            Comment comment = convertFromCommentDTOToComment(commentDTO);
+            commentRepository.save(comment);
+            commentDTO.setCommentId(comment.getId());
             return commentDTO;
         } else {
             throw new AppBusinessException(

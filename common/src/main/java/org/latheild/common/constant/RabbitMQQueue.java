@@ -1,9 +1,13 @@
 package org.latheild.common.constant;
 
 public interface RabbitMQQueue {
-    String USER_INFO_QUEUE = "UserInfoQueue";
+    public String USER_INFO_QUEUE = "UserInfoQueue";
 
-    String TASK_QUEUE = "TaskQueue";
+    public String PROJECT_QUEUE = "ProjectQueue";
 
-    String SUBTASK_QUEUE = "SubtaskQueue";
+    public String PROGRESS_QUEUE = "ProgressQueue";
+
+    public String TASK_QUEUE = "TaskQueue";
+
+    public String SUBTASK_QUEUE = "SubtaskQueue";
 }

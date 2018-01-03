@@ -85,7 +85,9 @@ public class SubtaskServiceImpl implements SubtaskService {
     public SubtaskDTO createSubtask(SubtaskDTO subtaskDTO) {
         if (userClient.checkUserExistance(subtaskDTO.getUserId())) {
             /*if (taskClient.checkTaskExistance(subtaskDTO.getTaskId())) {
-                subtaskRepository.save(convertFromSubtaskDTOToSubtask(subtaskDTO));
+                Subtask subtask = convertFromSubtaskDTOToSubtask(subtaskDTO);
+                subtaskRepository.save(subtask);
+                subtaskDTO.setSubtaskId(subtask.getId());
                 return subtaskDTO;
             } else {
                 throw new AppBusinessException(
@@ -93,7 +95,9 @@ public class SubtaskServiceImpl implements SubtaskService {
                         String.format("Task %s does not exist", subtaskDTO.getTaskId())
                 );
             }*/
-            subtaskRepository.save(convertFromSubtaskDTOToSubtask(subtaskDTO));
+            Subtask subtask = convertFromSubtaskDTOToSubtask(subtaskDTO);
+            subtaskRepository.save(subtask);
+            subtaskDTO.setSubtaskId(subtask.getId());
             return subtaskDTO;
         } else {
             throw new AppBusinessException(
