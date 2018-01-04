@@ -6,11 +6,19 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.ArrayList;
 
 public interface UserInfoRepository extends MongoRepository<UserInfo, String> {
-    public UserInfo findById(String id);
+    UserInfo findById(String id);
 
-    public UserInfo findByUserId(String userId);
+    UserInfo findByUserId(String userId);
 
-    public int countByUserId(String userId);
+    int countById(String id);
 
-    public ArrayList<UserInfo> findAll();
+    int countByUserId(String userId);
+
+    int countByName(String name);
+
+    ArrayList<UserInfo> findAll();
+
+    ArrayList<UserInfo> findAllByName(String name);
+
+    void deleteByUserId(String userId);
 }

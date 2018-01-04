@@ -1,0 +1,10 @@
+spring:
+  application:
+    name: comment-service
+  cloud:
+    config:
+      uri: http://localhost:12312
+      failFast: true
+
+encrypt:
+  failOnError: true

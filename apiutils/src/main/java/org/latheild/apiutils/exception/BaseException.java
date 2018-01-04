@@ -1,6 +1,6 @@
 package org.latheild.apiutils.exception;
 
-public class BaseException extends RuntimeException {
+public class BaseException extends RuntimeException implements Exception {
     public BaseException(String message) {
         super(message);
     }
@@ -15,5 +15,10 @@ public class BaseException extends RuntimeException {
 
     protected BaseException(String message, Throwable cause, boolean enableSuppression, boolean writableStackTrace) {
         super(message, cause, enableSuppression, writableStackTrace);
+    }
+
+    @Override
+    public String getExceptionType() {
+        return this.getClass().getName();
     }
 }

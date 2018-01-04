@@ -10,6 +10,15 @@ public class UserInfoDTO {
     private String phoneNumber;
     private String job;
     private String avatar;
+    private String userId;
+
+    public String getUserId() {
+        return userId;
+    }
+
+    public void setUserId(String userId) {
+        this.userId = userId;
+    }
 
     public void setName(String name) {
         this.name = name;

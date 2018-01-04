@@ -1,15 +1,29 @@
 package org.latheild.user.service;
 
 import org.latheild.user.api.dto.RegisterDTO;
-import org.latheild.user.domain.User;
-import org.latheild.userinfo.api.dto.UserInfoDTO;
+import org.latheild.user.api.dto.ResetPasswordDTO;
+import org.latheild.user.api.dto.UserDTO;
 
 import java.util.ArrayList;
 
 public interface UserService {
-    public User register(RegisterDTO registerDTO);
+    UserDTO register(RegisterDTO registerDTO);
 
-    public UserInfoDTO createUserInfo(RegisterDTO registerDTO);
+    UserDTO resetPassword(ResetPasswordDTO resetPasswordDTO);
 
-    public ArrayList<User> listUsers();
+    boolean checkPassword(RegisterDTO registerDTO);
+
+    boolean checkUserExistence(String userId);
+
+    UserDTO getUserByEmail(String email);
+
+    UserDTO getUserByUserId(String id);
+
+    ArrayList<UserDTO> getAllUsers();
+
+    void adminDeleteUserByEmail(String email, String code);
+
+    void adminDeleteUserByUserId(String id, String code);
+
+    void adminDeleteAllUsers(String code);
 }

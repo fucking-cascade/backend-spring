@@ -35,4 +35,9 @@ public class AppBusinessException extends BaseException {
     public int getHttpStatus() {
         return httpStatus;
     }
+
+    @Override
+    public String getExceptionType() {
+        return this.getClass().getName();
+    }
 }
