@@ -90,16 +90,14 @@ public class SubtaskServiceImpl implements SubtaskService {
     @RabbitHandler
     public void eventHandler(Message message) {
         switch (message.getMessageType()) {
-            case TUTORIAL_PROGRESS_CREATED:
+            case TUTORIAL_TASK_CREATED:
                 TaskDTO taskDTO = (TaskDTO) message.getMessageBody();
 
                 if (taskDTO.getIndex() == 0) {
                     ArrayList<Subtask> subtasks = convertFromSubtaskDTOsToSubtasks(
-                            TutorialSubtaskCreator.setTutorialSubtasks(taskDTO.getOwnerId(), taskDTO.getProgressId())
+                            TutorialSubtaskCreator.setTutorialSubtasks(taskDTO.getOwnerId(), taskDTO.getTaskId())
                     );
-                    for (Subtask subtask : subtasks) {
-                        subtaskRepository.save(subtask);
-                    }
+                    subtaskRepository.save(subtasks);
                 }
                 break;
             case TASK_DELETED:

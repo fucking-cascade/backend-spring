@@ -13,7 +13,7 @@ public interface ProgressURL {
 
     String GET_PROGRESS_BY_ID_URL = "/retrieve";
 
-    String GET_PROGRESS_LIST_URL = "/retrieve/list";
+    String GET_PROGRESS_LIST_URL = "/retrieve/all";
 
     String ADMIN_GET_ALL_PROGRESS_URL = "/admin/retrieve/all";
 

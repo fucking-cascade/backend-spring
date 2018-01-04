@@ -54,23 +54,17 @@ public class UserInfoController {
         }
     }
 
-    @RequestMapping(value = GET_USER_INFOS_BY_NAME_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
-    @ResponseBody
-    public Object getUserInfosByName(
-            @RequestParam(value = "name") String name
-    ) {
-        try {
-            return new BaseResponseBody(CommonErrorCode.SUCCESS, userInfoService.getUserInfosByName(name));
-        } catch (AppBusinessException e) {
-            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
-        }
-    }
-
     @RequestMapping(value = GET_USER_INFOS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
-    public Object getUserInfos() {
+    public Object getUserInfosByName(
+            @RequestParam(value = "name", required = false) String name
+    ) {
         try {
-            return new BaseResponseBody(CommonErrorCode.SUCCESS, userInfoService.getAllUserInfos());
+            if (name != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, userInfoService.getUserInfosByName(name));
+            } else {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, userInfoService.getAllUserInfos());
+            }
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
         }

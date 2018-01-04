@@ -82,7 +82,9 @@ public class CommentServiceImpl implements CommentService {
             case USER_DELETED:
                 messageBody = (String) message.getMessageBody();
                 if (messageBody.equals(ADMIN_DELETE_ALL)) {
-                    adminDeleteAllComments(ADMIN_CODE);
+                    if (commentRepository.count() > 0) {
+                        adminDeleteAllComments(ADMIN_CODE);
+                    }
                 } else {
                     if (isCommentExist(DAOQueryMode.QUERY_BY_USER_ID, messageBody)) {
                         commentRepository.deleteAllByUserId(messageBody);
@@ -101,6 +103,8 @@ public class CommentServiceImpl implements CommentService {
                     }
                 }
                 break;
+            default:
+                System.out.println(message.toString());
         }
     }
 
@@ -130,7 +134,7 @@ public class CommentServiceImpl implements CommentService {
         if (isCommentExist(DAOQueryMode.QUERY_BY_ID, commentDTO.getCommentId())) {
             Comment comment = commentRepository.findById(commentDTO.getCommentId());
             if (comment.getUserId().equals(commentDTO.getUserId())) {
-                commentRepository.deleteById(commentDTO.getUserId());
+                commentRepository.deleteById(commentDTO.getCommentId());
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.UNAUTHORIZED

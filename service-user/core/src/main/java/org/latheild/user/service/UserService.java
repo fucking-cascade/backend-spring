@@ -17,13 +17,13 @@ public interface UserService {
 
     UserDTO getUserByEmail(String email);
 
-    UserDTO getUserByUserId(String userId);
+    UserDTO getUserByUserId(String id);
 
     ArrayList<UserDTO> getAllUsers();
 
     void adminDeleteUserByEmail(String email, String code);
 
-    void adminDeleteUserByUserId(String userId, String code);
+    void adminDeleteUserByUserId(String id, String code);
 
     void adminDeleteAllUsers(String code);
 }

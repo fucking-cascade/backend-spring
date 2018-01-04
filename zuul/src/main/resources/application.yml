@@ -1,5 +1,5 @@
 server:
-  port: 8083
+  port: 12306
 
 spring:
   application:
@@ -11,15 +11,17 @@ eureka:
     instanceId: ${eureka.instance.hostname}:${server.port}
   client:
     serviceUrl:
-      defaultZone: http://localhost:8080/eureka/
+      defaultZone: http://localhost:10086/eureka/
 
 encrypt:
   failOnError: true
 
 zuul:
   routes:
-    user-info-service: /user/info/**
     user-service: /user/**
-    subtask-service: /task/subtask/**
+    user-info-service: /userinfo/**
     comment-service: /comment/**
     project-service: /project/**
+    progress-service: /progress/**
+    task-service: /task/**
+    subtask-service: /subtask/**

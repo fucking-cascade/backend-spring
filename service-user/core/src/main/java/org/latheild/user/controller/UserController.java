@@ -79,12 +79,12 @@ public class UserController {
     @RequestMapping(value = GET_USER_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object getUser(
-            @RequestParam(value = "userId", required = false) String userId,
+            @RequestParam(value = "id", required = false) String id,
             @RequestParam(value = "email", required = false) String email
     ) {
         try {
-            if (userId != null) {
-                return new BaseResponseBody(CommonErrorCode.SUCCESS, userService.getUserByUserId(userId));
+            if (id != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, userService.getUserByUserId(id));
             } else if (email != null) {
                 return new BaseResponseBody(CommonErrorCode.SUCCESS, userService.getUserByEmail(email));
             } else {
@@ -110,13 +110,13 @@ public class UserController {
     @RequestMapping(value = ADMIN_DELETE_USER_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminDeleteUser(
-            @RequestParam(value = "userId", required = false) String userId,
+            @RequestParam(value = "id", required = false) String id,
             @RequestParam(value = "email", required = false) String email,
             @RequestParam(value = "code") String code
     ) {
         try {
-            if (userId != null) {
-                userService.adminDeleteUserByUserId(userId, code);
+            if (id != null) {
+                userService.adminDeleteUserByUserId(id, code);
             } else if (email != null) {
                 userService.adminDeleteUserByEmail(email, code);
             } else {

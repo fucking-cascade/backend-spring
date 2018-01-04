@@ -88,7 +88,7 @@ public class TaskServiceImpl implements TaskService {
         task.setOwnerId(taskDTO.getOwnerId());
         task.setPriority(taskDTO.getPriority());
         task.setTaskStatus(taskDTO.getTaskStatus());
-        task.setProgressId(task.getProgressId());
+        task.setProgressId(taskDTO.getProgressId());
         return task;
     }
 
@@ -107,6 +107,16 @@ public class TaskServiceImpl implements TaskService {
             taskDTO.setIndex(0);
         }
         return taskDTO;
+    }
+
+    private void resetIndexForTaskListOfProgress(Task task) {
+        ArrayList<Task> tasks = taskRepository.findAllByProgressIdOrderByIndexAsc(task.getProgressId());
+        int i = 0;
+        for (Task iter : tasks) {
+            iter.setIndex(i);
+            i++;
+            taskRepository.save(iter);
+        }
     }
 
     @RabbitHandler
@@ -182,6 +192,7 @@ public class TaskServiceImpl implements TaskService {
             Task task = taskRepository.findById(taskDTO.getTaskId());
             if (task.getOwnerId().equals(taskDTO.getOwnerId())) {
                 taskRepository.deleteById(taskDTO.getTaskId());
+                resetIndexForTaskListOfProgress(task);
 
                 rabbitTemplate.convertAndSend(
                         TASK_FAN_OUT_EXCHANGE,
@@ -275,7 +286,9 @@ public class TaskServiceImpl implements TaskService {
                     }
                     task.setIndex(taskDTO.getIndex());
                     taskRepository.save(task);
+                    resetIndexForTaskListOfProgress(task);
                 }
+                task = taskRepository.findById(task.getId());
                 return convertFromTaskToTaskDTO(task);
             } else {
                 throw new AppBusinessException(
@@ -315,7 +328,9 @@ public class TaskServiceImpl implements TaskService {
                         task.setIndex(taskDTO.getIndex());
                         task.setProgressId(taskDTO.getProgressId());
                         taskRepository.save(task);
+                        resetIndexForTaskListOfProgress(task);
                     }
+                    task = taskRepository.findById(task.getId());
                     return convertFromTaskToTaskDTO(task);
                 } else {
                     throw new AppBusinessException(
@@ -412,7 +427,9 @@ public class TaskServiceImpl implements TaskService {
     public void adminDeleteTaskById(String id, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isTaskExist(DAOQueryMode.QUERY_BY_ID, id)) {
+                Task task = taskRepository.findById(id);
                 taskRepository.deleteById(id);
+                resetIndexForTaskListOfProgress(task);
 
                 rabbitTemplate.convertAndSend(
                         TASK_FAN_OUT_EXCHANGE,
@@ -443,6 +460,8 @@ public class TaskServiceImpl implements TaskService {
                 taskRepository.deleteAllByOwnerId(ownerId);
 
                 for (Task task : tasks) {
+                    resetIndexForTaskListOfProgress(task);
+
                     rabbitTemplate.convertAndSend(
                             TASK_FAN_OUT_EXCHANGE,
                             "",
@@ -473,6 +492,8 @@ public class TaskServiceImpl implements TaskService {
                 taskRepository.deleteAllByProgressId(progressId);
 
                 for (Task task : tasks) {
+                    resetIndexForTaskListOfProgress(task);
+
                     rabbitTemplate.convertAndSend(
                             TASK_FAN_OUT_EXCHANGE,
                             "",
@@ -504,6 +525,8 @@ public class TaskServiceImpl implements TaskService {
                     taskRepository.deleteAllByOwnerIdAndProgressId(ownerId, progressId);
 
                     for (Task task : tasks) {
+                        resetIndexForTaskListOfProgress(task);
+
                         rabbitTemplate.convertAndSend(
                                 TASK_FAN_OUT_EXCHANGE,
                                 "",

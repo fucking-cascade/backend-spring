@@ -82,7 +82,7 @@ public class ProgressServiceImpl implements ProgressService {
         progress.setName(progressDTO.getName());
         progress.setIndex(progressDTO.getIndex());
         progress.setOwnerId(progressDTO.getOwnerId());
-        progress.setProjectId(progress.getProjectId());
+        progress.setProjectId(progressDTO.getProjectId());
         return progress;
     }
 
@@ -96,11 +96,21 @@ public class ProgressServiceImpl implements ProgressService {
 
     private ProgressDTO adjustIndex(ProgressDTO progressDTO) {
         if (progressDTO.getIndex() >= progressRepository.countByProjectId(progressDTO.getProjectId())) {
-            progressDTO.setIndex(progressRepository.countByProjectId(progressDTO.getProjectId()) - 1);
+            progressDTO.setIndex(progressRepository.countByProjectId(progressDTO.getProjectId()));
         } else if (progressDTO.getIndex() < 0) {
             progressDTO.setIndex(0);
         }
         return progressDTO;
+    }
+
+    private void resetIndexForProgressListOfProject(Progress progress) {
+        ArrayList<Progress> progressList = progressRepository.findAllByProjectIdOrderByIndexAsc(progress.getProjectId());
+        int i = 0;
+        for (Progress iter : progressList) {
+            iter.setIndex(i);
+            i++;
+            progressRepository.save(iter);
+        }
     }
 
     @RabbitHandler
@@ -113,6 +123,7 @@ public class ProgressServiceImpl implements ProgressService {
                         TutorialProgressListCreator.setTutorialProgressList(projectDTO.getOwnerId(), projectDTO.getProjectId())
                 );
                 for (Progress progress : progressList) {
+                    progress.setIndex(progressRepository.countByProjectId(progress.getProjectId()));
                     progressRepository.save(progress);
 
                     rabbitTemplate.convertAndSend(
@@ -150,6 +161,7 @@ public class ProgressServiceImpl implements ProgressService {
         if (userClient.checkUserExistence(progressDTO.getOwnerId())) {
             if (projectClient.checkProjectExistence(progressDTO.getProjectId())) {
                 Progress progress = convertFromProgressDTOToProgress(progressDTO);
+                progress.setIndex(progressRepository.countByProjectId(progress.getProjectId()));
                 progressRepository.save(progress);
                 return convertFromProgressToProgressDTO(progress);
             } else {
@@ -172,6 +184,7 @@ public class ProgressServiceImpl implements ProgressService {
             Progress progress = progressRepository.findById(progressDTO.getProgressId());
             if (progress.getId().equals(progressDTO.getProgressId())) {
                 progressRepository.deleteById(progressDTO.getProgressId());
+                resetIndexForProgressListOfProject(progress);
 
                 rabbitTemplate.convertAndSend(
                         PROGRESS_FAN_OUT_EXCHANGE,
@@ -244,6 +257,8 @@ public class ProgressServiceImpl implements ProgressService {
                 }
                 progress.setIndex(progressDTO.getIndex());
                 progressRepository.save(progress);
+                resetIndexForProgressListOfProject(progress);
+                progress = progressRepository.findById(progress.getId());
                 return convertFromProgressToProgressDTO(progress);
             } else {
                 throw new AppBusinessException(
@@ -334,7 +349,9 @@ public class ProgressServiceImpl implements ProgressService {
     public void adminDeleteProgressById(String id, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isProgressExist(DAOQueryMode.QUERY_BY_ID, id)) {
+                Progress progress = progressRepository.findById(id);
                 progressRepository.deleteById(id);
+                resetIndexForProgressListOfProject(progress);
 
                 rabbitTemplate.convertAndSend(
                         PROGRESS_FAN_OUT_EXCHANGE,
@@ -365,6 +382,8 @@ public class ProgressServiceImpl implements ProgressService {
                 progressRepository.deleteAllByOwnerId(ownerId);
 
                 for (Progress progress : progressList) {
+                    resetIndexForProgressListOfProject(progress);
+
                     rabbitTemplate.convertAndSend(
                             PROGRESS_FAN_OUT_EXCHANGE,
                             "",
@@ -395,6 +414,8 @@ public class ProgressServiceImpl implements ProgressService {
                 progressRepository.deleteAllByProjectId(projectId);
 
                 for (Progress progress : progressList) {
+                    resetIndexForProgressListOfProject(progress);
+
                     rabbitTemplate.convertAndSend(
                             PROGRESS_FAN_OUT_EXCHANGE,
                             "",
@@ -426,6 +447,8 @@ public class ProgressServiceImpl implements ProgressService {
                     progressRepository.deleteAllByOwnerIdAndProjectId(ownerId, projectId);
 
                     for (Progress progress : progressList) {
+                        resetIndexForProgressListOfProject(progress);
+
                         rabbitTemplate.convertAndSend(
                                 PROGRESS_FAN_OUT_EXCHANGE,
                                 "",

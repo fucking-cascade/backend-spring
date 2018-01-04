@@ -5,9 +5,9 @@ public interface SubtaskURL {
 
     String DELETE_SUBTASK_BY_ID_URL = "/delete";
 
-    String UPDATE_SUBTASK_CONTENT_URL = "/content/update";
+    String UPDATE_SUBTASK_CONTENT_URL = "/update/content";
 
-    String UPDATE_SUBTASK_STATE_URL = "/state/update";
+    String UPDATE_SUBTASK_STATE_URL = "/update/state";
 
     String GET_SUBTASK_BY_ID_URL = "/retrieve";
 

@@ -142,13 +142,13 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public UserDTO getUserByUserId(String userId) {
-        if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userId)) {
-            return convertFromUserToUserDTO(userRepository.findById(userId));
+    public UserDTO getUserByUserId(String id) {
+        if (isUserCreated(DAOQueryMode.QUERY_BY_ID, id)) {
+            return convertFromUserToUserDTO(userRepository.findById(id));
         } else {
             throw new AppBusinessException(
                     UserErrorCode.USER_NOT_EXIST,
-                    String.format("User %s does not exist", userId)
+                    String.format("User %s does not exist", id)
             );
         }
     }
@@ -190,20 +190,20 @@ public class UserServiceImpl implements UserService {
     }
 
     @Override
-    public void adminDeleteUserByUserId(String userId, String code) {
+    public void adminDeleteUserByUserId(String id, String code) {
         if (code.equals(ADMIN_CODE)) {
-            if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userId)) {
-                userRepository.deleteById(userId);
+            if (isUserCreated(DAOQueryMode.QUERY_BY_ID, id)) {
+                userRepository.deleteById(id);
 
                 rabbitTemplate.convertAndSend(
                         USER_FAN_OUT_EXCHANGE,
                         "",
-                        RabbitMQMessageCreator.newInstance(MessageType.USER_DELETED, userId)
+                        RabbitMQMessageCreator.newInstance(MessageType.USER_DELETED, id)
                 );
             } else {
                 throw new AppBusinessException(
                         UserErrorCode.USER_NOT_EXIST,
-                        String.format("User %s does not exist", userId)
+                        String.format("User %s does not exist", id)
                 );
             }
         } else {
