@@ -45,7 +45,7 @@ public class UserInfoController {
     @RequestMapping(value = GET_USER_INFO_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object getUserInfoById(
-            @RequestParam(value = "userId", required = true) String userId
+            @RequestParam(value = "userId") String userId
     ) {
         try {
             return new BaseResponseBody(CommonErrorCode.SUCCESS, userInfoService.getUserInfoByUserId(userId));
@@ -57,7 +57,7 @@ public class UserInfoController {
     @RequestMapping(value = GET_USER_INFOS_BY_NAME_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object getUserInfosByName(
-            @RequestParam(value = "name", required = true) String name
+            @RequestParam(value = "name") String name
     ) {
         try {
             return new BaseResponseBody(CommonErrorCode.SUCCESS, userInfoService.getUserInfosByName(name));
@@ -79,8 +79,8 @@ public class UserInfoController {
     @RequestMapping(value = ADMIN_RESET_USER_INFO_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminResetUserInfoById(
-            @RequestParam(value = "userId", required = true) String userId,
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "userId") String userId,
+            @RequestParam(value = "code") String code
     ) {
         try {
             userInfoService.resetUserInfoById(userId, code);
@@ -93,7 +93,7 @@ public class UserInfoController {
     @RequestMapping(value = ADMIN_DELETE_ALL_USER_INFOS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminDeleteAllUserInfos(
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "code") String code
     ) {
         try {
             userInfoService.deleteAllUserInfos(code);
@@ -106,8 +106,8 @@ public class UserInfoController {
     @RequestMapping(value = ADMIN_DELETE_USER_INFO_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminDeleteUserInfoByUserId(
-            @RequestParam(value = "userId", required = true) String userId,
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "userId") String userId,
+            @RequestParam(value = "code") String code
     ) {
         try {
             userInfoService.deleteUserInfoByUserId(userId, code);

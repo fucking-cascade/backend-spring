@@ -6,27 +6,27 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.ArrayList;
 
 public interface CommentRepository extends MongoRepository<Comment, String> {
-    public Comment findById(String id);
+    Comment findById(String id);
 
-    public ArrayList<Comment> findAllByUserId(String userId);
+    ArrayList<Comment> findAllByUserId(String userId);
 
-    public ArrayList<Comment> findAllByTaskId(String userId);
+    ArrayList<Comment> findAllByTaskId(String userId);
 
-    public ArrayList<Comment> findAllByUserIdAndAndTaskId(String userId, String taskId);
+    ArrayList<Comment> findAllByUserIdAndTaskId(String userId, String taskId);
 
-    public ArrayList<Comment> findAll();
+    ArrayList<Comment> findAll();
 
-    public int countById(String id);
+    int countById(String id);
 
-    public int countByUserId(String userId);
+    int countByUserId(String userId);
 
-    public int countByTaskId(String taskId);
+    int countByTaskId(String taskId);
 
-    public void deleteById(String id);
+    void deleteById(String id);
 
-    public void deleteAllByUserId(String userId);
+    void deleteAllByUserId(String userId);
 
-    public void deleteAllByTaskId(String taskId);
+    void deleteAllByTaskId(String taskId);
 
-    public void deleteAllByUserIdAndTaskId(String userId, String taskId);
+    void deleteAllByUserIdAndTaskId(String userId, String taskId);
 }

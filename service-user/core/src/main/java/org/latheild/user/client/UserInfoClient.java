@@ -14,7 +14,7 @@ import static org.latheild.userinfo.api.constant.UserInfoURL.REGISTER_USER_INFO_
 public interface UserInfoClient {
     @RequestMapping(value = REGISTER_USER_INFO_URL, method = RequestMethod.POST)
     @ResponseBody
-    public UserInfoDTO register(
+    UserInfoDTO register(
             @RequestBody RegisterDTO registerDTO
     );
 }

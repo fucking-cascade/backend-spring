@@ -5,27 +5,27 @@ import org.latheild.subtask.api.dto.SubtaskDTO;
 import java.util.ArrayList;
 
 public interface SubtaskService {
-    public SubtaskDTO createSubtask(SubtaskDTO subtaskDTO);
+    SubtaskDTO createSubtask(SubtaskDTO subtaskDTO);
 
-    public void deleteSubtaskById(SubtaskDTO subtaskDTO);
+    void deleteSubtaskById(SubtaskDTO subtaskDTO);
 
-    public SubtaskDTO updateSubtaskContent(SubtaskDTO subtaskDTO);
+    SubtaskDTO updateSubtaskContent(SubtaskDTO subtaskDTO);
 
-    public SubtaskDTO updateSubtaskState(SubtaskDTO subtaskDTO);
+    SubtaskDTO updateSubtaskState(SubtaskDTO subtaskDTO);
 
-    public SubtaskDTO getSubtaskById(String id);
+    SubtaskDTO getSubtaskById(String id);
 
-    public ArrayList<SubtaskDTO> getSubtasksByUserId(String userId);
+    ArrayList<SubtaskDTO> getSubtasksByUserId(String userId);
 
-    public ArrayList<SubtaskDTO> getSubtasksByTaskId(String taskId);
+    ArrayList<SubtaskDTO> getSubtasksByTaskId(String taskId);
 
-    public ArrayList<SubtaskDTO> adminGetAllSubtasks();
+    ArrayList<SubtaskDTO> adminGetAllSubtasks(String code);
 
-    public void adminDeleteSubtaskById(String id, String code);
+    void adminDeleteSubtaskById(String id, String code);
 
-    public void adminDeleteAllSubtasksByUserId(String userId, String code);
+    void adminDeleteAllSubtasksByUserId(String userId, String code);
 
-    public void adminDeleteAllSubtasksByTaskId(String taskId, String code);
+    void adminDeleteAllSubtasksByTaskId(String taskId, String code);
 
-    public void adminDeleteAllSubtasks(String code);
+    void adminDeleteAllSubtasks(String code);
 }

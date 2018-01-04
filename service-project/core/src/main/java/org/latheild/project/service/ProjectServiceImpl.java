@@ -43,17 +43,9 @@ public class ProjectServiceImpl implements ProjectService {
     private boolean isProjectExist(DAOQueryMode mode, String target) {
         switch (mode) {
             case QUERY_BY_ID:
-                if (projectRepository.countById(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (projectRepository.countById(target) > 0);
             case QUERY_BY_USER_ID:
-                if (projectRepository.countByOwnerId(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (projectRepository.countByOwnerId(target) > 0);
             default:
                 throw new AppBusinessException(
                         CommonErrorCode.INTERNAL_ERROR
@@ -71,7 +63,7 @@ public class ProjectServiceImpl implements ProjectService {
     }
 
     private ArrayList<ProjectDTO> convertFromProjectsToProjectDTOs(ArrayList<Project> projects) {
-        ArrayList<ProjectDTO> projectDTOs = new ArrayList<ProjectDTO>();
+        ArrayList<ProjectDTO> projectDTOs = new ArrayList<>();
         for (Project project : projects) {
             projectDTOs.add(convertFromProjectToProjectDTO(project));
         }
@@ -108,25 +100,31 @@ public class ProjectServiceImpl implements ProjectService {
                 break;
             case USER_DELETED:
                 String messageBody = (String) message.getMessageBody();
-                if (message.equals(ADMIN_DELETE_ALL)) {
+                if (messageBody.equals(ADMIN_DELETE_ALL)) {
                     adminDeleteAllProjects(ADMIN_CODE);
                 } else {
                     if (isProjectExist(DAOQueryMode.QUERY_BY_USER_ID, messageBody)) {
                         projectRepository.deleteAllByOwnerId(messageBody);
-                    }/* else {
-                        throw new AppBusinessException(
-                                ProjectErrorCode.ProjectNotExist,
-                                String.format("User %s does not have any project", message)
-                        );
-                    }*/
+                    }
                 }
+
+                rabbitTemplate.convertAndSend(
+                        PROJECT_FAN_OUT_EXCHANGE,
+                        "",
+                        message
+                );
                 break;
         }
     }
 
     @Override
+    public boolean checkProjectExistence(String projectId) {
+        return isProjectExist(DAOQueryMode.QUERY_BY_ID, projectId);
+    }
+
+    @Override
     public ProjectDTO createProject(ProjectDTO projectDTO) {
-        if (userClient.checkUserExistance(projectDTO.getOwnerId())) {
+        if (userClient.checkUserExistence(projectDTO.getOwnerId())) {
             Project project = convertFromProjectDTOToProject(projectDTO);
             projectRepository.save(project);
             projectDTO.setProjectId(project.getId());
@@ -169,8 +167,8 @@ public class ProjectServiceImpl implements ProjectService {
                         CommonErrorCode.INVALID_ARGUMENT
                 );
             }
-            if (userClient.checkUserExistance(changeOwnerDTO.getOldOwnerId())) {
-                if (userClient.checkUserExistance(changeOwnerDTO.getNewOwnerId())) {
+            if (userClient.checkUserExistence(changeOwnerDTO.getOldOwnerId())) {
+                if (userClient.checkUserExistence(changeOwnerDTO.getNewOwnerId())) {
                     Project project = projectRepository.findById(changeOwnerDTO.getProjectId());
                     if (project.getOwnerId().equals(changeOwnerDTO.getOldOwnerId())) {
                         project.setOwnerId(changeOwnerDTO.getNewOwnerId());

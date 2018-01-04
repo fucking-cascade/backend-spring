@@ -27,23 +27,11 @@ public class CommentServiceImpl implements CommentService {
     private boolean isCommentExist(DAOQueryMode mode, String target) {
         switch (mode) {
             case QUERY_BY_ID:
-                if (commentRepository.countById(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (commentRepository.countById(target) > 0);
             case QUERY_BY_USER_ID:
-                if (commentRepository.countByUserId(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (commentRepository.countByUserId(target) > 0);
             case QUERY_BY_TASK_ID:
-                if (commentRepository.countByTaskId(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (commentRepository.countByTaskId(target) > 0);
             default:
                 throw new AppBusinessException(
                         CommonErrorCode.INTERNAL_ERROR
@@ -61,7 +49,7 @@ public class CommentServiceImpl implements CommentService {
     }
 
     private ArrayList<CommentDTO> convertFromCommentsToCommentDTOs(ArrayList<Comment> comments) {
-        ArrayList<CommentDTO> commentDTOs = new ArrayList<CommentDTO>();
+        ArrayList<CommentDTO> commentDTOs = new ArrayList<>();
         for (Comment comment : comments) {
             commentDTOs.add(convertFromCommentToCommentDTO(comment));
         }
@@ -78,7 +66,7 @@ public class CommentServiceImpl implements CommentService {
 
     @Override
     public CommentDTO addComment(CommentDTO commentDTO) {
-        if (userClient.checkUserExistance(commentDTO.getUserId())) {
+        if (userClient.checkUserExistence(commentDTO.getUserId())) {
             /*if (taskClient.checkTaskExistance(commentDTO.getTaskId())) {
                 Comment comment = convertFromCommentDTOToComment(commentDTO);
                 commentRepository.save(comment);
@@ -161,7 +149,7 @@ public class CommentServiceImpl implements CommentService {
     public ArrayList<CommentDTO> getCommentsByUserIdAndTaskId(String userId, String taskId) {
         if (isCommentExist(DAOQueryMode.QUERY_BY_USER_ID, userId)) {
             if (isCommentExist(DAOQueryMode.QUERY_BY_TASK_ID, taskId)) {
-                return convertFromCommentsToCommentDTOs(commentRepository.findAllByUserIdAndAndTaskId(userId, taskId));
+                return convertFromCommentsToCommentDTOs(commentRepository.findAllByUserIdAndTaskId(userId, taskId));
             } else {
                 throw new AppBusinessException(
                         CommentErrorCode.CommentNotExist,

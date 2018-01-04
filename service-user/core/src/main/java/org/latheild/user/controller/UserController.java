@@ -101,16 +101,16 @@ public class UserController {
     }
 
     @RequestMapping(value = CHECK_USER_EXIST_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
-    public boolean checkUserExistance(
-            @RequestParam(value = "userId", required = true) String userId
+    public boolean checkUserExistence(
+            @RequestParam(value = "userId") String userId
     ) {
-        return userService.checkUserExist(userId);
+        return userService.checkUserExistence(userId);
     }
 
     @RequestMapping(value = ADMIN_DELETE_ALL_USERS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminDeleteAllUsers(
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "code") String code
     ) {
         try {
             userService.adminDeleteAllUsers(code);
@@ -125,7 +125,7 @@ public class UserController {
     public Object adminDeleteUser(
             @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "email", required = false) String email,
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "code") String code
     ) {
         try {
             if (userId != null) {

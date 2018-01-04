@@ -30,23 +30,11 @@ public class SubtaskServiceImpl implements SubtaskService {
     private boolean isSubtaskCreated(DAOQueryMode mode, String target) {
         switch (mode) {
             case QUERY_BY_ID:
-                if (subtaskRepository.countById(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (subtaskRepository.countById(target) > 0);
             case QUERY_BY_TASK_ID:
-                if (subtaskRepository.countByTaskId(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (subtaskRepository.countByTaskId(target) > 0);
             case QUERY_BY_USER_ID:
-                if (subtaskRepository.countByUserId(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (subtaskRepository.countByUserId(target) > 0);
             default:
                 throw new AppBusinessException(
                         CommonErrorCode.INTERNAL_ERROR
@@ -65,7 +53,7 @@ public class SubtaskServiceImpl implements SubtaskService {
     }
 
     private ArrayList<SubtaskDTO> convertFromSubtasksToSubtaskDTOs(ArrayList<Subtask> subtasks) {
-        ArrayList<SubtaskDTO> subtaskDTOs = new ArrayList<SubtaskDTO>();
+        ArrayList<SubtaskDTO> subtaskDTOs = new ArrayList<>();
         for (Subtask subtask : subtasks) {
             subtaskDTOs.add(convertFromSubtaskToSubtaskDTO(subtask));
         }
@@ -83,7 +71,7 @@ public class SubtaskServiceImpl implements SubtaskService {
 
     @Override
     public SubtaskDTO createSubtask(SubtaskDTO subtaskDTO) {
-        if (userClient.checkUserExistance(subtaskDTO.getUserId())) {
+        if (userClient.checkUserExistence(subtaskDTO.getUserId())) {
             /*if (taskClient.checkTaskExistance(subtaskDTO.getTaskId())) {
                 Subtask subtask = convertFromSubtaskDTOToSubtask(subtaskDTO);
                 subtaskRepository.save(subtask);
@@ -205,12 +193,18 @@ public class SubtaskServiceImpl implements SubtaskService {
     }
 
     @Override
-    public ArrayList<SubtaskDTO> adminGetAllSubtasks() {
-        if (subtaskRepository.count() > 0) {
-            return convertFromSubtasksToSubtaskDTOs(subtaskRepository.findAll());
+    public ArrayList<SubtaskDTO> adminGetAllSubtasks(String code) {
+        if (code.equals(ADMIN_CODE)) {
+            if (subtaskRepository.count() > 0) {
+                return convertFromSubtasksToSubtaskDTOs(subtaskRepository.findAll());
+            } else {
+                throw new AppBusinessException(
+                        SubtaskErrorCode.SubtaskNotExist
+                );
+            }
         } else {
             throw new AppBusinessException(
-                    SubtaskErrorCode.SubtaskNotExist
+                    CommonErrorCode.UNAUTHORIZED
             );
         }
     }

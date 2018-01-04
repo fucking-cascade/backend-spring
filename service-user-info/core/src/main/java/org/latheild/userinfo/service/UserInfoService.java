@@ -6,19 +6,19 @@ import org.latheild.userinfo.api.dto.UserInfoDTO;
 import java.util.ArrayList;
 
 public interface UserInfoService {
-    public UserInfoDTO register(RegisterDTO registerDTO);
+    UserInfoDTO register(RegisterDTO registerDTO);
 
-    public UserInfoDTO updateUserInfo(UserInfoDTO userInfoDTO);
+    UserInfoDTO updateUserInfo(UserInfoDTO userInfoDTO);
 
-    public UserInfoDTO getUserInfoByUserId(String userId);
+    UserInfoDTO getUserInfoByUserId(String userId);
 
-    public ArrayList<UserInfoDTO> getUserInfosByName(String name);
+    ArrayList<UserInfoDTO> getUserInfosByName(String name);
 
-    public ArrayList<UserInfoDTO> getAllUserInfos();
+    ArrayList<UserInfoDTO> getAllUserInfos();
 
-    public void resetUserInfoById(String userId, String code);
+    void resetUserInfoById(String userId, String code);
 
-    public void deleteAllUserInfos(String code);
+    void deleteAllUserInfos(String code);
 
-    public void deleteUserInfoByUserId(String userId, String code);
+    void deleteUserInfoByUserId(String userId, String code);
 }

@@ -18,6 +18,13 @@ public class ProjectController {
     @Autowired
     ProjectService projectService;
 
+    @RequestMapping(value = CHECK_PROJECT_EXIST_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
+    public boolean checkProjectExistence(
+            @RequestParam(value = "projectId") String projectId
+    ) {
+        return projectService.checkProjectExistence(projectId);
+    }
+
     @RequestMapping(value = CREATE_PROJECT_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
     @ResponseBody
     public Object createProject(
@@ -70,7 +77,7 @@ public class ProjectController {
     @RequestMapping(value = GET_PROJECT_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object getProjectById(
-            @RequestParam(value = "id", required = true) String id
+            @RequestParam(value = "id") String id
     ) {
         try {
             return new BaseResponseBody(CommonErrorCode.SUCCESS, projectService.getProjectById(id));
@@ -82,7 +89,7 @@ public class ProjectController {
     @RequestMapping(value = GET_PROJECTS_BY_USER_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object getProjectsByUserId(
-            @RequestParam(value = "ownerId", required = true) String ownerId
+            @RequestParam(value = "ownerId") String ownerId
     ) {
         try {
             return new BaseResponseBody(CommonErrorCode.SUCCESS, projectService.getProjectsByOwnerId(ownerId));
@@ -94,7 +101,7 @@ public class ProjectController {
     @RequestMapping(value = ADMIN_GET_ALL_PROJECTS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminGetAllProjects(
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "code") String code
     ) {
         try {
             return new BaseResponseBody(CommonErrorCode.SUCCESS, projectService.adminGetAllProjects(code));
@@ -106,8 +113,8 @@ public class ProjectController {
     @RequestMapping(value = ADMIN_DELETE_PROJECT_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminDeleteProjectById(
-            @RequestParam(value = "id", required = true) String id,
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "id") String id,
+            @RequestParam(value = "code") String code
     ) {
         try {
             projectService.adminDeleteProjectById(id, code);
@@ -121,7 +128,7 @@ public class ProjectController {
     @ResponseBody
     public Object adminDeleteProjects(
             @RequestParam(value = "ownerId", required = false) String ownerId,
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "code") String code
     ) {
         try {
             if (ownerId != null) {

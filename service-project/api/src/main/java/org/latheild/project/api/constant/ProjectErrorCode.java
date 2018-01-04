@@ -3,8 +3,7 @@ package org.latheild.project.api.constant;
 import org.latheild.apiutils.api.ErrorCode;
 
 public enum ProjectErrorCode implements ErrorCode {
-    ProjectNotExist(404, "Project does not exist"),
-    ProjectExist(409, "Project already exists");
+    ProjectNotExist(404, "Project does not exist");
 
     private int status;
     private String message;

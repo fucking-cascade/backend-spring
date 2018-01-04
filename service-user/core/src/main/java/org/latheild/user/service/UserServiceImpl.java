@@ -36,17 +36,9 @@ public class UserServiceImpl implements UserService {
     private boolean isUserCreated(DAOQueryMode mode, String target) {
         switch (mode) {
             case QUERY_BY_ID:
-                if (userRepository.countById(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (userRepository.countById(target) > 0);
             case QUERY_BY_EMAIL:
-                if (userRepository.countByEmail(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (userRepository.countByEmail(target) > 0);
             default:
                 throw new AppBusinessException(
                         CommonErrorCode.INTERNAL_ERROR
@@ -62,7 +54,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private ArrayList<UserDTO> convertFromUsersToUserDTOs(ArrayList<User> users) {
-        ArrayList<UserDTO> userDTOs = new ArrayList<UserDTO>();
+        ArrayList<UserDTO> userDTOs = new ArrayList<>();
         for (User user : users) {
             userDTOs.add(convertFromUserToUserDTO(user));
         }
@@ -127,21 +119,12 @@ public class UserServiceImpl implements UserService {
                     String.format("User %s (userId: %s) does not exist", registerDTO.getEmail(), registerDTO.getUserId())
             );
         }
-
-        if (user.getPassword().equals(registerDTO.getPassword())) {
-            return true;
-        } else {
-            return false;
-        }
+        return user.getPassword().equals(registerDTO.getPassword());
     }
 
     @Override
-    public boolean checkUserExist(String userId) {
-        if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userId)) {
-            return true;
-        } else {
-            return false;
-        }
+    public boolean checkUserExistence(String userId) {
+        return isUserCreated(DAOQueryMode.QUERY_BY_ID, userId);
     }
 
 
@@ -175,8 +158,7 @@ public class UserServiceImpl implements UserService {
             return convertFromUsersToUserDTOs(userRepository.findAll());
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist,
-                    String.format("No user was created")
+                    UserErrorCode.UserNotExist
             );
         }
     }

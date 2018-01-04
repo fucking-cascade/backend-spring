@@ -5,7 +5,8 @@ public enum MessageType {
     USER_DELETED(2),
     PROJECT_CREATED(3),
     PROJECT_DELETED(4),
-    TUTORIAL_PROJECT_CREATED(5);
+    TUTORIAL_PROJECT_CREATED(5),
+    TUTORIAL_PROGRESS_CREATED(6);
 
     private Integer index;
 

@@ -6,23 +6,25 @@ import org.latheild.project.api.dto.ProjectDTO;
 import java.util.ArrayList;
 
 public interface ProjectService {
-    public ProjectDTO createProject(ProjectDTO projectDTO);
+    boolean checkProjectExistence(String projectId);
 
-    public ProjectDTO updateProjectInfo(ProjectDTO projectDTO);
+    ProjectDTO createProject(ProjectDTO projectDTO);
 
-    public ProjectDTO changeProjectOwner(ChangeOwnerDTO changeOwnerDTO);
+    ProjectDTO updateProjectInfo(ProjectDTO projectDTO);
 
-    public void deleteProjectById(ProjectDTO projectDTO);
+    ProjectDTO changeProjectOwner(ChangeOwnerDTO changeOwnerDTO);
 
-    public ProjectDTO getProjectById(String id);
+    void deleteProjectById(ProjectDTO projectDTO);
 
-    public ArrayList<ProjectDTO> getProjectsByOwnerId(String ownerId);
+    ProjectDTO getProjectById(String id);
 
-    public ArrayList<ProjectDTO> adminGetAllProjects(String code);
+    ArrayList<ProjectDTO> getProjectsByOwnerId(String ownerId);
 
-    public void adminDeleteProjectById(String id, String code);
+    ArrayList<ProjectDTO> adminGetAllProjects(String code);
 
-    public void adminDeleteProjectsByOwnerId(String ownerId, String code);
+    void adminDeleteProjectById(String id, String code);
 
-    public void adminDeleteAllProjects(String code);
+    void adminDeleteProjectsByOwnerId(String ownerId, String code);
+
+    void adminDeleteAllProjects(String code);
 }

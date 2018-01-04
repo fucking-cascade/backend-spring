@@ -1,21 +1,23 @@
 package org.latheild.project.api.constant;
 
 public interface ProjectURL {
-    public String CREATE_PROJECT_URL = "/create";
+    String CHECK_PROJECT_EXIST_URL = "/check";
 
-    public String UPDATE_PROJECT_URL = "/update/info";
+    String CREATE_PROJECT_URL = "/create";
 
-    public String CHANGE_PROJECT_OWNER_URL = "/update/owner";
+    String UPDATE_PROJECT_URL = "/update/info";
 
-    public String DELETE_PROJECT_BY_ID_URL = "/delete";
+    String CHANGE_PROJECT_OWNER_URL = "/update/owner";
 
-    public String GET_PROJECT_BY_ID_URL = "/retrieve";
+    String DELETE_PROJECT_BY_ID_URL = "/delete";
 
-    public String GET_PROJECTS_BY_USER_ID_URL = "/retrieve/all";
+    String GET_PROJECT_BY_ID_URL = "/retrieve";
 
-    public String ADMIN_GET_ALL_PROJECTS_URL = "/admin/retrieve/all";
+    String GET_PROJECTS_BY_USER_ID_URL = "/retrieve/all";
 
-    public String ADMIN_DELETE_PROJECT_BY_ID_URL = "/admin/delete";
+    String ADMIN_GET_ALL_PROJECTS_URL = "/admin/retrieve/all";
 
-    public String ADMIN_DELETE_PROJECTS_URL = "/admin/delete/all";
+    String ADMIN_DELETE_PROJECT_BY_ID_URL = "/admin/delete";
+
+    String ADMIN_DELETE_PROJECTS_URL = "/admin/delete/all";
 }

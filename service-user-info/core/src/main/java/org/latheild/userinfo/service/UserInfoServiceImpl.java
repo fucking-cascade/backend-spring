@@ -30,23 +30,11 @@ public class UserInfoServiceImpl implements UserInfoService {
     private boolean isUserInfoCreated(DAOQueryMode mode, String target) {
         switch (mode) {
             case QUERY_BY_ID:
-                if (userInfoRepository.countById(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (userInfoRepository.countById(target) > 0);
             case QUERY_BY_USER_ID:
-                if (userInfoRepository.countByUserId(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (userInfoRepository.countByUserId(target) > 0);
             case QUERY_BY_NAME:
-                if (userInfoRepository.countByName(target) > 0) {
-                    return true;
-                } else {
-                    return false;
-                }
+                return (userInfoRepository.countByName(target) > 0);
             default:
                 throw new AppBusinessException(
                         CommonErrorCode.INTERNAL_ERROR
@@ -55,7 +43,7 @@ public class UserInfoServiceImpl implements UserInfoService {
     }
 
     private UserInfoDTO convertFromUserInfoToUserInfoDTO(UserInfo userInfo) {
-        UserInfoDTO userInfoDTO = UserInfoDTOCreator.newInstance(
+        return UserInfoDTOCreator.newInstance(
                 userInfo.getUserId(),
                 userInfo.getName(),
                 userInfo.getGender(),
@@ -65,11 +53,10 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfo.getJob(),
                 userInfo.getAvatar()
         );
-        return userInfoDTO;
     }
 
     private ArrayList<UserInfoDTO> convertFromUserInfosToUserInfoDTOs(ArrayList<UserInfo> userInfos) {
-        ArrayList<UserInfoDTO> userInfoDTOs = new ArrayList<UserInfoDTO>();
+        ArrayList<UserInfoDTO> userInfoDTOs = new ArrayList<>();
         for (UserInfo userInfo : userInfos) {
             userInfoDTOs.add(convertFromUserInfoToUserInfoDTO(userInfo));
         }
@@ -188,8 +175,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             return convertFromUserInfosToUserInfoDTOs(userInfoRepository.findAll());
         } else {
             throw new AppBusinessException(
-                    UserInfoErrorCode.UserInfoNotExist,
-                    String.format("No user info was created")
+                    UserInfoErrorCode.UserInfoNotExist
             );
         }
     }

@@ -69,7 +69,7 @@ public class SubtaskController {
     @RequestMapping(value = GET_SUBTASK_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object getSubtaskById(
-            @RequestParam(value = "id", required = true) String id
+            @RequestParam(value = "id") String id
     ) {
         try {
             return new BaseResponseBody(CommonErrorCode.SUCCESS, subtaskService.getSubtaskById(id));
@@ -102,10 +102,10 @@ public class SubtaskController {
     @RequestMapping(value = ADMIN_GET_ALL_SUBTASKS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminGetlAllSubtasks(
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "code") String code
     ) {
         try {
-            return new BaseResponseBody(CommonErrorCode.SUCCESS, subtaskService.adminGetAllSubtasks());
+            return new BaseResponseBody(CommonErrorCode.SUCCESS, subtaskService.adminGetAllSubtasks(code));
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
         }
@@ -114,8 +114,8 @@ public class SubtaskController {
     @RequestMapping(value = ADMIN_DELETE_SUBTASK_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object updateSubtaskState(
-            @RequestParam(value = "id", required = true) String id,
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "id") String id,
+            @RequestParam(value = "code") String code
     ) {
         try {
             subtaskService.adminDeleteSubtaskById(id, code);
@@ -130,7 +130,7 @@ public class SubtaskController {
     public Object updateSubtaskState(
             @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "taskId", required = false) String taskId,
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "code") String code
     ) {
         try {
             if (userId != null) {

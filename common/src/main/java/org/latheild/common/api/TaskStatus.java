@@ -1,9 +1,9 @@
 package org.latheild.common.api;
 
 public interface TaskStatus {
-    public int getStatus();
+    int getStatus();
 
-    public String getStatusDescription();
+    String getStatusDescription();
 
-    public String getMessage();
+    String getMessage();
 }

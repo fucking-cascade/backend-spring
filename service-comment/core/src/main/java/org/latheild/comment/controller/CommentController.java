@@ -45,7 +45,7 @@ public class CommentController {
     @RequestMapping(value = GET_COMMENT_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object getCommentById(
-            @RequestParam(value = "id" , required = true) String id
+            @RequestParam(value = "id") String id
     ) {
         try {
             return new BaseResponseBody(CommonErrorCode.SUCCESS, commentService.getCommentById(id));
@@ -80,7 +80,7 @@ public class CommentController {
     @RequestMapping(value = ADMIN_GET_ALL_COMMENTS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminGetAllComments(
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "code") String code
     ) {
         try {
             return new BaseResponseBody(CommonErrorCode.SUCCESS, commentService.adminGetAllComments(code));
@@ -92,8 +92,8 @@ public class CommentController {
     @RequestMapping(value = ADMIN_DELETE_COMMENT_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminDeleteCommentById(
-            @RequestParam(value = "id", required = true) String id,
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "id") String id,
+            @RequestParam(value = "code") String code
     ) {
         try {
             commentService.adminDeleteCommentById(id, code);
@@ -108,7 +108,7 @@ public class CommentController {
     public Object adminDeleteAllComments(
             @RequestParam(value = "userId", required = false) String userId,
             @RequestParam(value = "taskId", required = false) String taskId,
-            @RequestParam(value = "code", required = true) String code
+            @RequestParam(value = "code") String code
     ) {
         try {
             if (userId != null && taskId != null) {

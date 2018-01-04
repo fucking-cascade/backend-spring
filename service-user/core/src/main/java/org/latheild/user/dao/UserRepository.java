@@ -6,17 +6,17 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.ArrayList;
 
 public interface UserRepository extends MongoRepository<User, String> {
-    public ArrayList<User> findAll();
+    ArrayList<User> findAll();
 
-    public User findById(String id);
+    User findById(String id);
 
-    public User findByEmail(String email);
+    User findByEmail(String email);
 
-    public int countByEmail(String email);
+    int countByEmail(String email);
 
-    public int countById(String id);
+    int countById(String id);
 
-    public void deleteByEmail(String email);
+    void deleteByEmail(String email);
 
-    public void deleteById(String id);
+    void deleteById(String id);
 }

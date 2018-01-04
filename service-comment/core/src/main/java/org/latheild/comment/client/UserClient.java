@@ -11,7 +11,7 @@ import static org.latheild.user.api.constant.UserUrl.CHECK_USER_EXIST_URL;
 @FeignClient(name = "user-service")
 public interface UserClient {
     @RequestMapping(value = CHECK_USER_EXIST_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
-    public boolean checkUserExistance(
-            @RequestParam(value = "userId", required = true) String userId
+    boolean checkUserExistence(
+            @RequestParam(value = "userId") String userId
     );
 }

@@ -7,27 +7,25 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 import java.util.ArrayList;
 
 public interface SubtaskRepository extends MongoRepository<Subtask, String> {
-    public ArrayList<Subtask> findAllByUserId(String userId);
+    ArrayList<Subtask> findAllByUserId(String userId);
 
-    public ArrayList<Subtask> findAllByTaskId(String taskId);
+    ArrayList<Subtask> findAllByTaskId(String taskId);
 
-    public ArrayList<Subtask> findAllByTaskStatus(CommonTaskStatus taskStatus);
+    ArrayList<Subtask> findAllByTaskStatus(CommonTaskStatus taskStatus);
 
-    public ArrayList<Subtask> findAll();
+    ArrayList<Subtask> findAll();
 
-    public Subtask findById(String id);
+    Subtask findById(String id);
 
-    public int countByUserId(String userId);
+    int countByUserId(String userId);
 
-    public int countByTaskId(String taskId);
+    int countByTaskId(String taskId);
 
-    public int countByTaskStatus(CommonTaskStatus taskStatus);
+    int countById(String id);
 
-    public int countById(String id);
+    void deleteAllByUserId(String userId);
 
-    public void deleteAllByUserId(String userId);
+    void deleteAllByTaskId(String taskId);
 
-    public void deleteAllByTaskId(String taskId);
-
-    public void deleteById(String id);
+    void deleteById(String id);
 }
