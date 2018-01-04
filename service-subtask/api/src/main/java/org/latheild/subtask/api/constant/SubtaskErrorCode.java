@@ -3,7 +3,7 @@ package org.latheild.subtask.api.constant;
 import org.latheild.apiutils.api.ErrorCode;
 
 public enum SubtaskErrorCode implements ErrorCode {
-    SubtaskNotExist(404, "Subtask does not exist");
+    SUBTASK_NOT_EXIST(404, "Subtask does not exist");
 
     private int status;
     private String message;

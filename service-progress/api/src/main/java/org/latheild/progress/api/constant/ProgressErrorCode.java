@@ -3,7 +3,7 @@ package org.latheild.progress.api.constant;
 import org.latheild.apiutils.api.ErrorCode;
 
 public enum ProgressErrorCode implements ErrorCode {
-    ProgressNotExist(404, "Progress does not exist");
+    PROGRESS_NOT_EXIST(404, "Progress does not exist");
 
     private int status;
     private String message;

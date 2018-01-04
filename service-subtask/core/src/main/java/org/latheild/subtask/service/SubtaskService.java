@@ -19,6 +19,8 @@ public interface SubtaskService {
 
     ArrayList<SubtaskDTO> getSubtasksByTaskId(String taskId);
 
+    ArrayList<SubtaskDTO> getSubtasksByUserIdAndTaskId(String userId, String taskId);
+
     ArrayList<SubtaskDTO> adminGetAllSubtasks(String code);
 
     void adminDeleteSubtaskById(String id, String code);
@@ -26,6 +28,8 @@ public interface SubtaskService {
     void adminDeleteAllSubtasksByUserId(String userId, String code);
 
     void adminDeleteAllSubtasksByTaskId(String taskId, String code);
+
+    void adminDeleteAllSubtasksByUserIdAndTaskId(String userId, String taskId, String code);
 
     void adminDeleteAllSubtasks(String code);
 }

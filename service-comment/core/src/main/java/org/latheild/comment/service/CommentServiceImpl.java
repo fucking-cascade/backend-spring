@@ -4,22 +4,33 @@ import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
 import org.latheild.comment.api.constant.CommentErrorCode;
 import org.latheild.comment.api.dto.CommentDTO;
+import org.latheild.comment.client.TaskClient;
 import org.latheild.comment.client.UserClient;
 import org.latheild.comment.constant.DAOQueryMode;
 import org.latheild.comment.dao.CommentRepository;
 import org.latheild.comment.domain.Comment;
+import org.latheild.common.domain.Message;
+import org.latheild.task.api.constant.TaskErrorCode;
 import org.latheild.user.api.constant.UserErrorCode;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
+import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
 
 import static org.latheild.apiutils.constant.Constants.ADMIN_CODE;
+import static org.latheild.apiutils.constant.Constants.ADMIN_DELETE_ALL;
+import static org.latheild.common.constant.RabbitMQQueue.COMMENT_QUEUE;
 
 @Service
+@RabbitListener(queues = COMMENT_QUEUE)
 public class CommentServiceImpl implements CommentService {
     @Autowired
     UserClient userClient;
+
+    @Autowired
+    TaskClient taskClient;
 
     @Autowired
     CommentRepository commentRepository;
@@ -64,27 +75,51 @@ public class CommentServiceImpl implements CommentService {
         return comment;
     }
 
+    @RabbitHandler
+    public void eventHandler(Message message) {
+        String messageBody;
+        switch (message.getMessageType()) {
+            case USER_DELETED:
+                messageBody = (String) message.getMessageBody();
+                if (messageBody.equals(ADMIN_DELETE_ALL)) {
+                    adminDeleteAllComments(ADMIN_CODE);
+                } else {
+                    if (isCommentExist(DAOQueryMode.QUERY_BY_USER_ID, messageBody)) {
+                        commentRepository.deleteAllByUserId(messageBody);
+                    }
+                }
+                break;
+            case TASK_DELETED:
+                messageBody = (String) message.getMessageBody();
+                if (messageBody.equals(ADMIN_DELETE_ALL)) {
+                    if (commentRepository.count() > 0) {
+                        adminDeleteAllComments(ADMIN_CODE);
+                    }
+                } else {
+                    if (isCommentExist(DAOQueryMode.QUERY_BY_TASK_ID, messageBody)) {
+                        commentRepository.deleteAllByTaskId(messageBody);
+                    }
+                }
+                break;
+        }
+    }
+
     @Override
     public CommentDTO addComment(CommentDTO commentDTO) {
         if (userClient.checkUserExistence(commentDTO.getUserId())) {
-            /*if (taskClient.checkTaskExistance(commentDTO.getTaskId())) {
+            if (taskClient.checkTaskExistence(commentDTO.getTaskId())) {
                 Comment comment = convertFromCommentDTOToComment(commentDTO);
                 commentRepository.save(comment);
-                commentDTO.setCommentId(comment.getId());
-                return commentDTO;
+                return convertFromCommentToCommentDTO(comment);
             } else {
                 throw new AppBusinessException(
-                        TaskErrorCode.TaskNotExist,
+                        TaskErrorCode.TASK_NOT_EXIST,
                         String.format("Task %s does not exist", commentDTO.getTaskId())
                 );
-            }*/
-            Comment comment = convertFromCommentDTOToComment(commentDTO);
-            commentRepository.save(comment);
-            commentDTO.setCommentId(comment.getId());
-            return commentDTO;
+            }
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist,
+                    UserErrorCode.USER_NOT_EXIST,
                     String.format("User %s does not exist", commentDTO.getUserId())
             );
         }
@@ -103,7 +138,7 @@ public class CommentServiceImpl implements CommentService {
             }
         } else {
             throw new AppBusinessException(
-                    CommentErrorCode.CommentNotExist,
+                    CommentErrorCode.COMMENT_NOT_EXIST,
                     String.format("Comment %s does not exist", commentDTO.getCommentId())
             );
         }
@@ -115,7 +150,7 @@ public class CommentServiceImpl implements CommentService {
             return convertFromCommentToCommentDTO(commentRepository.findById(id));
         } else {
             throw new AppBusinessException(
-                    CommentErrorCode.CommentNotExist,
+                    CommentErrorCode.COMMENT_NOT_EXIST,
                     String.format("Comment %s does not exist", id)
             );
         }
@@ -127,7 +162,7 @@ public class CommentServiceImpl implements CommentService {
             return convertFromCommentsToCommentDTOs(commentRepository.findAllByUserId(userId));
         } else {
             throw new AppBusinessException(
-                    CommentErrorCode.CommentNotExist,
+                    CommentErrorCode.COMMENT_NOT_EXIST,
                     String.format("User %s hasn't made any comment", userId)
             );
         }
@@ -139,8 +174,8 @@ public class CommentServiceImpl implements CommentService {
             return convertFromCommentsToCommentDTOs(commentRepository.findAllByTaskId(taskId));
         } else {
             throw new AppBusinessException(
-                    CommentErrorCode.CommentNotExist,
-                    String.format("No comment was made under task %s", taskId)
+                    CommentErrorCode.COMMENT_NOT_EXIST,
+                    String.format("No comment is made under task %s", taskId)
             );
         }
     }
@@ -152,13 +187,13 @@ public class CommentServiceImpl implements CommentService {
                 return convertFromCommentsToCommentDTOs(commentRepository.findAllByUserIdAndTaskId(userId, taskId));
             } else {
                 throw new AppBusinessException(
-                        CommentErrorCode.CommentNotExist,
-                        String.format("No comment was made by user %s under task %s", userId, taskId)
+                        CommentErrorCode.COMMENT_NOT_EXIST,
+                        String.format("No comment is made by user %s under task %s", userId, taskId)
                 );
             }
         } else {
             throw new AppBusinessException(
-                    CommentErrorCode.CommentNotExist,
+                    CommentErrorCode.COMMENT_NOT_EXIST,
                     String.format("User %s hasn't made any comment", userId)
             );
         }
@@ -171,7 +206,7 @@ public class CommentServiceImpl implements CommentService {
                 return convertFromCommentsToCommentDTOs(commentRepository.findAll());
             } else {
                 throw new AppBusinessException(
-                        CommentErrorCode.CommentNotExist
+                        CommentErrorCode.COMMENT_NOT_EXIST
                 );
             }
         } else {
@@ -189,7 +224,7 @@ public class CommentServiceImpl implements CommentService {
                 commentRepository.deleteById(id);
             } else {
                 throw new AppBusinessException(
-                        CommentErrorCode.CommentNotExist,
+                        CommentErrorCode.COMMENT_NOT_EXIST,
                         String.format("Comment %s does not exist", id)
                 );
             }
@@ -207,7 +242,7 @@ public class CommentServiceImpl implements CommentService {
                 commentRepository.deleteAllByUserId(userId);
             } else {
                 throw new AppBusinessException(
-                        CommentErrorCode.CommentNotExist,
+                        CommentErrorCode.COMMENT_NOT_EXIST,
                         String.format("User %s hasn't made any comment", userId)
                 );
             }
@@ -225,8 +260,8 @@ public class CommentServiceImpl implements CommentService {
                 commentRepository.deleteAllByTaskId(taskId);
             } else {
                 throw new AppBusinessException(
-                        CommentErrorCode.CommentNotExist,
-                        String.format("No comment was made under task %s", taskId)
+                        CommentErrorCode.COMMENT_NOT_EXIST,
+                        String.format("No comment is made under task %s", taskId)
                 );
             }
         } else {
@@ -243,13 +278,13 @@ public class CommentServiceImpl implements CommentService {
                 commentRepository.deleteAllByUserIdAndTaskId(userId, taskId);
             } else {
                 throw new AppBusinessException(
-                        CommentErrorCode.CommentNotExist,
-                        String.format("No comment was made by user %s under task %s", userId, taskId)
+                        CommentErrorCode.COMMENT_NOT_EXIST,
+                        String.format("No comment is made by user %s under task %s", userId, taskId)
                 );
             }
         } else {
             throw new AppBusinessException(
-                    CommentErrorCode.CommentNotExist,
+                    CommentErrorCode.COMMENT_NOT_EXIST,
                     String.format("User %s hasn't made any comment", userId)
             );
         }
@@ -262,7 +297,7 @@ public class CommentServiceImpl implements CommentService {
                 commentRepository.deleteAll();
             } else {
                 throw new AppBusinessException(
-                        CommentErrorCode.CommentNotExist
+                        CommentErrorCode.COMMENT_NOT_EXIST
                 );
             }
         } else {

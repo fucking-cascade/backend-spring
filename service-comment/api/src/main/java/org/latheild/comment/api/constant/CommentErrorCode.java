@@ -3,7 +3,7 @@ package org.latheild.comment.api.constant;
 import org.latheild.apiutils.api.ErrorCode;
 
 public enum CommentErrorCode implements ErrorCode {
-    CommentNotExist(404, "Comment does not exist");
+    COMMENT_NOT_EXIST(404, "Comment does not exist");
 
     private int status;
     private String message;

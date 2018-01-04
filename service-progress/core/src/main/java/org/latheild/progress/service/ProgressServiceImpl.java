@@ -94,6 +94,15 @@ public class ProgressServiceImpl implements ProgressService {
         return progressList;
     }
 
+    private ProgressDTO adjustIndex(ProgressDTO progressDTO) {
+        if (progressDTO.getIndex() >= progressRepository.countByProjectId(progressDTO.getProjectId())) {
+            progressDTO.setIndex(progressRepository.countByProjectId(progressDTO.getProjectId()) - 1);
+        } else if (progressDTO.getIndex() < 0) {
+            progressDTO.setIndex(0);
+        }
+        return progressDTO;
+    }
+
     @RabbitHandler
     public void eventHandler(Message message) {
         switch (message.getMessageType()) {
@@ -116,21 +125,17 @@ public class ProgressServiceImpl implements ProgressService {
                     );
                 }
                 break;
-            case USER_DELETED:
+            case PROJECT_DELETED:
                 String messageBody = (String) message.getMessageBody();
                 if (messageBody.equals(ADMIN_DELETE_ALL)) {
-                    adminDeleteAllProgress(ADMIN_CODE);
+                    if (progressRepository.count() > 0) {
+                        adminDeleteAllProgress(ADMIN_CODE);
+                    }
                 } else {
-                    if (isProgressExist(DAOQueryMode.QUERY_BY_OWNER_ID, messageBody)) {
-                        progressRepository.deleteAllByOwnerId(messageBody);
+                    if (isProgressExist(DAOQueryMode.QUERY_BY_PROJECT_ID, messageBody)) {
+                        progressRepository.deleteAllByProjectId(messageBody);
                     }
                 }
-
-                rabbitTemplate.convertAndSend(
-                        PROGRESS_FAN_OUT_EXCHANGE,
-                        "",
-                        message
-                );
                 break;
         }
     }
@@ -146,17 +151,16 @@ public class ProgressServiceImpl implements ProgressService {
             if (projectClient.checkProjectExistence(progressDTO.getProjectId())) {
                 Progress progress = convertFromProgressDTOToProgress(progressDTO);
                 progressRepository.save(progress);
-                progressDTO.setProgressId(progress.getId());
-                return progressDTO;
+                return convertFromProgressToProgressDTO(progress);
             } else {
                 throw new AppBusinessException(
-                        ProjectErrorCode.ProjectNotExist,
+                        ProjectErrorCode.PROJECT_NOT_EXIST,
                         String.format("Project %s does not exist", progressDTO.getProjectId())
                 );
             }
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist,
+                    UserErrorCode.USER_NOT_EXIST,
                     String.format("User %s does not exist", progressDTO.getOwnerId())
             );
         }
@@ -168,6 +172,15 @@ public class ProgressServiceImpl implements ProgressService {
             Progress progress = progressRepository.findById(progressDTO.getProgressId());
             if (progress.getId().equals(progressDTO.getProgressId())) {
                 progressRepository.deleteById(progressDTO.getProgressId());
+
+                rabbitTemplate.convertAndSend(
+                        PROGRESS_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.PROGRESS_DELETED,
+                                progressDTO.getProgressId()
+                        )
+                );
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.UNAUTHORIZED
@@ -175,7 +188,7 @@ public class ProgressServiceImpl implements ProgressService {
             }
         } else {
             throw new AppBusinessException(
-                    ProgressErrorCode.ProgressNotExist,
+                    ProgressErrorCode.PROGRESS_NOT_EXIST,
                     String.format("Progress %s does not exist", progressDTO.getProgressId())
             );
         }
@@ -196,7 +209,7 @@ public class ProgressServiceImpl implements ProgressService {
             }
         } else {
             throw new AppBusinessException(
-                    ProgressErrorCode.ProgressNotExist,
+                    ProgressErrorCode.PROGRESS_NOT_EXIST,
                     String.format("Progress %s does not exist", progressDTO.getProgressId())
             );
         }
@@ -207,6 +220,7 @@ public class ProgressServiceImpl implements ProgressService {
         if (isProgressExist(DAOQueryMode.QUERY_BY_ID, progressDTO.getProgressId())) {
             Progress progress = progressRepository.findById(progressDTO.getProgressId());
             if (progress.getId().equals(progressDTO.getProgressId())) {
+                progressDTO = adjustIndex(progressDTO);
                 if (progress.getIndex() < progressDTO.getIndex()) {
                     ArrayList<Progress> progressList = progressRepository.findAllByProjectIdOrderByIndexAsc(progress.getProjectId());
                     for (Progress iter : progressList) {
@@ -238,7 +252,7 @@ public class ProgressServiceImpl implements ProgressService {
             }
         } else {
             throw new AppBusinessException(
-                    ProgressErrorCode.ProgressNotExist,
+                    ProgressErrorCode.PROGRESS_NOT_EXIST,
                     String.format("Progress %s does not exist", progressDTO.getProgressId())
             );
         }
@@ -250,7 +264,7 @@ public class ProgressServiceImpl implements ProgressService {
             return convertFromProgressToProgressDTO(progressRepository.findById(id));
         } else {
             throw new AppBusinessException(
-                    ProgressErrorCode.ProgressNotExist,
+                    ProgressErrorCode.PROGRESS_NOT_EXIST,
                     String.format("Progress %s does not exist", id)
             );
         }
@@ -262,7 +276,7 @@ public class ProgressServiceImpl implements ProgressService {
             return convertFromProgressListToProgressDTOs(progressRepository.findAllByOwnerId(ownerId));
         } else {
             throw new AppBusinessException(
-                    ProgressErrorCode.ProgressNotExist,
+                    ProgressErrorCode.PROGRESS_NOT_EXIST,
                     String.format("User %s does not have any progress", ownerId)
             );
         }
@@ -274,8 +288,8 @@ public class ProgressServiceImpl implements ProgressService {
             return convertFromProgressListToProgressDTOs(progressRepository.findAllByProjectId(projectId));
         } else {
             throw new AppBusinessException(
-                    ProgressErrorCode.ProgressNotExist,
-                    String.format("Project %s does not have any project", projectId)
+                    ProgressErrorCode.PROGRESS_NOT_EXIST,
+                    String.format("Project %s does not have any progress", projectId)
             );
         }
     }
@@ -287,13 +301,13 @@ public class ProgressServiceImpl implements ProgressService {
                 return convertFromProgressListToProgressDTOs(progressRepository.findAllByOwnerIdAndProjectId(ownerId, projectId));
             } else {
                 throw new AppBusinessException(
-                        ProgressErrorCode.ProgressNotExist,
-                        String.format("Project %s does not have any project", projectId)
+                        ProgressErrorCode.PROGRESS_NOT_EXIST,
+                        String.format("Project %s does not have any progress assigned to user %s", projectId, ownerId)
                 );
             }
         } else {
             throw new AppBusinessException(
-                    ProgressErrorCode.ProgressNotExist,
+                    ProgressErrorCode.PROGRESS_NOT_EXIST,
                     String.format("User %s does not have any progress", ownerId)
             );
         }
@@ -306,7 +320,7 @@ public class ProgressServiceImpl implements ProgressService {
                 return convertFromProgressListToProgressDTOs(progressRepository.findAll());
             } else {
                 throw new AppBusinessException(
-                        ProgressErrorCode.ProgressNotExist
+                        ProgressErrorCode.PROGRESS_NOT_EXIST
                 );
             }
         } else {
@@ -321,9 +335,18 @@ public class ProgressServiceImpl implements ProgressService {
         if (code.equals(ADMIN_CODE)) {
             if (isProgressExist(DAOQueryMode.QUERY_BY_ID, id)) {
                 progressRepository.deleteById(id);
+
+                rabbitTemplate.convertAndSend(
+                        PROGRESS_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.PROGRESS_DELETED,
+                                id
+                        )
+                );
             } else {
                 throw new AppBusinessException(
-                        ProgressErrorCode.ProgressNotExist,
+                        ProgressErrorCode.PROGRESS_NOT_EXIST,
                         String.format("Progress %s does not exist", id)
                 );
             }
@@ -338,10 +361,22 @@ public class ProgressServiceImpl implements ProgressService {
     public void adminDeleteProgressByOwnerId(String ownerId, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isProgressExist(DAOQueryMode.QUERY_BY_OWNER_ID, ownerId)) {
+                ArrayList<Progress> progressList = progressRepository.findAllByOwnerId(ownerId);
                 progressRepository.deleteAllByOwnerId(ownerId);
+
+                for (Progress progress : progressList) {
+                    rabbitTemplate.convertAndSend(
+                            PROGRESS_FAN_OUT_EXCHANGE,
+                            "",
+                            RabbitMQMessageCreator.newInstance(
+                                    MessageType.PROGRESS_DELETED,
+                                    progress.getId()
+                            )
+                    );
+                }
             } else {
                 throw new AppBusinessException(
-                        ProgressErrorCode.ProgressNotExist,
+                        ProgressErrorCode.PROGRESS_NOT_EXIST,
                         String.format("User %s does not have any progress", ownerId)
                 );
             }
@@ -356,11 +391,23 @@ public class ProgressServiceImpl implements ProgressService {
     public void adminDeleteProgressByProjectId(String projectId, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isProgressExist(DAOQueryMode.QUERY_BY_PROJECT_ID, projectId)) {
+                ArrayList<Progress> progressList = progressRepository.findAllByProjectId(projectId);
                 progressRepository.deleteAllByProjectId(projectId);
+
+                for (Progress progress : progressList) {
+                    rabbitTemplate.convertAndSend(
+                            PROGRESS_FAN_OUT_EXCHANGE,
+                            "",
+                            RabbitMQMessageCreator.newInstance(
+                                    MessageType.PROGRESS_DELETED,
+                                    progress.getId()
+                            )
+                    );
+                }
             } else {
                 throw new AppBusinessException(
-                        ProgressErrorCode.ProgressNotExist,
-                        String.format("Project %s does not have any project", projectId)
+                        ProgressErrorCode.PROGRESS_NOT_EXIST,
+                        String.format("Project %s does not have any progress", projectId)
                 );
             }
         } else {
@@ -375,16 +422,28 @@ public class ProgressServiceImpl implements ProgressService {
         if (code.equals(ADMIN_CODE)) {
             if (isProgressExist(DAOQueryMode.QUERY_BY_OWNER_ID, ownerId)) {
                 if (isProgressExist(DAOQueryMode.QUERY_BY_PROJECT_ID, projectId)) {
+                    ArrayList<Progress> progressList = progressRepository.findAllByOwnerIdAndProjectId(ownerId, projectId);
                     progressRepository.deleteAllByOwnerIdAndProjectId(ownerId, projectId);
+
+                    for (Progress progress : progressList) {
+                        rabbitTemplate.convertAndSend(
+                                PROGRESS_FAN_OUT_EXCHANGE,
+                                "",
+                                RabbitMQMessageCreator.newInstance(
+                                        MessageType.PROGRESS_DELETED,
+                                        progress.getId()
+                                )
+                        );
+                    }
                 } else {
                     throw new AppBusinessException(
-                            ProgressErrorCode.ProgressNotExist,
-                            String.format("Project %s does not have any project", projectId)
+                            ProgressErrorCode.PROGRESS_NOT_EXIST,
+                            String.format("Project %s does not have any progress assigned to user %s", projectId, ownerId)
                     );
                 }
             } else {
                 throw new AppBusinessException(
-                        ProgressErrorCode.ProgressNotExist,
+                        ProgressErrorCode.PROGRESS_NOT_EXIST,
                         String.format("User %s does not have any progress", ownerId)
                 );
             }
@@ -400,9 +459,18 @@ public class ProgressServiceImpl implements ProgressService {
         if (code.equals(ADMIN_CODE)) {
             if (progressRepository.count() > 0) {
                 progressRepository.deleteAll();
+
+                rabbitTemplate.convertAndSend(
+                        PROGRESS_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.PROGRESS_DELETED,
+                                ADMIN_DELETE_ALL
+                        )
+                );
             } else {
                 throw new AppBusinessException(
-                        ProgressErrorCode.ProgressNotExist
+                        ProgressErrorCode.PROGRESS_NOT_EXIST
                 );
             }
         } else {

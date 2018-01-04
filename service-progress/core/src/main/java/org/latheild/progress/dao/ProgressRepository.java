@@ -8,11 +8,11 @@ import java.util.ArrayList;
 public interface ProgressRepository extends MongoRepository<Progress, String> {
     Progress findById(String id);
 
-    ArrayList<Progress> findAllByProjectIdOrderByIndexAsc(String projectId);
+    ArrayList<Progress> findAllByOwnerId(String ownerId);
 
     ArrayList<Progress> findAllByProjectId(String projectId);
 
-    ArrayList<Progress> findAllByOwnerId(String ownerId);
+    ArrayList<Progress> findAllByProjectIdOrderByIndexAsc(String projectId);
 
     ArrayList<Progress> findAllByOwnerIdAndProjectId(String ownerId, String projectId);
 
@@ -20,9 +20,9 @@ public interface ProgressRepository extends MongoRepository<Progress, String> {
 
     int countById(String id);
 
-    int countByProjectId(String projectId);
-
     int countByOwnerId(String ownerId);
+
+    int countByProjectId(String projectId);
 
     void deleteById(String id);
 

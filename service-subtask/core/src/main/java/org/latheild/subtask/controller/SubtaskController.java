@@ -85,7 +85,9 @@ public class SubtaskController {
             @RequestParam(value = "taskId", required = false) String taskId
     ) {
         try {
-            if (userId != null) {
+            if (userId != null && taskId != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, subtaskService.getSubtasksByUserIdAndTaskId(userId, taskId));
+            } else if (userId != null) {
                 return new BaseResponseBody(CommonErrorCode.SUCCESS, subtaskService.getSubtasksByUserId(userId));
             } else if (taskId != null) {
                 return new BaseResponseBody(CommonErrorCode.SUCCESS, subtaskService.getSubtasksByTaskId(taskId));
@@ -133,7 +135,9 @@ public class SubtaskController {
             @RequestParam(value = "code") String code
     ) {
         try {
-            if (userId != null) {
+            if (userId != null && taskId != null) {
+                subtaskService.adminDeleteAllSubtasksByUserIdAndTaskId(userId, taskId, code);
+            } else if (userId != null) {
                 subtaskService.adminDeleteAllSubtasksByUserId(userId, code);
             } else if (taskId != null) {
                 subtaskService.adminDeleteAllSubtasksByTaskId(taskId, code);

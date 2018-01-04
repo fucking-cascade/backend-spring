@@ -2,13 +2,19 @@ package org.latheild.subtask.service;
 
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
+import org.latheild.common.domain.Message;
 import org.latheild.subtask.api.constant.SubtaskErrorCode;
 import org.latheild.subtask.api.dto.SubtaskDTO;
+import org.latheild.subtask.client.TaskClient;
 import org.latheild.subtask.client.UserClient;
 import org.latheild.subtask.constant.DAOQueryMode;
 import org.latheild.subtask.dao.SubtaskRepository;
 import org.latheild.subtask.domain.Subtask;
+import org.latheild.subtask.utils.TutorialSubtaskCreator;
+import org.latheild.task.api.constant.TaskErrorCode;
+import org.latheild.task.api.dto.TaskDTO;
 import org.latheild.user.api.constant.UserErrorCode;
+import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
@@ -16,6 +22,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 
 import static org.latheild.apiutils.constant.Constants.ADMIN_CODE;
+import static org.latheild.apiutils.constant.Constants.ADMIN_DELETE_ALL;
 import static org.latheild.common.constant.RabbitMQQueue.SUBTASK_QUEUE;
 
 @Service
@@ -23,6 +30,9 @@ import static org.latheild.common.constant.RabbitMQQueue.SUBTASK_QUEUE;
 public class SubtaskServiceImpl implements SubtaskService {
     @Autowired
     UserClient userClient;
+
+    @Autowired
+    TaskClient taskClient;
 
     @Autowired
     SubtaskRepository subtaskRepository;
@@ -69,27 +79,60 @@ public class SubtaskServiceImpl implements SubtaskService {
         return subtask;
     }
 
+    private ArrayList<Subtask> convertFromSubtaskDTOsToSubtasks(ArrayList<SubtaskDTO> subtaskDTOs) {
+        ArrayList<Subtask> subtasks = new ArrayList<>();
+        for (SubtaskDTO subtaskDTO : subtaskDTOs) {
+            subtasks.add(convertFromSubtaskDTOToSubtask(subtaskDTO));
+        }
+        return subtasks;
+    }
+
+    @RabbitHandler
+    public void eventHandler(Message message) {
+        switch (message.getMessageType()) {
+            case TUTORIAL_PROGRESS_CREATED:
+                TaskDTO taskDTO = (TaskDTO) message.getMessageBody();
+
+                if (taskDTO.getIndex() == 0) {
+                    ArrayList<Subtask> subtasks = convertFromSubtaskDTOsToSubtasks(
+                            TutorialSubtaskCreator.setTutorialSubtasks(taskDTO.getOwnerId(), taskDTO.getProgressId())
+                    );
+                    for (Subtask subtask : subtasks) {
+                        subtaskRepository.save(subtask);
+                    }
+                }
+                break;
+            case TASK_DELETED:
+                String messageBody = (String) message.getMessageBody();
+                if (messageBody.equals(ADMIN_DELETE_ALL)) {
+                    if (subtaskRepository.count() > 0) {
+                        adminDeleteAllSubtasks(ADMIN_CODE);
+                    }
+                } else {
+                    if (isSubtaskCreated(DAOQueryMode.QUERY_BY_TASK_ID, messageBody)) {
+                        subtaskRepository.deleteAllByTaskId(messageBody);
+                    }
+                }
+                break;
+        }
+    }
+
     @Override
     public SubtaskDTO createSubtask(SubtaskDTO subtaskDTO) {
         if (userClient.checkUserExistence(subtaskDTO.getUserId())) {
-            /*if (taskClient.checkTaskExistance(subtaskDTO.getTaskId())) {
+            if (taskClient.checkTaskExistence(subtaskDTO.getTaskId())) {
                 Subtask subtask = convertFromSubtaskDTOToSubtask(subtaskDTO);
                 subtaskRepository.save(subtask);
-                subtaskDTO.setSubtaskId(subtask.getId());
-                return subtaskDTO;
+                return convertFromSubtaskToSubtaskDTO(subtask);
             } else {
                 throw new AppBusinessException(
-                        TaskErrorCode.TaskNotExist,
+                        TaskErrorCode.TASK_NOT_EXIST,
                         String.format("Task %s does not exist", subtaskDTO.getTaskId())
                 );
-            }*/
-            Subtask subtask = convertFromSubtaskDTOToSubtask(subtaskDTO);
-            subtaskRepository.save(subtask);
-            subtaskDTO.setSubtaskId(subtask.getId());
-            return subtaskDTO;
+            }
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist,
+                    UserErrorCode.USER_NOT_EXIST,
                     String.format("User %s does not exist", subtaskDTO.getUserId())
             );
         }
@@ -108,7 +151,7 @@ public class SubtaskServiceImpl implements SubtaskService {
             }
         } else {
             throw new AppBusinessException(
-                    SubtaskErrorCode.SubtaskNotExist,
+                    SubtaskErrorCode.SUBTASK_NOT_EXIST,
                     String.format("Subtask %s does not exist", subtaskDTO.getSubtaskId())
             );
         }
@@ -121,7 +164,7 @@ public class SubtaskServiceImpl implements SubtaskService {
             if (subtaskDTO.getUserId().equals(subtask.getUserId())) {
                 subtask.setContent(subtaskDTO.getContent());
                 subtaskRepository.save(subtask);
-                return subtaskDTO;
+                return convertFromSubtaskToSubtaskDTO(subtask);
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.UNAUTHORIZED
@@ -129,7 +172,7 @@ public class SubtaskServiceImpl implements SubtaskService {
             }
         } else {
             throw new AppBusinessException(
-                    SubtaskErrorCode.SubtaskNotExist,
+                    SubtaskErrorCode.SUBTASK_NOT_EXIST,
                     String.format("Subtask %s does not exist", subtaskDTO.getSubtaskId())
             );
         }
@@ -142,7 +185,7 @@ public class SubtaskServiceImpl implements SubtaskService {
             if (subtaskDTO.getUserId().equals(subtask.getUserId())) {
                 subtask.setTaskStatus(subtaskDTO.getTaskStatus());
                 subtaskRepository.save(subtask);
-                return subtaskDTO;
+                return convertFromSubtaskToSubtaskDTO(subtask);
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.UNAUTHORIZED
@@ -150,7 +193,7 @@ public class SubtaskServiceImpl implements SubtaskService {
             }
         } else {
             throw new AppBusinessException(
-                    SubtaskErrorCode.SubtaskNotExist,
+                    SubtaskErrorCode.SUBTASK_NOT_EXIST,
                     String.format("Subtask %s does not exist", subtaskDTO.getSubtaskId())
             );
         }
@@ -162,7 +205,7 @@ public class SubtaskServiceImpl implements SubtaskService {
             return convertFromSubtaskToSubtaskDTO(subtaskRepository.findById(id));
         } else {
             throw new AppBusinessException(
-                    SubtaskErrorCode.SubtaskNotExist,
+                    SubtaskErrorCode.SUBTASK_NOT_EXIST,
                     String.format("Subtask %s does not exist", id)
             );
         }
@@ -174,8 +217,8 @@ public class SubtaskServiceImpl implements SubtaskService {
             return convertFromSubtasksToSubtaskDTOs(subtaskRepository.findAllByUserId(userId));
         } else {
             throw new AppBusinessException(
-                    SubtaskErrorCode.SubtaskNotExist,
-                    String.format("No subtask has been assigned to user %s", userId)
+                    SubtaskErrorCode.SUBTASK_NOT_EXIST,
+                    String.format("No subtask is assigned to user %s", userId)
             );
         }
     }
@@ -186,8 +229,27 @@ public class SubtaskServiceImpl implements SubtaskService {
             return convertFromSubtasksToSubtaskDTOs(subtaskRepository.findAllByTaskId(taskId));
         } else {
             throw new AppBusinessException(
-                    SubtaskErrorCode.SubtaskNotExist,
-                    String.format("No subtask has been assigned to task %s", taskId)
+                    SubtaskErrorCode.SUBTASK_NOT_EXIST,
+                    String.format("No subtask is assigned to task %s", taskId)
+            );
+        }
+    }
+
+    @Override
+    public ArrayList<SubtaskDTO> getSubtasksByUserIdAndTaskId(String userId, String taskId) {
+        if (isSubtaskCreated(DAOQueryMode.QUERY_BY_USER_ID, userId)) {
+            if (isSubtaskCreated(DAOQueryMode.QUERY_BY_TASK_ID, taskId)) {
+                return convertFromSubtasksToSubtaskDTOs(subtaskRepository.findAllByUserIdAndTaskId(userId, taskId));
+            } else {
+                throw new AppBusinessException(
+                        SubtaskErrorCode.SUBTASK_NOT_EXIST,
+                        String.format("No subtask is assigned to user %s under task %s", userId, taskId)
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    SubtaskErrorCode.SUBTASK_NOT_EXIST,
+                    String.format("No subtask is assigned to user %s", userId)
             );
         }
     }
@@ -199,7 +261,7 @@ public class SubtaskServiceImpl implements SubtaskService {
                 return convertFromSubtasksToSubtaskDTOs(subtaskRepository.findAll());
             } else {
                 throw new AppBusinessException(
-                        SubtaskErrorCode.SubtaskNotExist
+                        SubtaskErrorCode.SUBTASK_NOT_EXIST
                 );
             }
         } else {
@@ -216,8 +278,8 @@ public class SubtaskServiceImpl implements SubtaskService {
                 subtaskRepository.deleteById(id);
             } else {
                 throw new AppBusinessException(
-                        SubtaskErrorCode.SubtaskNotExist,
-                        String.format("Subtask %s was not created", id)
+                        SubtaskErrorCode.SUBTASK_NOT_EXIST,
+                        String.format("Subtask %s does not exist", id)
                 );
             }
         } else {
@@ -234,8 +296,8 @@ public class SubtaskServiceImpl implements SubtaskService {
                 subtaskRepository.deleteAllByUserId(userId);
             } else {
                 throw new AppBusinessException(
-                        SubtaskErrorCode.SubtaskNotExist,
-                        String.format("No subtask has been assigned to user %s", userId)
+                        SubtaskErrorCode.SUBTASK_NOT_EXIST,
+                        String.format("No subtask is assigned to user %s", userId)
                 );
             }
         } else {
@@ -252,8 +314,33 @@ public class SubtaskServiceImpl implements SubtaskService {
                 subtaskRepository.deleteAllByTaskId(taskId);
             } else {
                 throw new AppBusinessException(
-                        SubtaskErrorCode.SubtaskNotExist,
-                        String.format("No subtask has been assigned to task %s", taskId)
+                        SubtaskErrorCode.SUBTASK_NOT_EXIST,
+                        String.format("No subtask is assigned to task %s", taskId)
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    CommonErrorCode.UNAUTHORIZED
+            );
+        }
+    }
+
+    @Override
+    public void adminDeleteAllSubtasksByUserIdAndTaskId(String userId, String taskId, String code) {
+        if (code.equals(ADMIN_CODE)) {
+            if (isSubtaskCreated(DAOQueryMode.QUERY_BY_USER_ID, userId)) {
+                if (isSubtaskCreated(DAOQueryMode.QUERY_BY_TASK_ID, taskId)) {
+                    subtaskRepository.deleteAllByUserIdAndTaskId(userId, taskId);
+                } else {
+                    throw new AppBusinessException(
+                            SubtaskErrorCode.SUBTASK_NOT_EXIST,
+                            String.format("No subtask is assigned to user %s under task %s", userId, taskId)
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        SubtaskErrorCode.SUBTASK_NOT_EXIST,
+                        String.format("No subtask is assigned to user %s", userId)
                 );
             }
         } else {
@@ -270,7 +357,7 @@ public class SubtaskServiceImpl implements SubtaskService {
                 subtaskRepository.deleteAll();
             } else {
                 throw new AppBusinessException(
-                        SubtaskErrorCode.SubtaskNotExist
+                        SubtaskErrorCode.SUBTASK_NOT_EXIST
                 );
             }
         } else {

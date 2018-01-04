@@ -6,8 +6,8 @@ public class TutorialProjectCreator {
     public static ProjectDTO setTutorialProject(String ownerId) {
         ProjectDTO projectDTO = new ProjectDTO();
         projectDTO.setOwnerId(ownerId);
-        projectDTO.setName("Tutorial Project V0.000000001");
-        projectDTO.setDescription("This is a tutorial project. Provided by Emoin LANYU of team Cascade.");
+        projectDTO.setName("Tutorial project v0.000000001");
+        projectDTO.setDescription("This is a tutorial project provided by Emoin LANYU of team cascade");
         return projectDTO;
     }
 }

@@ -8,7 +8,6 @@ import org.latheild.user.api.constant.UserErrorCode;
 import org.latheild.user.api.dto.RegisterDTO;
 import org.latheild.user.api.dto.ResetPasswordDTO;
 import org.latheild.user.api.dto.UserDTO;
-import org.latheild.user.client.UserInfoClient;
 import org.latheild.user.constant.DAOQueryMode;
 import org.latheild.user.dao.UserRepository;
 import org.latheild.user.domain.User;
@@ -26,9 +25,6 @@ import static org.latheild.common.constant.RabbitMQExchange.USER_FAN_OUT_EXCHANG
 public class UserServiceImpl implements UserService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
-
-    @Autowired
-    private UserInfoClient userInfoClient;
 
     @Autowired
     private UserRepository userRepository;
@@ -61,12 +57,17 @@ public class UserServiceImpl implements UserService {
         return userDTOs;
     }
 
+    private User convertFromRegisterDTOToUser(RegisterDTO registerDTO) {
+        User user = new User();
+        user.setPassword(registerDTO.getPassword());
+        user.setEmail(registerDTO.getEmail());
+        return user;
+    }
+
     @Override
     public UserDTO register(RegisterDTO registerDTO) {
         if (!isUserCreated(DAOQueryMode.QUERY_BY_EMAIL, registerDTO.getEmail())) {
-            User user = new User();
-            user.setEmail(registerDTO.getEmail());
-            user.setPassword(registerDTO.getPassword());
+            User user = convertFromRegisterDTOToUser(registerDTO);
             userRepository.save(user);
 
             registerDTO.setUserId(user.getId());
@@ -79,7 +80,7 @@ public class UserServiceImpl implements UserService {
             return convertFromUserToUserDTO(user);
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.EmailExist,
+                    UserErrorCode.EMAIL_EXIST,
                     String.format("Email %s has already been used", registerDTO.getEmail())
             );
         }
@@ -95,12 +96,12 @@ public class UserServiceImpl implements UserService {
                 return convertFromUserToUserDTO(user);
             } else {
                 throw new AppBusinessException(
-                        UserErrorCode.WrongPassword
+                        UserErrorCode.WRONG_PASSWORD
                 );
             }
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist,
+                    UserErrorCode.USER_NOT_EXIST,
                     String.format("User %s does not exist", resetPasswordDTO.getUserId())
             );
         }
@@ -115,7 +116,7 @@ public class UserServiceImpl implements UserService {
             user = userRepository.findById(registerDTO.getUserId());
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist,
+                    UserErrorCode.USER_NOT_EXIST,
                     String.format("User %s (userId: %s) does not exist", registerDTO.getEmail(), registerDTO.getUserId())
             );
         }
@@ -134,7 +135,7 @@ public class UserServiceImpl implements UserService {
             return convertFromUserToUserDTO(userRepository.findByEmail(email));
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist,
+                    UserErrorCode.USER_NOT_EXIST,
                     String.format("User %s does not exist", email)
             );
         }
@@ -146,7 +147,7 @@ public class UserServiceImpl implements UserService {
             return convertFromUserToUserDTO(userRepository.findById(userId));
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist,
+                    UserErrorCode.USER_NOT_EXIST,
                     String.format("User %s does not exist", userId)
             );
         }
@@ -158,7 +159,7 @@ public class UserServiceImpl implements UserService {
             return convertFromUsersToUserDTOs(userRepository.findAll());
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist
+                    UserErrorCode.USER_NOT_EXIST
             );
         }
     }
@@ -177,7 +178,7 @@ public class UserServiceImpl implements UserService {
                 );
             } else {
                 throw new AppBusinessException(
-                        UserErrorCode.UserNotExist,
+                        UserErrorCode.USER_NOT_EXIST,
                         String.format("User %s does not exist", email)
                 );
             }
@@ -201,7 +202,7 @@ public class UserServiceImpl implements UserService {
                 );
             } else {
                 throw new AppBusinessException(
-                        UserErrorCode.UserNotExist,
+                        UserErrorCode.USER_NOT_EXIST,
                         String.format("User %s does not exist", userId)
                 );
             }
@@ -225,7 +226,7 @@ public class UserServiceImpl implements UserService {
                 );
             } else {
                 throw new AppBusinessException(
-                        UserErrorCode.UserNotExist
+                        UserErrorCode.USER_NOT_EXIST
                 );
             }
         } else {

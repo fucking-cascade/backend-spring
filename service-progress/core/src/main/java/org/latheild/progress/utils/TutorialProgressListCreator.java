@@ -15,13 +15,13 @@ public class TutorialProgressListCreator {
             temp.setOwnerId(ownerId);
             switch (i) {
                 case 0:
-                    temp.setName("Tutorial Progress Prepare");
+                    temp.setName("Tutorial progress prepare");
                     break;
                 case 1:
-                    temp.setName("Tutorial Progress Ongoing");
+                    temp.setName("Tutorial progress ongoing");
                     break;
                 case 2:
-                    temp.setName("Tutorial Progress Done");
+                    temp.setName("Tutorial progress done");
                     break;
             }
             progressDTOs.add(temp);

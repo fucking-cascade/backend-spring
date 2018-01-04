@@ -3,8 +3,8 @@ package org.latheild.userinfo.api.constant;
 import org.latheild.apiutils.api.ErrorCode;
 
 public enum UserInfoErrorCode implements ErrorCode {
-    UserInfoNotExist(404, "User info does not exist"),
-    UserInfoExist(409, "User info already exists");
+    USER_INFO_NOT_EXIST(404, "User info does not exist"),
+    USER_INFO_EXIST(409, "User info already exists");
 
     private int status;
     private String message;

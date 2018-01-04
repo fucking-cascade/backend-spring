@@ -7,9 +7,9 @@ public interface ProgressURL {
 
     String DELETE_PROGRESS_BY_ID_URL = "/delete";
 
-    String UPDATE_PROGRESS_NAME_URL = "/update";
+    String UPDATE_PROGRESS_NAME_URL = "/update/name";
 
-    String CHANGE_PROGRESS_ORDER_URL = "/order";
+    String CHANGE_PROGRESS_ORDER_URL = "/update/order";
 
     String GET_PROGRESS_BY_ID_URL = "/retrieve";
 

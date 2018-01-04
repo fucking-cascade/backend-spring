@@ -1,4 +1,4 @@
-package org.latheild.comment.context;
+package org.latheild.task.context;
 
 import org.latheild.common.spring.config.BaseConfiguration;
 import org.latheild.common.spring.config.ServiceClientConfiguration;
@@ -15,8 +15,8 @@ import org.springframework.context.annotation.Import;
         FanoutRabbitMQConfig.class
 })
 @Configuration
-public class CommentApplication {
+public class TaskApplication {
     public static void main(String[] args) {
-        SpringApplication.run(CommentApplication.class, args);
+        SpringApplication.run(TaskApplication.class, args);
     }
 }

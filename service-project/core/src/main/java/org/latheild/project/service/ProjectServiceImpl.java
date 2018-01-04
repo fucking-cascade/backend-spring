@@ -101,18 +101,14 @@ public class ProjectServiceImpl implements ProjectService {
             case USER_DELETED:
                 String messageBody = (String) message.getMessageBody();
                 if (messageBody.equals(ADMIN_DELETE_ALL)) {
-                    adminDeleteAllProjects(ADMIN_CODE);
+                    if (projectRepository.count() > 0) {
+                        adminDeleteAllProjects(ADMIN_CODE);
+                    }
                 } else {
                     if (isProjectExist(DAOQueryMode.QUERY_BY_USER_ID, messageBody)) {
                         projectRepository.deleteAllByOwnerId(messageBody);
                     }
                 }
-
-                rabbitTemplate.convertAndSend(
-                        PROJECT_FAN_OUT_EXCHANGE,
-                        "",
-                        message
-                );
                 break;
         }
     }
@@ -127,11 +123,10 @@ public class ProjectServiceImpl implements ProjectService {
         if (userClient.checkUserExistence(projectDTO.getOwnerId())) {
             Project project = convertFromProjectDTOToProject(projectDTO);
             projectRepository.save(project);
-            projectDTO.setProjectId(project.getId());
-            return projectDTO;
+            return convertFromProjectToProjectDTO(project);
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.UserNotExist,
+                    UserErrorCode.USER_NOT_EXIST,
                     String.format("User %s does not exist", projectDTO.getOwnerId())
             );
         }
@@ -145,7 +140,7 @@ public class ProjectServiceImpl implements ProjectService {
                 project.setDescription(projectDTO.getDescription());
                 project.setName(projectDTO.getName());
                 projectRepository.save(project);
-                return projectDTO;
+                return convertFromProjectToProjectDTO(project);
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.UNAUTHORIZED
@@ -153,7 +148,7 @@ public class ProjectServiceImpl implements ProjectService {
             }
         } else {
             throw new AppBusinessException(
-                    ProjectErrorCode.ProjectNotExist,
+                    ProjectErrorCode.PROJECT_NOT_EXIST,
                     String.format("Project %s does not exist", projectDTO.getProjectId())
             );
         }
@@ -181,19 +176,19 @@ public class ProjectServiceImpl implements ProjectService {
                     }
                 } else {
                     throw new AppBusinessException(
-                            UserErrorCode.UserNotExist,
+                            UserErrorCode.USER_NOT_EXIST,
                             String.format("User %s does not exist", changeOwnerDTO.getNewOwnerId())
                     );
                 }
             } else {
                 throw new AppBusinessException(
-                        UserErrorCode.UserNotExist,
+                        UserErrorCode.USER_NOT_EXIST,
                         String.format("User %s does not exist", changeOwnerDTO.getOldOwnerId())
                 );
             }
         } else {
             throw new AppBusinessException(
-                    ProjectErrorCode.ProjectNotExist,
+                    ProjectErrorCode.PROJECT_NOT_EXIST,
                     String.format("Project %s does not exist", changeOwnerDTO.getProjectId())
             );
         }
@@ -205,6 +200,15 @@ public class ProjectServiceImpl implements ProjectService {
             Project project = projectRepository.findById(projectDTO.getProjectId());
             if (project.getOwnerId().equals(projectDTO.getOwnerId())) {
                 projectRepository.deleteById(projectDTO.getProjectId());
+
+                rabbitTemplate.convertAndSend(
+                        PROJECT_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.PROJECT_DELETED,
+                                projectDTO.getProjectId()
+                        )
+                );
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.UNAUTHORIZED
@@ -212,7 +216,7 @@ public class ProjectServiceImpl implements ProjectService {
             }
         } else {
             throw new AppBusinessException(
-                    ProjectErrorCode.ProjectNotExist,
+                    ProjectErrorCode.PROJECT_NOT_EXIST,
                     String.format("Project %s does not exist", projectDTO.getProjectId())
             );
         }
@@ -224,7 +228,7 @@ public class ProjectServiceImpl implements ProjectService {
             return convertFromProjectToProjectDTO(projectRepository.findById(id));
         } else {
             throw new AppBusinessException(
-                    ProjectErrorCode.ProjectNotExist,
+                    ProjectErrorCode.PROJECT_NOT_EXIST,
                     String.format("Project %s does not exist", id)
             );
         }
@@ -236,7 +240,7 @@ public class ProjectServiceImpl implements ProjectService {
             return convertFromProjectsToProjectDTOs(projectRepository.findAllByOwnerId(ownerId));
         } else {
             throw new AppBusinessException(
-                    ProjectErrorCode.ProjectNotExist,
+                    ProjectErrorCode.PROJECT_NOT_EXIST,
                     String.format("Project %s does not exist", ownerId)
             );
         }
@@ -249,7 +253,7 @@ public class ProjectServiceImpl implements ProjectService {
                 return convertFromProjectsToProjectDTOs(projectRepository.findAll());
             } else {
                 throw new AppBusinessException(
-                        ProjectErrorCode.ProjectNotExist
+                        ProjectErrorCode.PROJECT_NOT_EXIST
                 );
             }
         } else {
@@ -264,9 +268,18 @@ public class ProjectServiceImpl implements ProjectService {
         if (code.equals(ADMIN_CODE)) {
             if (isProjectExist(DAOQueryMode.QUERY_BY_ID, id)) {
                 projectRepository.deleteById(id);
+
+                rabbitTemplate.convertAndSend(
+                        PROJECT_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.PROJECT_DELETED,
+                                id
+                        )
+                );
             } else {
                 throw new AppBusinessException(
-                        ProjectErrorCode.ProjectNotExist,
+                        ProjectErrorCode.PROJECT_NOT_EXIST,
                         String.format("Project %s does not exist", id)
                 );
             }
@@ -281,10 +294,22 @@ public class ProjectServiceImpl implements ProjectService {
     public void adminDeleteProjectsByOwnerId(String ownerId, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isProjectExist(DAOQueryMode.QUERY_BY_USER_ID, ownerId)) {
+                ArrayList<Project> projects = projectRepository.findAllByOwnerId(ownerId);
                 projectRepository.deleteAllByOwnerId(ownerId);
+
+                for (Project project : projects) {
+                    rabbitTemplate.convertAndSend(
+                            PROJECT_FAN_OUT_EXCHANGE,
+                            "",
+                            RabbitMQMessageCreator.newInstance(
+                                    MessageType.PROJECT_DELETED,
+                                    project.getId()
+                            )
+                    );
+                }
             } else {
                 throw new AppBusinessException(
-                        ProjectErrorCode.ProjectNotExist,
+                        ProjectErrorCode.PROJECT_NOT_EXIST,
                         String.format("Project %s does not exist", ownerId)
                 );
             }
@@ -300,9 +325,18 @@ public class ProjectServiceImpl implements ProjectService {
         if (code.equals(ADMIN_CODE)) {
             if (projectRepository.count() > 0) {
                 projectRepository.deleteAll();
+
+                rabbitTemplate.convertAndSend(
+                        PROJECT_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.PROJECT_DELETED,
+                                ADMIN_DELETE_ALL
+                        )
+                );
             } else {
                 throw new AppBusinessException(
-                        ProjectErrorCode.ProjectNotExist
+                        ProjectErrorCode.PROJECT_NOT_EXIST
                 );
             }
         } else {

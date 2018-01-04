@@ -84,26 +84,18 @@ public class UserInfoServiceImpl implements UserInfoService {
                 if (!isUserInfoCreated(DAOQueryMode.QUERY_BY_USER_ID, registerDTO.getUserId())) {
                     UserInfo userInfo = convertFromRegisterDTOToUserInfoDTO(registerDTO);
                     userInfoRepository.save(userInfo);
-                } else {
-                    throw new AppBusinessException(
-                            UserInfoErrorCode.UserInfoExist,
-                            String.format("User info for user %s has already been created", registerDTO.getUserId())
-                    );
                 }
                 break;
             case USER_DELETED:
                 String messageBody = (String) message.getMessageBody();
                 if (messageBody.equals(ADMIN_DELETE_ALL)) {
-                    deleteAllUserInfos(ADMIN_CODE);
+                    if (userInfoRepository.count() > 0) {
+                        deleteAllUserInfos(ADMIN_CODE);
+                    }
                 } else {
                     if (isUserInfoCreated(DAOQueryMode.QUERY_BY_USER_ID, messageBody)) {
                         userInfoRepository.deleteByUserId(messageBody);
-                    }/* else {
-                        throw new AppBusinessException(
-                                UserInfoErrorCode.UserInfoNotExist,
-                                String.format("User info for %s was not created", messageBody)
-                        );
-                    }*/
+                    }
                 }
                 break;
         }
@@ -118,7 +110,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             return userInfoDTO;
         } else {
             throw new AppBusinessException(
-                    UserInfoErrorCode.UserInfoExist,
+                    UserInfoErrorCode.USER_INFO_EXIST,
                     String.format("User info for user %s has already been created", registerDTO.getUserId())
             );
         }
@@ -139,8 +131,8 @@ public class UserInfoServiceImpl implements UserInfoService {
             return userInfoDTO;
         } else {
             throw new AppBusinessException(
-                    UserInfoErrorCode.UserInfoNotExist,
-                    String.format("User info for user %s was not created", userInfoDTO.getUserId())
+                    UserInfoErrorCode.USER_INFO_NOT_EXIST,
+                    String.format("User info for user %s does not exist", userInfoDTO.getUserId())
             );
         }
     }
@@ -151,8 +143,8 @@ public class UserInfoServiceImpl implements UserInfoService {
             return convertFromUserInfoToUserInfoDTO(userInfoRepository.findByUserId(userId));
         } else {
             throw new AppBusinessException(
-                    UserInfoErrorCode.UserInfoNotExist,
-                    String.format("User info for user %s was not created", userId)
+                    UserInfoErrorCode.USER_INFO_NOT_EXIST,
+                    String.format("User info for user %s does not exist", userId)
             );
         }
     }
@@ -163,8 +155,8 @@ public class UserInfoServiceImpl implements UserInfoService {
             return convertFromUserInfosToUserInfoDTOs(userInfoRepository.findAllByName(name));
         } else {
             throw new AppBusinessException(
-                    UserInfoErrorCode.UserInfoNotExist,
-                    String.format("User info with name %s was not created", name)
+                    UserInfoErrorCode.USER_INFO_NOT_EXIST,
+                    String.format("User info with name %s does not exist", name)
             );
         }
     }
@@ -175,7 +167,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             return convertFromUserInfosToUserInfoDTOs(userInfoRepository.findAll());
         } else {
             throw new AppBusinessException(
-                    UserInfoErrorCode.UserInfoNotExist
+                    UserInfoErrorCode.USER_INFO_NOT_EXIST
             );
         }
     }
@@ -207,7 +199,7 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfoRepository.deleteAll();
             } else {
                 throw new AppBusinessException(
-                        UserInfoErrorCode.UserInfoNotExist
+                        UserInfoErrorCode.USER_INFO_NOT_EXIST
                 );
             }
         } else {
@@ -224,8 +216,8 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfoRepository.deleteByUserId(userId);
             } else {
                 throw new AppBusinessException(
-                        UserInfoErrorCode.UserInfoNotExist,
-                        String.format("User info for %s was not created", userId)
+                        UserInfoErrorCode.USER_INFO_NOT_EXIST,
+                        String.format("User info for %s does not exist", userId)
                 );
             }
         } else {

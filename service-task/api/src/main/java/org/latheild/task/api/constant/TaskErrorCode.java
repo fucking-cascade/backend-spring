@@ -3,7 +3,7 @@ package org.latheild.task.api.constant;
 import org.latheild.apiutils.api.ErrorCode;
 
 public enum TaskErrorCode implements ErrorCode {
-    TaskNotExist(404, "Task does not exist");
+    TASK_NOT_EXIST(404, "Task does not exist");
 
     private int status;
     private String message;

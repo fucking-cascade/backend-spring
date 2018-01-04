@@ -1,15 +1,10 @@
-package org.latheild.task.domain;
+package org.latheild.task.api.dto;
 
 import org.latheild.common.api.CommonPriority;
 import org.latheild.common.api.CommonTaskStatus;
-import org.springframework.data.annotation.Id;
 
-import javax.validation.constraints.NotNull;
-
-public class Task {
-    @Id
-    @NotNull
-    private String id;
+public class TaskDTO {
+    private String taskId;
 
     private String ownerId;
 
@@ -25,12 +20,12 @@ public class Task {
 
     private int index;
 
-    public String getId() {
-        return id;
+    public String getTaskId() {
+        return taskId;
     }
 
-    public void setId(String id) {
-        this.id = id;
+    public void setTaskId(String taskId) {
+        this.taskId = taskId;
     }
 
     public String getOwnerId() {

@@ -36,46 +36,61 @@ public class FanoutRabbitMQConfig {
     }
 
     @Bean
-    public FanoutExchange userFanoutExchange() {
+    public Queue CommentReceiverQueue() {
+        return new Queue(COMMENT_QUEUE);
+    }
+
+    @Bean
+    public FanoutExchange UserFanoutExchange() {
         return new FanoutExchange(USER_FAN_OUT_EXCHANGE);
     }
 
     @Bean
-    public FanoutExchange projectFanoutExchange() {
+    public FanoutExchange ProjectFanoutExchange() {
         return new FanoutExchange(PROJECT_FAN_OUT_EXCHANGE);
     }
 
     @Bean
-    public FanoutExchange progressFanoutExchange() {
+    public FanoutExchange ProgressFanoutExchange() {
         return new FanoutExchange(PROGRESS_FAN_OUT_EXCHANGE);
     }
 
-    @Bean FanoutExchange taskFanoutExchange() {
+    @Bean FanoutExchange TaskFanoutExchange() {
         return new FanoutExchange(TASK_FAN_OUT_EXCHANGE);
     }
 
     @Bean
-    public Binding bindingUserExchangeUserInfo(Queue UserInfoReceiverQueue, FanoutExchange userFanoutExchange) {
-        return BindingBuilder.bind(UserInfoReceiverQueue).to(userFanoutExchange);
+    public Binding bindingUserExchangeUserInfo(Queue UserInfoReceiverQueue, FanoutExchange UserFanoutExchange) {
+        return BindingBuilder.bind(UserInfoReceiverQueue).to(UserFanoutExchange);
     }
 
     @Bean
-    public Binding bindingUserExchangeProject(Queue ProjectReceiverQueue, FanoutExchange userFanoutExchange) {
-        return BindingBuilder.bind(ProjectReceiverQueue).to(userFanoutExchange);
+    public Binding bindingUserExchangeProject(Queue ProjectReceiverQueue, FanoutExchange UserFanoutExchange) {
+        return BindingBuilder.bind(ProjectReceiverQueue).to(UserFanoutExchange);
     }
 
     @Bean
-    public Binding bindingProjectExchangeProgress(Queue ProgressReceiverQueue, FanoutExchange projectFanoutExchange) {
-        return BindingBuilder.bind(ProgressReceiverQueue).to(projectFanoutExchange);
+    public Binding bindingUserExchangeComment(Queue CommentReceiverQueue, FanoutExchange UserFanoutExchange) {
+        return BindingBuilder.bind(CommentReceiverQueue).to(UserFanoutExchange);
     }
 
     @Bean
-    public Binding bindingProgressExchangeTask(Queue TaskReceiverQueue, FanoutExchange progressFanoutExchange) {
-        return BindingBuilder.bind(TaskReceiverQueue).to(progressFanoutExchange);
+    public Binding bindingProjectExchangeProgress(Queue ProgressReceiverQueue, FanoutExchange ProjectFanoutExchange) {
+        return BindingBuilder.bind(ProgressReceiverQueue).to(ProjectFanoutExchange);
     }
 
     @Bean
-    public Binding bindingTaskExchangeSubtask(Queue SubtaskReceiverQueue, FanoutExchange taskFanoutExchange) {
-        return BindingBuilder.bind(SubtaskReceiverQueue).to(taskFanoutExchange);
+    public Binding bindingProgressExchangeTask(Queue TaskReceiverQueue, FanoutExchange ProgressFanoutExchange) {
+        return BindingBuilder.bind(TaskReceiverQueue).to(ProgressFanoutExchange);
+    }
+
+    @Bean
+    public Binding bindingTaskExchangeSubtask(Queue SubtaskReceiverQueue, FanoutExchange TaskFanoutExchange) {
+        return BindingBuilder.bind(SubtaskReceiverQueue).to(TaskFanoutExchange);
+    }
+
+    @Bean
+    public Binding bindingTaskExchangeComment(Queue CommentReceiverQueue, FanoutExchange TaskFanoutExchange) {
+        return BindingBuilder.bind(CommentReceiverQueue).to(TaskFanoutExchange);
     }
 }
