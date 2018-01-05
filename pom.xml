@@ -26,6 +26,7 @@
         <module>service-schedule</module>
         <module>service-comment</module>
         <module>service-file</module>
+        <module>service-relation</module>
     </modules>
 
     <properties>

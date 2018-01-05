@@ -110,6 +110,8 @@ public class ProjectServiceImpl implements ProjectService {
                     }
                 }
                 break;
+            default:
+                System.out.println(message.toString());
         }
     }
 

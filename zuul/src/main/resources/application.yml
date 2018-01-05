@@ -25,3 +25,5 @@ zuul:
     progress-service: /progress/**
     task-service: /task/**
     subtask-service: /subtask/**
+    schedule-service: /schedule/**
+    file-service: /file/**

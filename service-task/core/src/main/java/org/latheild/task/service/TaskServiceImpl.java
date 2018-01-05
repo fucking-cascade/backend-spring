@@ -156,6 +156,8 @@ public class TaskServiceImpl implements TaskService {
                     }
                 }
                 break;
+            default:
+                System.out.println(message.toString());
         }
     }
 

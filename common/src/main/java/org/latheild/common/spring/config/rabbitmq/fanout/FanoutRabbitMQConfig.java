@@ -51,6 +51,11 @@ public class FanoutRabbitMQConfig {
     }
 
     @Bean
+    public Queue RelationReceiverQueue() {
+        return new Queue(RELATION_QUEUE);
+    }
+
+    @Bean
     public FanoutExchange UserFanoutExchange() {
         return new FanoutExchange(USER_FAN_OUT_EXCHANGE);
     }
@@ -65,8 +70,19 @@ public class FanoutRabbitMQConfig {
         return new FanoutExchange(PROGRESS_FAN_OUT_EXCHANGE);
     }
 
-    @Bean FanoutExchange TaskFanoutExchange() {
+    @Bean
+    public FanoutExchange TaskFanoutExchange() {
         return new FanoutExchange(TASK_FAN_OUT_EXCHANGE);
+    }
+
+    @Bean
+    public FanoutExchange ScheduleFanoutExchange() {
+        return new FanoutExchange(SCHEDULE_FAN_OUT_EXCHANGE);
+    }
+
+    @Bean
+    public FanoutExchange FileFanoutExchange() {
+        return new FanoutExchange(FILE_FAN_OUT_EXCHANGE);
     }
 
     @Bean
@@ -95,6 +111,11 @@ public class FanoutRabbitMQConfig {
     }
 
     @Bean
+    public Binding bindingUserExchangeRelation(Queue RelationReceiverQueue, FanoutExchange UserFanoutExchange) {
+        return BindingBuilder.bind(RelationReceiverQueue).to(UserFanoutExchange);
+    }
+
+    @Bean
     public Binding bindingProjectExchangeProgress(Queue ProgressReceiverQueue, FanoutExchange ProjectFanoutExchange) {
         return BindingBuilder.bind(ProgressReceiverQueue).to(ProjectFanoutExchange);
     }
@@ -110,6 +131,11 @@ public class FanoutRabbitMQConfig {
     }
 
     @Bean
+    public Binding bindingProjectExchangeRelation(Queue RelationReceiverQueue, FanoutExchange ProjectFanoutExchange) {
+        return BindingBuilder.bind(RelationReceiverQueue).to(ProjectFanoutExchange);
+    }
+
+    @Bean
     public Binding bindingProgressExchangeTask(Queue TaskReceiverQueue, FanoutExchange ProgressFanoutExchange) {
         return BindingBuilder.bind(TaskReceiverQueue).to(ProgressFanoutExchange);
     }
@@ -122,5 +148,20 @@ public class FanoutRabbitMQConfig {
     @Bean
     public Binding bindingTaskExchangeComment(Queue CommentReceiverQueue, FanoutExchange TaskFanoutExchange) {
         return BindingBuilder.bind(CommentReceiverQueue).to(TaskFanoutExchange);
+    }
+
+    @Bean
+    public Binding bindingTaskExchangeRelation(Queue RelationReceiverQueue, FanoutExchange TaskFanoutExchange) {
+        return BindingBuilder.bind(RelationReceiverQueue).to(TaskFanoutExchange);
+    }
+
+    @Bean
+    public Binding bindingScheduleExchangeRelation(Queue RelationReceiverQueue, FanoutExchange ScheduleFanoutExchange) {
+        return BindingBuilder.bind(RelationReceiverQueue).to(ScheduleFanoutExchange);
+    }
+
+    @Bean
+    public Binding bindingFileExchangeRelation(Queue RelationReceiverQueue, FanoutExchange FileFanoutExchange) {
+        return BindingBuilder.bind(RelationReceiverQueue).to(FileFanoutExchange);
     }
 }

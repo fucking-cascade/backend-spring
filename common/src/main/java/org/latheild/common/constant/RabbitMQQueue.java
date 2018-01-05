@@ -16,4 +16,6 @@ public interface RabbitMQQueue {
     String SCHEDULE_QUEUE = "ScheduleQueue";
 
     String FILE_QUEUE = "FileQueue";
+
+    String RELATION_QUEUE = "RelationQueue";
 }

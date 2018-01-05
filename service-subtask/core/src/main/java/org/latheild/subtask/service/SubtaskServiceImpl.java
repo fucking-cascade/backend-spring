@@ -112,6 +112,8 @@ public class SubtaskServiceImpl implements SubtaskService {
                     }
                 }
                 break;
+            default:
+                System.out.println(message.toString());
         }
     }
 

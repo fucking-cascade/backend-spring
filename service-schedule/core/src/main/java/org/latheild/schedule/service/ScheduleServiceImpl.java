@@ -2,6 +2,8 @@ package org.latheild.schedule.service;
 
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
+import org.latheild.common.api.RabbitMQMessageCreator;
+import org.latheild.common.constant.MessageType;
 import org.latheild.common.domain.Message;
 import org.latheild.project.api.constant.ProjectErrorCode;
 import org.latheild.schedule.api.constant.ScheduleErrorCode;
@@ -14,6 +16,7 @@ import org.latheild.schedule.domain.Schedule;
 import org.latheild.user.api.constant.UserErrorCode;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +24,15 @@ import java.util.ArrayList;
 
 import static org.latheild.apiutils.constant.Constants.ADMIN_CODE;
 import static org.latheild.apiutils.constant.Constants.ADMIN_DELETE_ALL;
+import static org.latheild.common.constant.RabbitMQExchange.SCHEDULE_FAN_OUT_EXCHANGE;
 import static org.latheild.common.constant.RabbitMQQueue.SCHEDULE_QUEUE;
 
 @Service
 @RabbitListener(queues = SCHEDULE_QUEUE)
 public class ScheduleServiceImpl implements ScheduleService {
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
     @Autowired
     UserClient userClient;
 
@@ -165,6 +172,15 @@ public class ScheduleServiceImpl implements ScheduleService {
             Schedule schedule = scheduleRepository.findById(scheduleDTO.getScheduleId());
             if (schedule.getOwnerId().equals(scheduleDTO.getOwnerId())) {
                 scheduleRepository.deleteById(scheduleDTO.getScheduleId());
+
+                rabbitTemplate.convertAndSend(
+                        SCHEDULE_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.SCHEDULE_DELETED,
+                                schedule.getId()
+                        )
+                );
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.UNAUTHORIZED
@@ -255,6 +271,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (code.equals(ADMIN_CODE)) {
             if (isScheduleExist(DAOQueryMode.QUERY_BY_ID, id)) {
                 scheduleRepository.deleteById(id);
+
+                rabbitTemplate.convertAndSend(
+                        SCHEDULE_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.SCHEDULE_DELETED,
+                                id
+                        )
+                );
             } else {
                 throw new AppBusinessException(
                         ScheduleErrorCode.SCHEDULE_NOT_EXIST,
@@ -272,7 +297,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void adminDeleteSchedulesByOwnerId(String ownerId, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isScheduleExist(DAOQueryMode.QUERY_BY_OWNER_ID, ownerId)) {
+                ArrayList<Schedule> schedules = scheduleRepository.findAllByOwnerId(ownerId);
                 scheduleRepository.deleteAllByOwnerId(ownerId);
+
+                for (Schedule schedule : schedules) {
+                    rabbitTemplate.convertAndSend(
+                            SCHEDULE_FAN_OUT_EXCHANGE,
+                            "",
+                            RabbitMQMessageCreator.newInstance(
+                                    MessageType.SCHEDULE_DELETED,
+                                    schedule.getId()
+                            )
+                    );
+                }
             } else {
                 throw new AppBusinessException(
                         ScheduleErrorCode.SCHEDULE_NOT_EXIST,
@@ -290,7 +327,19 @@ public class ScheduleServiceImpl implements ScheduleService {
     public void adminDeleteSchedulesByProjectId(String projectId, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isScheduleExist(DAOQueryMode.QUERY_BY_PROJECT_ID, projectId)) {
+                ArrayList<Schedule> schedules = scheduleRepository.findAllByProjectId(projectId);
                 scheduleRepository.deleteAllByProjectId(projectId);
+
+                for (Schedule schedule : schedules) {
+                    rabbitTemplate.convertAndSend(
+                            SCHEDULE_FAN_OUT_EXCHANGE,
+                            "",
+                            RabbitMQMessageCreator.newInstance(
+                                    MessageType.SCHEDULE_DELETED,
+                                    schedule.getId()
+                            )
+                    );
+                }
             } else {
                 throw new AppBusinessException(
                         ScheduleErrorCode.SCHEDULE_NOT_EXIST,
@@ -309,7 +358,19 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (code.equals(ADMIN_CODE)) {
             if (isScheduleExist(DAOQueryMode.QUERY_BY_OWNER_ID, ownerId)) {
                 if (isScheduleExist(DAOQueryMode.QUERY_BY_PROJECT_ID, projectId)) {
+                    ArrayList<Schedule> schedules = scheduleRepository.findAllByOwnerIdAndProjectId(ownerId, projectId);
                     scheduleRepository.deleteAllByOwnerIdAndProjectId(ownerId, projectId);
+
+                    for (Schedule schedule : schedules) {
+                        rabbitTemplate.convertAndSend(
+                                SCHEDULE_FAN_OUT_EXCHANGE,
+                                "",
+                                RabbitMQMessageCreator.newInstance(
+                                        MessageType.SCHEDULE_DELETED,
+                                        schedule.getId()
+                                )
+                        );
+                    }
                 } else {
                     throw new AppBusinessException(
                             UserErrorCode.USER_NOT_EXIST,
@@ -334,6 +395,15 @@ public class ScheduleServiceImpl implements ScheduleService {
         if (code.equals(ADMIN_CODE)) {
             if (scheduleRepository.count() > 0) {
                 scheduleRepository.deleteAll();
+
+                rabbitTemplate.convertAndSend(
+                        SCHEDULE_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.SCHEDULE_DELETED,
+                                ADMIN_DELETE_ALL
+                        )
+                );
             } else {
                 throw new AppBusinessException(
                         ScheduleErrorCode.SCHEDULE_NOT_EXIST

@@ -2,6 +2,8 @@ package org.latheild.file.service;
 
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
+import org.latheild.common.api.RabbitMQMessageCreator;
+import org.latheild.common.constant.MessageType;
 import org.latheild.common.domain.Message;
 import org.latheild.file.api.constant.FileErrorCode;
 import org.latheild.file.api.dto.FileDTO;
@@ -14,6 +16,7 @@ import org.latheild.project.api.constant.ProjectErrorCode;
 import org.latheild.user.api.constant.UserErrorCode;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
+import org.springframework.amqp.rabbit.core.RabbitTemplate;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
@@ -21,11 +24,15 @@ import java.util.ArrayList;
 
 import static org.latheild.apiutils.constant.Constants.ADMIN_CODE;
 import static org.latheild.apiutils.constant.Constants.ADMIN_DELETE_ALL;
+import static org.latheild.common.constant.RabbitMQExchange.FILE_FAN_OUT_EXCHANGE;
 import static org.latheild.common.constant.RabbitMQQueue.FILE_QUEUE;
 
 @Service
 @RabbitListener(queues = FILE_QUEUE)
 public class FileServiceImpl implements FileService {
+    @Autowired
+    RabbitTemplate rabbitTemplate;
+
     @Autowired
     UserClient userClient;
 
@@ -160,6 +167,15 @@ public class FileServiceImpl implements FileService {
             File file = fileRepository.findById(fileDTO.getFileId());
             if (file.getOwnerId().equals(fileDTO.getOwnerId())) {
                 fileRepository.deleteById(file.getId());
+
+                rabbitTemplate.convertAndSend(
+                        FILE_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.FILE_DELETED,
+                                file.getId()
+                        )
+                );
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.UNAUTHORIZED
@@ -250,6 +266,15 @@ public class FileServiceImpl implements FileService {
         if (code.equals(ADMIN_CODE)) {
             if (isFileExist(DAOQueryMode.QUERY_BY_ID, id)) {
                 fileRepository.deleteById(id);
+
+                rabbitTemplate.convertAndSend(
+                        FILE_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.FILE_DELETED,
+                                id
+                        )
+                );
             } else {
                 throw new AppBusinessException(
                         FileErrorCode.FILE_NOT_EXIST,
@@ -267,7 +292,19 @@ public class FileServiceImpl implements FileService {
     public void adminDeleteFilesByOwnerId(String ownerId, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isFileExist(DAOQueryMode.QUERY_BY_OWNER_ID, ownerId)) {
+                ArrayList<File> files = fileRepository.findAllByOwnerId(ownerId);
                 fileRepository.deleteAllByOwnerId(ownerId);
+
+                for (File file : files) {
+                    rabbitTemplate.convertAndSend(
+                            FILE_FAN_OUT_EXCHANGE,
+                            "",
+                            RabbitMQMessageCreator.newInstance(
+                                    MessageType.FILE_DELETED,
+                                    file.getId()
+                            )
+                    );
+                }
             } else {
                 throw new AppBusinessException(
                         FileErrorCode.FILE_NOT_EXIST,
@@ -285,7 +322,19 @@ public class FileServiceImpl implements FileService {
     public void adminDeleteFilesByProjectId(String projectId, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isFileExist(DAOQueryMode.QUERY_BY_PROJECT_ID, projectId)) {
+                ArrayList<File> files = fileRepository.findAllByProjectId(projectId);
                 fileRepository.deleteAllByProjectId(projectId);
+
+                for (File file : files) {
+                    rabbitTemplate.convertAndSend(
+                            FILE_FAN_OUT_EXCHANGE,
+                            "",
+                            RabbitMQMessageCreator.newInstance(
+                                    MessageType.FILE_DELETED,
+                                    file.getId()
+                            )
+                    );
+                }
             } else {
                 throw new AppBusinessException(
                         FileErrorCode.FILE_NOT_EXIST,
@@ -304,7 +353,19 @@ public class FileServiceImpl implements FileService {
         if (code.equals(ADMIN_CODE)) {
             if (isFileExist(DAOQueryMode.QUERY_BY_OWNER_ID, ownerId)) {
                 if (isFileExist(DAOQueryMode.QUERY_BY_PROJECT_ID, projectId)) {
+                    ArrayList<File> files = fileRepository.findAllByOwnerIdAndProjectId(ownerId, projectId);
                     fileRepository.deleteAllByOwnerIdAndProjectId(ownerId, projectId);
+
+                    for (File file : files) {
+                        rabbitTemplate.convertAndSend(
+                                FILE_FAN_OUT_EXCHANGE,
+                                "",
+                                RabbitMQMessageCreator.newInstance(
+                                        MessageType.FILE_DELETED,
+                                        file.getId()
+                                )
+                        );
+                    }
                 } else {
                     throw new AppBusinessException(
                             FileErrorCode.FILE_NOT_EXIST,
@@ -329,6 +390,15 @@ public class FileServiceImpl implements FileService {
         if (code.equals(ADMIN_CODE)) {
             if (fileRepository.count() > 0) {
                 fileRepository.deleteAll();
+
+                rabbitTemplate.convertAndSend(
+                        FILE_FAN_OUT_EXCHANGE,
+                        "",
+                        RabbitMQMessageCreator.newInstance(
+                                MessageType.FILE_DELETED,
+                                ADMIN_DELETE_ALL
+                        )
+                );
             } else {
                 throw new AppBusinessException(
                         FileErrorCode.FILE_NOT_EXIST
