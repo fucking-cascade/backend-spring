@@ -5,6 +5,8 @@ import org.latheild.schedule.api.dto.ScheduleDTO;
 import java.util.ArrayList;
 
 public interface ScheduleService {
+    boolean checkScheduleExistence(String scheduleId);
+
     ScheduleDTO createSchedule(ScheduleDTO scheduleDTO);
 
     ScheduleDTO updateSchedule(ScheduleDTO scheduleDTO);

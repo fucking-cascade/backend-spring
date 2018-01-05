@@ -4,8 +4,9 @@ import org.latheild.common.api.CommonIdentityType;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-public class UserProjectRelation {
+public class UserProjectRelation implements Serializable {
     @Id
     @NotNull
     private String id;

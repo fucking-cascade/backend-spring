@@ -124,6 +124,11 @@ public class ScheduleServiceImpl implements ScheduleService {
     }
 
     @Override
+    public boolean checkScheduleExistence(String scheduleId) {
+        return isScheduleExist(DAOQueryMode.QUERY_BY_ID, scheduleId);
+    }
+
+    @Override
     public ScheduleDTO createSchedule(ScheduleDTO scheduleDTO) {
         if (userClient.checkUserExistence(scheduleDTO.getOwnerId())) {
             if (projectClient.checkProjectExistence(scheduleDTO.getProjectId())) {

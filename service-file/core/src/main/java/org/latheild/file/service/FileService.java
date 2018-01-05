@@ -5,6 +5,8 @@ import org.latheild.file.api.dto.FileDTO;
 import java.util.ArrayList;
 
 public interface FileService {
+    boolean checkFileExistence(String fileId);
+
     FileDTO uploadFile(FileDTO fileDTO);
 
     FileDTO renameFile(FileDTO fileDTO);

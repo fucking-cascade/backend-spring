@@ -3,8 +3,9 @@ package org.latheild.relation.core.domain;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
+import java.io.Serializable;
 
-public class FileTaskRelation {
+public class FileTaskRelation implements Serializable {
     @Id
     @NotNull
     private String id;

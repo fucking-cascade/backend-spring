@@ -120,6 +120,11 @@ public class FileServiceImpl implements FileService {
     }
 
     @Override
+    public boolean checkFileExistence(String fileId) {
+        return isFileExist(DAOQueryMode.QUERY_BY_ID, fileId);
+    }
+
+    @Override
     public FileDTO uploadFile(FileDTO fileDTO) {
         if (userClient.checkUserExistence(fileDTO.getOwnerId())) {
             if (projectClient.checkProjectExistence(fileDTO.getProjectId())) {

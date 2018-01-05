@@ -1,6 +1,8 @@
 package org.latheild.schedule.api.constant;
 
 public interface ScheduleURL {
+    String CHECK_SCHEDULE_EXIST_URL = "/check";
+
     String CREATE_SCHEDULE_URL = "/create";
 
     String UPDATE_SCHEDULE_URL = "/update";

@@ -1,6 +1,8 @@
 package org.latheild.file.api.constant;
 
 public interface FileURL {
+    String CHECK_FILE_EXIST_URL = "/check";
+
     String UPLOAD_FILE_URL = "/upload";
 
     String RENAME_FILE_URL = "/update";

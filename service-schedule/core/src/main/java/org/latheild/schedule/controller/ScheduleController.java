@@ -17,6 +17,13 @@ public class ScheduleController {
     @Autowired
     ScheduleService scheduleService;
 
+    @RequestMapping(value = CHECK_SCHEDULE_EXIST_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
+    public boolean checkScheduleExistence(
+            @RequestParam(value = "scheduleId") String scheduleId
+    ) {
+        return scheduleService.checkScheduleExistence(scheduleId);
+    }
+
     @RequestMapping(value = CREATE_SCHEDULE_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
     @ResponseBody
     public Object createSchedule(

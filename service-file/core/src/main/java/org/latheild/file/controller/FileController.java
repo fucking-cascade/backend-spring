@@ -17,6 +17,13 @@ public class FileController {
     @Autowired
     FileService fileService;
 
+    @RequestMapping(value = CHECK_FILE_EXIST_URL, method = RequestMethod.GET, produces =  PRODUCE_JSON)
+    public boolean checkFileExistence(
+            @RequestParam(value = "fileId") String fileId
+    ) {
+        return fileService.checkFileExistence(fileId);
+    }
+
     @RequestMapping(value = UPLOAD_FILE_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
     @ResponseBody
     public Object uploadFile(
