@@ -153,8 +153,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.USER_NOT_EXIST,
-                    String.format("User %s does not exist", scheduleDTO.getScheduleId())
+                    ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                    String.format("Schedule %s does not exist", scheduleDTO.getProjectId())
             );
         }
     }
@@ -172,8 +172,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.USER_NOT_EXIST,
-                    String.format("User %s does not exist", scheduleDTO.getScheduleId())
+                    ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                    String.format("Schedule %s does not exist", scheduleDTO.getProjectId())
             );
         }
     }
@@ -184,8 +184,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             return convertFromScheduleToScheduleDTO(scheduleRepository.findById(id));
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.USER_NOT_EXIST,
-                    String.format("User %s does not exist", id)
+                    ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                    String.format("Schedule %s does not exist", id)
             );
         }
     }
@@ -196,8 +196,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             return convertFromSchedulesToScheduleDTOs(scheduleRepository.findAllByOwnerId(ownerId));
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.USER_NOT_EXIST,
-                    String.format("User %s does not exist", ownerId)
+                    ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                    String.format("User %s does not have any schedule", ownerId)
             );
         }
     }
@@ -208,8 +208,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             return convertFromSchedulesToScheduleDTOs(scheduleRepository.findAllByProjectId(projectId));
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.USER_NOT_EXIST,
-                    String.format("Project %s does not exist", projectId)
+                    ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                    String.format("Project %s does not have any schedule", projectId)
             );
         }
     }
@@ -227,8 +227,8 @@ public class ScheduleServiceImpl implements ScheduleService {
             }
         } else {
             throw new AppBusinessException(
-                    UserErrorCode.USER_NOT_EXIST,
-                    String.format("User %s does not exist", ownerId)
+                    ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                    String.format("User %s does not have any schedule", ownerId)
             );
         }
     }
@@ -257,8 +257,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 scheduleRepository.deleteById(id);
             } else {
                 throw new AppBusinessException(
-                        UserErrorCode.USER_NOT_EXIST,
-                        String.format("User %s does not exist", id)
+                        ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                        String.format("Schedule %s does not exist", id)
                 );
             }
         } else {
@@ -275,8 +275,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 scheduleRepository.deleteAllByOwnerId(ownerId);
             } else {
                 throw new AppBusinessException(
-                        UserErrorCode.USER_NOT_EXIST,
-                        String.format("User %s does not exist", ownerId)
+                        ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                        String.format("User %s does not have any schedule", ownerId)
                 );
             }
         } else {
@@ -293,8 +293,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 scheduleRepository.deleteAllByProjectId(projectId);
             } else {
                 throw new AppBusinessException(
-                        UserErrorCode.USER_NOT_EXIST,
-                        String.format("Project %s does not exist", projectId)
+                        ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                        String.format("Project %s does not have any schedule", projectId)
                 );
             }
         } else {
@@ -318,8 +318,8 @@ public class ScheduleServiceImpl implements ScheduleService {
                 }
             } else {
                 throw new AppBusinessException(
-                        UserErrorCode.USER_NOT_EXIST,
-                        String.format("User %s does not exist", ownerId)
+                        ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                        String.format("User %s does not have any schedule", ownerId)
                 );
             }
         } else {

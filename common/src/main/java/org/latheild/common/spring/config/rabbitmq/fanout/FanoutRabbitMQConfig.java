@@ -46,6 +46,11 @@ public class FanoutRabbitMQConfig {
     }
 
     @Bean
+    public Queue FileReceiverQueue() {
+        return new Queue(FILE_QUEUE);
+    }
+
+    @Bean
     public FanoutExchange UserFanoutExchange() {
         return new FanoutExchange(USER_FAN_OUT_EXCHANGE);
     }
@@ -85,6 +90,11 @@ public class FanoutRabbitMQConfig {
     }
 
     @Bean
+    public Binding bindingUserExchangeFile(Queue FileReceiverQueue, FanoutExchange UserFanoutExchange) {
+        return BindingBuilder.bind(FileReceiverQueue).to(UserFanoutExchange);
+    }
+
+    @Bean
     public Binding bindingProjectExchangeProgress(Queue ProgressReceiverQueue, FanoutExchange ProjectFanoutExchange) {
         return BindingBuilder.bind(ProgressReceiverQueue).to(ProjectFanoutExchange);
     }
@@ -92,6 +102,11 @@ public class FanoutRabbitMQConfig {
     @Bean
     public Binding bindingProjectExchangeSchedule(Queue ScheduleReceiverQueue, FanoutExchange ProjectFanoutExchange) {
         return BindingBuilder.bind(ScheduleReceiverQueue).to(ProjectFanoutExchange);
+    }
+
+    @Bean
+    public Binding bindingProjectExchangeFile(Queue FileReceiverQueue, FanoutExchange ProjectFanoutExchange) {
+        return BindingBuilder.bind(FileReceiverQueue).to(ProjectFanoutExchange);
     }
 
     @Bean
