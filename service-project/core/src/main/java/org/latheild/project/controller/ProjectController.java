@@ -4,6 +4,7 @@ import org.latheild.apiutils.api.BaseResponseBody;
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.api.ExceptionResponseBody;
 import org.latheild.apiutils.exception.AppBusinessException;
+import org.latheild.project.api.dto.AddMemberDTO;
 import org.latheild.project.api.dto.ChangeOwnerDTO;
 import org.latheild.project.api.dto.ProjectDTO;
 import org.latheild.project.service.ProjectService;
@@ -89,10 +90,19 @@ public class ProjectController {
     @RequestMapping(value = GET_PROJECTS_BY_USER_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object getProjectsByUserId(
-            @RequestParam(value = "ownerId") String ownerId
+            @RequestParam(value = "ownerId", required = false) String ownerId,
+            @RequestParam(value = "userId", required = false) String userId
     ) {
         try {
-            return new BaseResponseBody(CommonErrorCode.SUCCESS, projectService.getProjectsByOwnerId(ownerId));
+            if (ownerId != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, projectService.getProjectsByOwnerId(ownerId));
+            } else if (userId != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, projectService.getAllProjectsByUserId(userId));
+            } else {
+                throw new AppBusinessException(
+                        CommonErrorCode.INTERNAL_ERROR
+                );
+            }
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
         }
@@ -136,6 +146,32 @@ public class ProjectController {
             } else {
                 projectService.adminDeleteAllProjects(code);
             }
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = ADD_PROJECT_MEMBER_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object addProjectMember(
+            @RequestBody AddMemberDTO addMemberDTO
+    ) {
+        try {
+            projectService.addProjectMember(addMemberDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = REMOVE_PROJECT_MEMBER_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object removeProjectMember(
+            @RequestBody AddMemberDTO addMemberDTO
+    ) {
+        try {
+            projectService.removeProjectMember(addMemberDTO);
             return new BaseResponseBody(CommonErrorCode.SUCCESS);
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());

@@ -138,6 +138,7 @@ public class RelationServiceImpl implements RelationService {
         if (userClient.checkUserExistence(userId)) {
             if (projectClient.checkProjectExistence(projectId)) {
                 if (!checkProjectMemberExistence(userId, projectId)) {
+                    System.out.println("Adding project member " + userId + " of project " + projectId);
                     userProjectRelationRepository.save(
                             RelationCreator.setUserProjectRelation(
                                     userId, projectId, identityType

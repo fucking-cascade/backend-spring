@@ -8,6 +8,7 @@ import org.latheild.user.api.constant.UserErrorCode;
 import org.latheild.user.api.dto.RegisterDTO;
 import org.latheild.user.api.dto.ResetPasswordDTO;
 import org.latheild.user.api.dto.UserDTO;
+import org.latheild.user.client.RelationClient;
 import org.latheild.user.constant.DAOQueryMode;
 import org.latheild.user.dao.UserRepository;
 import org.latheild.user.domain.User;
@@ -25,6 +26,9 @@ import static org.latheild.common.constant.RabbitMQExchange.USER_FAN_OUT_EXCHANG
 public class UserServiceImpl implements UserService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    RelationClient relationClient;
 
     @Autowired
     private UserRepository userRepository;
