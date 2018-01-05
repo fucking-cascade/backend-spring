@@ -12,4 +12,6 @@ public interface RabbitMQQueue {
     String SUBTASK_QUEUE = "SubtaskQueue";
 
     String COMMENT_QUEUE = "CommentQueue";
+
+    String SCHEDULE_QUEUE = "ScheduleQueue";
 }
