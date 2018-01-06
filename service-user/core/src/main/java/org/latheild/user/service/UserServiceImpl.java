@@ -339,10 +339,10 @@ public class UserServiceImpl implements UserService {
     public void addUserSchedule(UserOperationDTO userOperationDTO) {
         if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userOperationDTO.getUserId())) {
             if (scheduleClient.checkScheduleExistence(userOperationDTO.getScheduleId())) {
-                if (relationClient.getMemberIdentityOfProject(
+                if (relationClient.checkProjectMember(
                         userOperationDTO.getUserId(),
                         scheduleClient.getProjectId(userOperationDTO.getScheduleId())
-                ) != CommonIdentityType.PARTICIPANT) {
+                )) {
                     relationClient.addScheduleParticipant(
                             userOperationDTO.getUserId(),
                             userOperationDTO.getScheduleId()
@@ -406,10 +406,10 @@ public class UserServiceImpl implements UserService {
     public void addUserTask(UserOperationDTO userOperationDTO) {
         if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userOperationDTO.getUserId())) {
             if (taskClient.checkTaskExistence(userOperationDTO.getTaskId())) {
-                if (relationClient.getMemberIdentityOfProject(
+                if (relationClient.checkProjectMember(
                         userOperationDTO.getUserId(),
                         taskClient.getProjectId(userOperationDTO.getTaskId())
-                ) != CommonIdentityType.PARTICIPANT) {
+                )) {
                     relationClient.addTaskParticipant(
                             userOperationDTO.getUserId(),
                             userOperationDTO.getTaskId()
