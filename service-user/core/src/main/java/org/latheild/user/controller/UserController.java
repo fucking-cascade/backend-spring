@@ -4,10 +4,7 @@ import org.latheild.apiutils.api.BaseResponseBody;
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.api.ExceptionResponseBody;
 import org.latheild.apiutils.exception.AppBusinessException;
-import org.latheild.user.api.dto.RegisterDTO;
-import org.latheild.user.api.dto.ResetPasswordDTO;
-import org.latheild.user.api.dto.UserDTO;
-import org.latheild.user.api.dto.UserProfileDTO;
+import org.latheild.user.api.dto.*;
 import org.latheild.user.service.UserService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -99,9 +96,21 @@ public class UserController {
 
     @RequestMapping(value = GET_USERS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
-    public Object getAllUsers() {
+    public Object getAllUsers(
+            @RequestParam(value = "projectId", required = false) String projectId,
+            @RequestParam(value = "scheduleId", required = false) String scheduleId,
+            @RequestParam(value = "taskId", required = false) String taskId
+    ) {
         try {
-            return new BaseResponseBody(CommonErrorCode.SUCCESS, userService.getAllUsers());
+            if (projectId != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, userService.getAllUsersByProjectId(projectId));
+            } else if (scheduleId != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, userService.getAllUsersByScheduleId(scheduleId));
+            } else if (taskId != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, userService.getAllUsersByTaskId(taskId));
+            } else {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, userService.getAllUsers());
+            }
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
         }
@@ -137,6 +146,84 @@ public class UserController {
     ) {
         try {
             userService.adminDeleteAllUsers(code);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = USER_PARTICIPATE_PROJECT_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object userParticipateProject(
+            @RequestBody UserOperationDTO userOperationDTO
+    ) {
+        try {
+            userService.addUserProject(userOperationDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = USER_QUIT_PROJECT_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object userQuitProject(
+            @RequestBody UserOperationDTO userOperationDTO
+    ) {
+        try {
+            userService.removeUserProject(userOperationDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = USER_PARTICIPATE_SCHEDULE_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object userParticipateSchedule(
+            @RequestBody UserOperationDTO userOperationDTO
+    ) {
+        try {
+            userService.addUserSchedule(userOperationDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = USER_QUIT_SCHEDULE_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object userQuitSchedule(
+            @RequestBody UserOperationDTO userOperationDTO
+    ) {
+        try {
+            userService.removeUserSchedule(userOperationDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = USER_PARTICIPATE_TASK_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object userParticipateTask(
+            @RequestBody UserOperationDTO userOperationDTO
+    ) {
+        try {
+            userService.addUserTask(userOperationDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = USER_QUIT_TASK_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object userQuitTask(
+            @RequestBody UserOperationDTO userOperationDTO
+    ) {
+        try {
+            userService.removeUserTask(userOperationDTO);
             return new BaseResponseBody(CommonErrorCode.SUCCESS);
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());

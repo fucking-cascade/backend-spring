@@ -8,4 +8,8 @@ public interface RabbitMQExchange {
     String PROGRESS_FAN_OUT_EXCHANGE = "ProgressFanOutExchange";
 
     String TASK_FAN_OUT_EXCHANGE = "TaskFanOutExchange";
+
+    String SCHEDULE_FAN_OUT_EXCHANGE = "ScheduleFanOutExchange";
+
+    String FILE_FAN_OUT_EXCHANGE = "FileFanOutExchange";
 }

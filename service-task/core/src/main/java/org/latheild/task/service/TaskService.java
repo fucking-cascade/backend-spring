@@ -1,10 +1,14 @@
 package org.latheild.task.service;
 
+import org.latheild.task.api.dto.TaskAttachmentOperationDTO;
 import org.latheild.task.api.dto.TaskDTO;
+import org.latheild.task.api.dto.TaskParticipantOperationDTO;
 
 import java.util.ArrayList;
 
 public interface TaskService {
+    String getProjectId(String taskId);
+
     boolean checkTaskExistence(String taskId);
 
     TaskDTO createTask(TaskDTO taskDTO);
@@ -38,4 +42,16 @@ public interface TaskService {
     void adminDeleteTasksByOwnerIdAndProgressId(String ownerId, String progressId, String code);
 
     void adminDeleteAllTasks(String code);
+
+    void addTaskParticipant(TaskParticipantOperationDTO taskParticipantOperationDTO);
+
+    void removeTaskParticipant(TaskParticipantOperationDTO taskParticipantOperationDTO);
+
+    ArrayList<TaskDTO> getAllTasksByUserId(String userId);
+
+    void addTaskAttachment(TaskAttachmentOperationDTO taskAttachmentOperationDTO);
+
+    void removeTaskAttachment(TaskAttachmentOperationDTO taskAttachmentOperationDTO);
+
+    ArrayList<TaskDTO> getAllTasksByFileId(String fileId);
 }

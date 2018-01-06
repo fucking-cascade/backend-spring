@@ -98,6 +98,8 @@ public class UserInfoServiceImpl implements UserInfoService {
                     }
                 }
                 break;
+            default:
+                System.out.println(message.toString());
         }
     }
 

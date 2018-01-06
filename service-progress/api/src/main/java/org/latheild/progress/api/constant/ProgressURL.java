@@ -1,6 +1,8 @@
 package org.latheild.progress.api.constant;
 
 public interface ProgressURL {
+    String GET_PROJECT_ID_URL = "/retrieve/project";
+
     String CHECK_PROGRESS_EXIST_URL = "/check";
 
     String CREATE_PROGRESS_URL = "/create";

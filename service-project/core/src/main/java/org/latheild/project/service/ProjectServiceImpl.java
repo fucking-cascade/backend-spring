@@ -2,17 +2,22 @@ package org.latheild.project.service;
 
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
+import org.latheild.common.api.CommonIdentityType;
 import org.latheild.common.api.RabbitMQMessageCreator;
 import org.latheild.common.constant.MessageType;
 import org.latheild.common.domain.Message;
 import org.latheild.project.api.constant.ProjectErrorCode;
+import org.latheild.project.api.dto.ProjectMemberOperationDTO;
 import org.latheild.project.api.dto.ChangeOwnerDTO;
 import org.latheild.project.api.dto.ProjectDTO;
+import org.latheild.project.client.RelationClient;
 import org.latheild.project.client.UserClient;
 import org.latheild.project.constant.DAOQueryMode;
 import org.latheild.project.dao.ProjectRepository;
 import org.latheild.project.domain.Project;
 import org.latheild.project.utils.TutorialProjectCreator;
+import org.latheild.relation.api.dto.RelationDTO;
+import org.latheild.relation.api.utils.RelationDTOAnalyzer;
 import org.latheild.user.api.constant.UserErrorCode;
 import org.latheild.user.api.dto.RegisterDTO;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
@@ -33,6 +38,9 @@ import static org.latheild.common.constant.RabbitMQQueue.PROJECT_QUEUE;
 public class ProjectServiceImpl implements ProjectService {
     @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    RelationClient relationClient;
 
     @Autowired
     UserClient userClient;
@@ -88,6 +96,7 @@ public class ProjectServiceImpl implements ProjectService {
                         TutorialProjectCreator.setTutorialProject(registerDTO.getUserId())
                 );
                 projectRepository.save(project);
+                relationClient.addProjectMember(project.getOwnerId(), project.getId(), CommonIdentityType.CREATOR);
 
                 rabbitTemplate.convertAndSend(
                         PROJECT_FAN_OUT_EXCHANGE,
@@ -110,6 +119,8 @@ public class ProjectServiceImpl implements ProjectService {
                     }
                 }
                 break;
+            default:
+                System.out.println(message.toString());
         }
     }
 
@@ -123,6 +134,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (userClient.checkUserExistence(projectDTO.getOwnerId())) {
             Project project = convertFromProjectDTOToProject(projectDTO);
             projectRepository.save(project);
+            relationClient.addProjectMember(project.getOwnerId(), project.getId(), CommonIdentityType.CREATOR);
             return convertFromProjectToProjectDTO(project);
         } else {
             throw new AppBusinessException(
@@ -342,6 +354,98 @@ public class ProjectServiceImpl implements ProjectService {
         } else {
             throw new AppBusinessException(
                     CommonErrorCode.UNAUTHORIZED
+            );
+        }
+    }
+
+    @Override
+    public void addProjectMember(ProjectMemberOperationDTO projectMemberOperationDTO) {
+        if (userClient.checkUserExistence(projectMemberOperationDTO.getExecutorId())) {
+            if (userClient.checkUserExistence(projectMemberOperationDTO.getMemberId())) {
+                if (isProjectExist(DAOQueryMode.QUERY_BY_ID, projectMemberOperationDTO.getProjectId())) {
+                    Project project = projectRepository.findById(projectMemberOperationDTO.getProjectId());
+                    if (project.getOwnerId().equals(projectMemberOperationDTO.getExecutorId())) {
+                        relationClient.addProjectMember(
+                                projectMemberOperationDTO.getMemberId(),
+                                projectMemberOperationDTO.getProjectId(),
+                                projectMemberOperationDTO.getIdentityType()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            ProjectErrorCode.PROJECT_NOT_EXIST,
+                            String.format("Project %s does not exist", projectMemberOperationDTO.getProjectId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        UserErrorCode.USER_NOT_EXIST,
+                        String.format("User %s does not exist", projectMemberOperationDTO.getMemberId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", projectMemberOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public void removeProjectMember(ProjectMemberOperationDTO projectMemberOperationDTO) {
+        if (userClient.checkUserExistence(projectMemberOperationDTO.getExecutorId())) {
+            if (userClient.checkUserExistence(projectMemberOperationDTO.getMemberId())) {
+                if (isProjectExist(DAOQueryMode.QUERY_BY_ID, projectMemberOperationDTO.getProjectId())) {
+                    Project project = projectRepository.findById(projectMemberOperationDTO.getProjectId());
+                    if (project.getOwnerId().equals(projectMemberOperationDTO.getExecutorId())) {
+                        relationClient.deleteProjectMember(
+                                projectMemberOperationDTO.getMemberId(),
+                                projectMemberOperationDTO.getProjectId()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            ProjectErrorCode.PROJECT_NOT_EXIST,
+                            String.format("Project %s does not exist", projectMemberOperationDTO.getProjectId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        UserErrorCode.USER_NOT_EXIST,
+                        String.format("User %s does not exist", projectMemberOperationDTO.getMemberId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", projectMemberOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public ArrayList<ProjectDTO> getAllProjectsByUserId(String userId) {
+        try {
+            ArrayList<RelationDTO> relationDTOs = relationClient.getUserProjects(userId);
+            ArrayList<ProjectDTO> projectDTOs = new ArrayList<>();
+            ProjectDTO projectDTO;
+            for (RelationDTO relationDTO : relationDTOs) {
+                projectDTO = getProjectById(RelationDTOAnalyzer.getProjectId(relationDTO));
+                projectDTOs.add(projectDTO);
+            }
+            return projectDTOs;
+        } catch (Exception e) {
+            throw new AppBusinessException(
+                    CommonErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
             );
         }
     }

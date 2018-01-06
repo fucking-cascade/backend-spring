@@ -87,6 +87,10 @@ public class SubtaskServiceImpl implements SubtaskService {
         return subtasks;
     }
 
+    private String getProjectId(String subtaskId) {
+        return taskClient.getProjectId(getSubtaskById(subtaskId).getTaskId());
+    }
+
     @RabbitHandler
     public void eventHandler(Message message) {
         switch (message.getMessageType()) {
@@ -112,6 +116,8 @@ public class SubtaskServiceImpl implements SubtaskService {
                     }
                 }
                 break;
+            default:
+                System.out.println(message.toString());
         }
     }
 

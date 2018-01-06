@@ -20,4 +20,8 @@ public interface ProjectURL {
     String ADMIN_DELETE_PROJECT_BY_ID_URL = "/admin/delete";
 
     String ADMIN_DELETE_PROJECTS_URL = "/admin/delete/all";
+
+    String ADD_PROJECT_MEMBER_URL = "/add/member";
+
+    String REMOVE_PROJECT_MEMBER_URL = "/remove/member";
 }

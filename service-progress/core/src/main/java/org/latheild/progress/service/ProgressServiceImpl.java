@@ -148,6 +148,8 @@ public class ProgressServiceImpl implements ProgressService {
                     }
                 }
                 break;
+            default:
+                System.out.println(message.toString());
         }
     }
 

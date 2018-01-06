@@ -5,6 +5,7 @@ import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.api.ExceptionResponseBody;
 import org.latheild.apiutils.exception.AppBusinessException;
 import org.latheild.task.api.dto.TaskDTO;
+import org.latheild.task.api.dto.TaskParticipantOperationDTO;
 import org.latheild.task.service.TaskService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,13 @@ import static org.latheild.task.api.constant.TaskURL.*;
 public class TaskController {
     @Autowired
     TaskService taskService;
+
+    @RequestMapping(value = GET_PROJECT_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
+    public String getProjectId(
+            @RequestParam(value = "taskId") String taskId
+    ) {
+        return taskService.getProjectId(taskId);
+    }
 
     @RequestMapping(value = CHECK_TASK_EXIST_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     public boolean checkTaskExistence(
@@ -113,7 +121,8 @@ public class TaskController {
     @ResponseBody
     public Object getTasks(
             @RequestParam(value = "ownerId", required = false) String ownerId,
-            @RequestParam(value = "progressId", required = false) String progressId
+            @RequestParam(value = "progressId", required = false) String progressId,
+            @RequestParam(value = "userId", required = false) String userId
     ) {
         try {
             if (ownerId != null && progressId != null) {
@@ -122,6 +131,8 @@ public class TaskController {
                 return new BaseResponseBody(CommonErrorCode.SUCCESS, taskService.getTasksByOwnerId(ownerId));
             } else if (progressId != null) {
                 return new BaseResponseBody(CommonErrorCode.SUCCESS, taskService.getTasksByProgressId(progressId));
+            } else if (userId != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, taskService.getAllTasksByUserId(userId));
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.INVALID_ARGUMENT
@@ -175,6 +186,32 @@ public class TaskController {
             } else {
                 taskService.adminDeleteAllTasks(code);
             }
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = ADD_TASK_PARTICIPANT_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object addTaskParticipant(
+            @RequestBody TaskParticipantOperationDTO taskParticipantOperationDTO
+    ) {
+        try {
+            taskService.addTaskParticipant(taskParticipantOperationDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = REMOVE_TASK_PARTICIPANT_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object removeTaskParticipant(
+            @RequestBody TaskParticipantOperationDTO taskParticipantOperationDTO
+    ) {
+        try {
+            taskService.removeTaskParticipant(taskParticipantOperationDTO);
             return new BaseResponseBody(CommonErrorCode.SUCCESS);
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());

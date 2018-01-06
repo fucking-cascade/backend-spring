@@ -1,6 +1,8 @@
 package org.latheild.task.api.constant;
 
 public interface TaskURL {
+    String GET_PROJECT_ID_URL = "/retrieve/project";
+
     String CHECK_TASK_EXIST_URL = "/check";
 
     String CREATE_TASK_URL = "/create";
@@ -24,4 +26,12 @@ public interface TaskURL {
     String ADMIN_DELETE_TASK_BY_ID_URL = "/admin/delete";
 
     String ADMIN_DELETE_TASKS_URL = "/admin/delete/all";
+
+    String ADD_TASK_PARTICIPANT_URL = "/add/participant";
+
+    String REMOVE_TASK_PARTICIPANT_URL = "/remove/participant";
+
+    String ADD_TASK_ATTACHMENT_URL = "/add/attachment";
+
+    String REMOVE_TASK_ATTACHMENT_URL = "/remove/attachment";
 }

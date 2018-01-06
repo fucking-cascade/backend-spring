@@ -1,5 +1,6 @@
 package org.latheild.project.service;
 
+import org.latheild.project.api.dto.ProjectMemberOperationDTO;
 import org.latheild.project.api.dto.ChangeOwnerDTO;
 import org.latheild.project.api.dto.ProjectDTO;
 
@@ -27,4 +28,10 @@ public interface ProjectService {
     void adminDeleteProjectsByOwnerId(String ownerId, String code);
 
     void adminDeleteAllProjects(String code);
+
+    void addProjectMember(ProjectMemberOperationDTO projectMemberOperationDTO);
+
+    void removeProjectMember(ProjectMemberOperationDTO projectMemberOperationDTO);
+
+    ArrayList<ProjectDTO> getAllProjectsByUserId(String userId);
 }

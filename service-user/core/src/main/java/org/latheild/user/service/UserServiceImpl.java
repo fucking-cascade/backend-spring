@@ -2,12 +2,23 @@ package org.latheild.user.service;
 
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
+import org.latheild.common.api.CommonIdentityType;
 import org.latheild.common.api.RabbitMQMessageCreator;
 import org.latheild.common.constant.MessageType;
+import org.latheild.project.api.constant.ProjectErrorCode;
+import org.latheild.relation.api.dto.RelationDTO;
+import org.latheild.relation.api.utils.RelationDTOAnalyzer;
+import org.latheild.schedule.api.constant.ScheduleErrorCode;
+import org.latheild.task.api.constant.TaskErrorCode;
 import org.latheild.user.api.constant.UserErrorCode;
 import org.latheild.user.api.dto.RegisterDTO;
 import org.latheild.user.api.dto.ResetPasswordDTO;
 import org.latheild.user.api.dto.UserDTO;
+import org.latheild.user.api.dto.UserOperationDTO;
+import org.latheild.user.client.ProjectClient;
+import org.latheild.user.client.RelationClient;
+import org.latheild.user.client.ScheduleClient;
+import org.latheild.user.client.TaskClient;
 import org.latheild.user.constant.DAOQueryMode;
 import org.latheild.user.dao.UserRepository;
 import org.latheild.user.domain.User;
@@ -25,6 +36,18 @@ import static org.latheild.common.constant.RabbitMQExchange.USER_FAN_OUT_EXCHANG
 public class UserServiceImpl implements UserService {
     @Autowired
     private RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    RelationClient relationClient;
+
+    @Autowired
+    ProjectClient projectClient;
+
+    @Autowired
+    ScheduleClient scheduleClient;
+
+    @Autowired
+    TaskClient taskClient;
 
     @Autowired
     private UserRepository userRepository;
@@ -62,6 +85,16 @@ public class UserServiceImpl implements UserService {
         user.setPassword(registerDTO.getPassword());
         user.setEmail(registerDTO.getEmail());
         return user;
+    }
+
+    private ArrayList<UserDTO> convertFromRelationDTOsToUserDTOs(ArrayList<RelationDTO> relationDTOs) throws Exception {
+        ArrayList<UserDTO> userDTOs = new ArrayList<>();
+        UserDTO userDTO;
+        for (RelationDTO relationDTO : relationDTOs) {
+            userDTO = getUserByUserId(RelationDTOAnalyzer.getUserId(relationDTO));
+            userDTOs.add(userDTO);
+        }
+        return userDTOs;
     }
 
     @Override
@@ -232,6 +265,206 @@ public class UserServiceImpl implements UserService {
         } else {
             throw new AppBusinessException(
                     CommonErrorCode.UNAUTHORIZED
+            );
+        }
+    }
+
+    @Override
+    public void addUserProject(UserOperationDTO userOperationDTO) {
+        if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userOperationDTO.getUserId())) {
+            if (projectClient.checkProjectExistence(userOperationDTO.getProjectId())) {
+                relationClient.addProjectMember(
+                        userOperationDTO.getUserId(),
+                        userOperationDTO.getProjectId(),
+                        CommonIdentityType.PARTICIPANT
+                );
+            } else {
+                throw new AppBusinessException(
+                        ProjectErrorCode.PROJECT_NOT_EXIST,
+                        String.format("Project %s does not exist", userOperationDTO.getProjectId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", userOperationDTO.getUserId())
+            );
+        }
+    }
+
+    @Override
+    public void removeUserProject(UserOperationDTO userOperationDTO) {
+        if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userOperationDTO.getUserId())) {
+            if (projectClient.checkProjectExistence(userOperationDTO.getProjectId())) {
+                if (relationClient.getMemberIdentityOfProject(userOperationDTO.getUserId(), userOperationDTO.getProjectId()) != CommonIdentityType.CREATOR) {
+                    relationClient.deleteProjectMember(
+                            userOperationDTO.getUserId(),
+                            userOperationDTO.getProjectId()
+                    );
+                } else {
+                    throw new AppBusinessException(
+                            CommonErrorCode.FORBIDDEN,
+                            String.format("Project owner cannot quit project and can only quit after transferring project ownership or by deleting the project")
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        ProjectErrorCode.PROJECT_NOT_EXIST,
+                        String.format("Project %s does not exist", userOperationDTO.getProjectId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", userOperationDTO.getUserId())
+            );
+        }
+    }
+
+    @Override
+    public ArrayList<UserDTO> getAllUsersByProjectId(String projectId) {
+        try {
+            return convertFromRelationDTOsToUserDTOs(
+                    relationClient.getProjectMembers(projectId)
+            );
+        } catch (Exception e) {
+            throw new AppBusinessException(
+                    CommonErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    @Override
+    public void addUserSchedule(UserOperationDTO userOperationDTO) {
+        if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userOperationDTO.getUserId())) {
+            if (scheduleClient.checkScheduleExistence(userOperationDTO.getScheduleId())) {
+                if (relationClient.checkProjectMember(
+                        userOperationDTO.getUserId(),
+                        scheduleClient.getProjectId(userOperationDTO.getScheduleId())
+                )) {
+                    relationClient.addScheduleParticipant(
+                            userOperationDTO.getUserId(),
+                            userOperationDTO.getScheduleId()
+                    );
+                } else {
+                    throw new AppBusinessException(
+                            CommonErrorCode.UNAUTHORIZED
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                        String.format("Schedule %s does not exist", userOperationDTO.getScheduleId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", userOperationDTO.getUserId())
+            );
+        }
+    }
+
+    @Override
+    public void removeUserSchedule(UserOperationDTO userOperationDTO) {
+        if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userOperationDTO.getUserId())) {
+            if (scheduleClient.checkScheduleExistence(userOperationDTO.getScheduleId())) {
+                relationClient.deleteScheduleParticipant(
+                        userOperationDTO.getUserId(),
+                        userOperationDTO.getScheduleId()
+                );
+            } else {
+                throw new AppBusinessException(
+                        ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                        String.format("Schedule %s does not exist", userOperationDTO.getScheduleId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", userOperationDTO.getUserId())
+            );
+        }
+    }
+
+    @Override
+    public ArrayList<UserDTO> getAllUsersByScheduleId(String scheduleId) {
+        try {
+            return convertFromRelationDTOsToUserDTOs(
+                    relationClient.getScheduleParticipants(scheduleId)
+            );
+        } catch (Exception e) {
+            throw new AppBusinessException(
+                    CommonErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    @Override
+    public void addUserTask(UserOperationDTO userOperationDTO) {
+        if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userOperationDTO.getUserId())) {
+            if (taskClient.checkTaskExistence(userOperationDTO.getTaskId())) {
+                if (relationClient.checkProjectMember(
+                        userOperationDTO.getUserId(),
+                        taskClient.getProjectId(userOperationDTO.getTaskId())
+                )) {
+                    relationClient.addTaskParticipant(
+                            userOperationDTO.getUserId(),
+                            userOperationDTO.getTaskId()
+                    );
+                } else {
+                    throw new AppBusinessException(
+                            CommonErrorCode.UNAUTHORIZED
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        TaskErrorCode.TASK_NOT_EXIST,
+                        String.format("Task %s does not exist", userOperationDTO.getTaskId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", userOperationDTO.getUserId())
+            );
+        }
+    }
+
+    @Override
+    public void removeUserTask(UserOperationDTO userOperationDTO) {
+        if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userOperationDTO.getUserId())) {
+            if (taskClient.checkTaskExistence(userOperationDTO.getTaskId())) {
+                relationClient.deleteTaskParticipant(
+                        userOperationDTO.getUserId(),
+                        userOperationDTO.getTaskId()
+                );
+            } else {
+                throw new AppBusinessException(
+                        TaskErrorCode.TASK_NOT_EXIST,
+                        String.format("Task %s does not exist", userOperationDTO.getTaskId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", userOperationDTO.getUserId())
+            );
+        }
+    }
+
+    @Override
+    public ArrayList<UserDTO> getAllUsersByTaskId(String taskId) {
+        try {
+            return convertFromRelationDTOsToUserDTOs(
+                    relationClient.getTaskParticipants(taskId)
+            );
+        } catch (Exception e) {
+            throw new AppBusinessException(
+                    CommonErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
             );
         }
     }

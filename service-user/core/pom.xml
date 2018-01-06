@@ -28,6 +28,30 @@
 
         <dependency>
             <groupId>org.latheild.cascade</groupId>
+            <artifactId>project-service-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.latheild.cascade</groupId>
+            <artifactId>task-service-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.latheild.cascade</groupId>
+            <artifactId>schedule-service-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.latheild.cascade</groupId>
+            <artifactId>relation-service-api</artifactId>
+            <version>${project.version}</version>
+        </dependency>
+
+        <dependency>
+            <groupId>org.latheild.cascade</groupId>
             <artifactId>common</artifactId>
             <version>${project.version}</version>
         </dependency>
