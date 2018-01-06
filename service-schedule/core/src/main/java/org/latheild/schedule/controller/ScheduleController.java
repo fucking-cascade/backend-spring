@@ -5,6 +5,7 @@ import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.api.ExceptionResponseBody;
 import org.latheild.apiutils.exception.AppBusinessException;
 import org.latheild.schedule.api.dto.ScheduleDTO;
+import org.latheild.schedule.api.dto.ScheduleParticipantOperationDTO;
 import org.latheild.schedule.service.ScheduleService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.*;
@@ -16,6 +17,13 @@ import static org.latheild.schedule.api.constant.ScheduleURL.*;
 public class ScheduleController {
     @Autowired
     ScheduleService scheduleService;
+
+    @RequestMapping(value = GET_PROJECT_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
+    public String getProjectId(
+            @RequestParam(value = "scheduleId") String scheduleId
+    ) {
+        return scheduleService.getScheduleById(scheduleId).getProjectId();
+    }
 
     @RequestMapping(value = CHECK_SCHEDULE_EXIST_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     public boolean checkScheduleExistence(
@@ -77,7 +85,8 @@ public class ScheduleController {
     @ResponseBody
     public Object getSchedules(
             @RequestParam(value = "ownerId", required = false) String ownerId,
-            @RequestParam(value = "projectId", required = false) String projectId
+            @RequestParam(value = "projectId", required = false) String projectId,
+            @RequestParam(value = "userId", required = false) String userId
     ) {
         try {
             if (ownerId != null && projectId != null) {
@@ -86,6 +95,8 @@ public class ScheduleController {
                 return new BaseResponseBody(CommonErrorCode.SUCCESS, scheduleService.getSchedulesByOwnerId(ownerId));
             } else if (projectId != null) {
                 return new BaseResponseBody(CommonErrorCode.SUCCESS, scheduleService.getSchedulesByProjectId(projectId));
+            } else if (userId != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, scheduleService.getAllSchedulesByUserId(userId));
             } else {
                 throw new AppBusinessException(
                         CommonErrorCode.INVALID_ARGUMENT
@@ -122,7 +133,7 @@ public class ScheduleController {
         }
     }
 
-    @RequestMapping(value = ADMIN_DELETE_SCHEDULES_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
+    @RequestMapping(value = ADMIN_DELETE_SCHEDULES_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
     @ResponseBody
     public Object adminDeleteSchedules(
             @RequestParam(value = "ownerId", required = false) String ownerId,
@@ -139,6 +150,32 @@ public class ScheduleController {
             } else {
                 scheduleService.adminDeleteAllSchedules(code);
             }
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = ADD_SCHEDULE_PARTICIPANT_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object addScheduleParticipant(
+            @RequestBody ScheduleParticipantOperationDTO scheduleParticipantOperationDTO
+    ) {
+        try {
+            scheduleService.addScheduleParticipant(scheduleParticipantOperationDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = REMOVE_SCHEDULE_PARTICIPANT_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object removeScheduleParticipant(
+            @RequestBody ScheduleParticipantOperationDTO scheduleParticipantOperationDTO
+    ) {
+        try {
+            scheduleService.removeScheduleParticipant(scheduleParticipantOperationDTO);
             return new BaseResponseBody(CommonErrorCode.SUCCESS);
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());

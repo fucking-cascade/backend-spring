@@ -23,6 +23,8 @@
     <orderEntry type="library" name="Maven: com.fasterxml:classmate:1.3.4" level="project" />
     <orderEntry type="module" module-name="user-service-api" />
     <orderEntry type="module" module-name="project-service-api" />
+    <orderEntry type="module" module-name="task-service-api" />
+    <orderEntry type="module" module-name="relation-service-api" />
     <orderEntry type="module" module-name="common" />
     <orderEntry type="library" name="Maven: org.springframework.cloud:spring-cloud-starter:1.2.4.RELEASE" level="project" />
     <orderEntry type="library" name="Maven: org.springframework.boot:spring-boot-starter:1.5.8.RELEASE" level="project" />

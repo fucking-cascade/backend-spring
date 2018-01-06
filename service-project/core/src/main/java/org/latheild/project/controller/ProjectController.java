@@ -4,7 +4,7 @@ import org.latheild.apiutils.api.BaseResponseBody;
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.api.ExceptionResponseBody;
 import org.latheild.apiutils.exception.AppBusinessException;
-import org.latheild.project.api.dto.AddMemberDTO;
+import org.latheild.project.api.dto.ProjectMemberOperationDTO;
 import org.latheild.project.api.dto.ChangeOwnerDTO;
 import org.latheild.project.api.dto.ProjectDTO;
 import org.latheild.project.service.ProjectService;
@@ -155,10 +155,10 @@ public class ProjectController {
     @RequestMapping(value = ADD_PROJECT_MEMBER_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
     @ResponseBody
     public Object addProjectMember(
-            @RequestBody AddMemberDTO addMemberDTO
+            @RequestBody ProjectMemberOperationDTO projectMemberOperationDTO
     ) {
         try {
-            projectService.addProjectMember(addMemberDTO);
+            projectService.addProjectMember(projectMemberOperationDTO);
             return new BaseResponseBody(CommonErrorCode.SUCCESS);
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
@@ -168,10 +168,10 @@ public class ProjectController {
     @RequestMapping(value = REMOVE_PROJECT_MEMBER_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
     @ResponseBody
     public Object removeProjectMember(
-            @RequestBody AddMemberDTO addMemberDTO
+            @RequestBody ProjectMemberOperationDTO projectMemberOperationDTO
     ) {
         try {
-            projectService.removeProjectMember(addMemberDTO);
+            projectService.removeProjectMember(projectMemberOperationDTO);
             return new BaseResponseBody(CommonErrorCode.SUCCESS);
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());

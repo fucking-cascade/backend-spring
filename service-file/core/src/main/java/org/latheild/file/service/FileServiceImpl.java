@@ -6,13 +6,19 @@ import org.latheild.common.api.RabbitMQMessageCreator;
 import org.latheild.common.constant.MessageType;
 import org.latheild.common.domain.Message;
 import org.latheild.file.api.constant.FileErrorCode;
+import org.latheild.file.api.dto.AttachmentOperationDTO;
 import org.latheild.file.api.dto.FileDTO;
 import org.latheild.file.client.ProjectClient;
+import org.latheild.file.client.RelationClient;
+import org.latheild.file.client.TaskClient;
 import org.latheild.file.client.UserClient;
 import org.latheild.file.constant.DAOQueryMode;
 import org.latheild.file.dao.FileRepository;
 import org.latheild.file.domain.File;
 import org.latheild.project.api.constant.ProjectErrorCode;
+import org.latheild.relation.api.dto.RelationDTO;
+import org.latheild.relation.api.utils.RelationDTOAnalyzer;
+import org.latheild.task.api.constant.TaskErrorCode;
 import org.latheild.user.api.constant.UserErrorCode;
 import org.springframework.amqp.rabbit.annotation.RabbitHandler;
 import org.springframework.amqp.rabbit.annotation.RabbitListener;
@@ -34,10 +40,16 @@ public class FileServiceImpl implements FileService {
     RabbitTemplate rabbitTemplate;
 
     @Autowired
+    RelationClient relationClient;
+
+    @Autowired
     UserClient userClient;
 
     @Autowired
     ProjectClient projectClient;
+
+    @Autowired
+    TaskClient taskClient;
 
     @Autowired
     FileRepository fileRepository;
@@ -412,6 +424,97 @@ public class FileServiceImpl implements FileService {
         } else {
             throw new AppBusinessException(
                     CommonErrorCode.UNAUTHORIZED
+            );
+        }
+    }
+
+    @Override
+    public void attachFileToTask(AttachmentOperationDTO attachmentOperationDTO) {
+        if (userClient.checkUserExistence(attachmentOperationDTO.getExecutorId())) {
+            if (taskClient.checkTaskExistence(attachmentOperationDTO.getTaskId())) {
+                if (isFileExist(DAOQueryMode.QUERY_BY_ID, attachmentOperationDTO.getFileId())) {
+                    File file = fileRepository.findById(attachmentOperationDTO.getFileId());
+                    if (file.getOwnerId().equals(attachmentOperationDTO.getExecutorId())) {
+                        relationClient.addTaskAttachment(
+                                attachmentOperationDTO.getFileId(),
+                                attachmentOperationDTO.getTaskId()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            FileErrorCode.FILE_NOT_EXIST,
+                            String.format("File %s does not exist", attachmentOperationDTO.getFileId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        TaskErrorCode.TASK_NOT_EXIST,
+                        String.format("Task %s does not exist", attachmentOperationDTO.getTaskId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", attachmentOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public void detachFileToTask(AttachmentOperationDTO attachmentOperationDTO) {
+        if (userClient.checkUserExistence(attachmentOperationDTO.getExecutorId())) {
+            if (taskClient.checkTaskExistence(attachmentOperationDTO.getTaskId())) {
+                if (isFileExist(DAOQueryMode.QUERY_BY_ID, attachmentOperationDTO.getFileId())) {
+                    File file = fileRepository.findById(attachmentOperationDTO.getFileId());
+                    if (file.getOwnerId().equals(attachmentOperationDTO.getExecutorId())) {
+                        relationClient.deleteTaskAttachment(
+                                attachmentOperationDTO.getFileId(),
+                                attachmentOperationDTO.getTaskId()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            FileErrorCode.FILE_NOT_EXIST,
+                            String.format("File %s does not exist", attachmentOperationDTO.getFileId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        TaskErrorCode.TASK_NOT_EXIST,
+                        String.format("Task %s does not exist", attachmentOperationDTO.getTaskId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", attachmentOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public ArrayList<FileDTO> getAllFilesByTaskId(String taskId) {
+        try {
+            ArrayList<RelationDTO> relationDTOs = relationClient.getTaskAttachments(taskId);
+            ArrayList<FileDTO> fileDTOS = new ArrayList<>();
+            FileDTO fileDTO;
+            for (RelationDTO relationDTO : relationDTOs) {
+                fileDTO = getFileById(RelationDTOAnalyzer.getFileId(relationDTO));
+                fileDTOS.add(fileDTO);
+            }
+            return fileDTOS;
+        } catch (Exception e) {
+            throw new AppBusinessException(
+                    CommonErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
             );
         }
     }

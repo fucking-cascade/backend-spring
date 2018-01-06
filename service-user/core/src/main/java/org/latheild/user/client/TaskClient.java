@@ -1,4 +1,4 @@
-package org.latheild.subtask.client;
+package org.latheild.user.client;
 
 import org.springframework.cloud.netflix.feign.FeignClient;
 import org.springframework.web.bind.annotation.RequestMapping;

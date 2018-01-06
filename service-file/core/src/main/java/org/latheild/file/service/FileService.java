@@ -1,5 +1,6 @@
 package org.latheild.file.service;
 
+import org.latheild.file.api.dto.AttachmentOperationDTO;
 import org.latheild.file.api.dto.FileDTO;
 
 import java.util.ArrayList;
@@ -32,4 +33,10 @@ public interface FileService {
     void adminDeleteFilesByOwnerIdAndProjectId(String ownerId, String projectId, String code);
 
     void adminDeleteAllFiles(String code);
+
+    void attachFileToTask(AttachmentOperationDTO attachmentOperationDTO);
+
+    void detachFileToTask(AttachmentOperationDTO attachmentOperationDTO);
+
+    ArrayList<FileDTO> getAllFilesByTaskId(String taskId);
 }

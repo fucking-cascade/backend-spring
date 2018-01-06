@@ -1,6 +1,7 @@
 package org.latheild.schedule.service;
 
 import org.latheild.schedule.api.dto.ScheduleDTO;
+import org.latheild.schedule.api.dto.ScheduleParticipantOperationDTO;
 
 import java.util.ArrayList;
 
@@ -32,4 +33,10 @@ public interface ScheduleService {
     void adminDeleteSchedulesByOwnerIdAndProjectId(String ownerId, String projectId, String code);
 
     void adminDeleteAllSchedules(String code);
+
+    void addScheduleParticipant(ScheduleParticipantOperationDTO scheduleParticipantOperationDTO);
+
+    void removeScheduleParticipant(ScheduleParticipantOperationDTO scheduleParticipantOperationDTO);
+
+    ArrayList<ScheduleDTO> getAllSchedulesByUserId(String userId);
 }

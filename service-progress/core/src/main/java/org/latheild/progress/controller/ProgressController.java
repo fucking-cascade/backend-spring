@@ -17,6 +17,13 @@ public class ProgressController {
     @Autowired
     ProgressService progressService;
 
+    @RequestMapping(value = GET_PROJECT_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
+    public String getProjectId(
+            @RequestParam(value = "progressId") String progressId
+    ) {
+        return progressService.getProgressById(progressId).getProjectId();
+    }
+
     @RequestMapping(value = CHECK_PROGRESS_EXIST_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     public boolean checkProgressExistence(
             @RequestParam(value = "progressId") String progressId

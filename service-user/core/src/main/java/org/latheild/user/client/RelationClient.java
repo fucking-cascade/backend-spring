@@ -39,6 +39,21 @@ public interface RelationClient {
             @RequestParam(value = "identityType") CommonIdentityType identityType
     );
 
+    @RequestMapping(value = GET_PROJECT_MEMBERS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
+    ArrayList<RelationDTO> getProjectMembers(
+            @RequestParam(value = "projectId") String projectId
+    );
+
+    @RequestMapping(value = GET_SCHEDULE_PARTICIPANTS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
+    ArrayList<RelationDTO> getScheduleParticipants(
+            @RequestParam(value = "scheduleId") String scheduleId
+    );
+
+    @RequestMapping(value = GET_TASK_PARTICIPANTS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
+    ArrayList<RelationDTO> getTaskParticipants(
+            @RequestParam(value = "taskId") String taskId
+    );
+
     @RequestMapping(value = ADD_SCHEDULE_PARTICIPANT_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     void addScheduleParticipant(
             @RequestParam(value = "userId") String userId,
@@ -67,21 +82,6 @@ public interface RelationClient {
     void deleteTaskParticipant(
             @RequestParam(value = "userId") String userId,
             @RequestParam(value = "taskId") String taskId
-    );
-
-    @RequestMapping(value = GET_PROJECT_MEMBERS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
-    ArrayList<RelationDTO> getProjectMembers(
-            @RequestParam(value = "projectId") String projectId
-    );
-
-    @RequestMapping(value = GET_USER_SCHEDULES_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
-    ArrayList<RelationDTO> getUserSchedules(
-            @RequestParam(value = "userId") String userId
-    );
-
-    @RequestMapping(value = GET_USER_TASKS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
-    ArrayList<RelationDTO> getUserTasks(
-            @RequestParam(value = "userId") String userId
     );
 
     @RequestMapping(value = GET_MEMBER_IDENTITY_OF_PROJECT_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)

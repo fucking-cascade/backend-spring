@@ -6,9 +6,13 @@ import org.latheild.common.api.RabbitMQMessageCreator;
 import org.latheild.common.constant.MessageType;
 import org.latheild.common.domain.Message;
 import org.latheild.project.api.constant.ProjectErrorCode;
+import org.latheild.relation.api.dto.RelationDTO;
+import org.latheild.relation.api.utils.RelationDTOAnalyzer;
 import org.latheild.schedule.api.constant.ScheduleErrorCode;
 import org.latheild.schedule.api.dto.ScheduleDTO;
+import org.latheild.schedule.api.dto.ScheduleParticipantOperationDTO;
 import org.latheild.schedule.client.ProjectClient;
+import org.latheild.schedule.client.RelationClient;
 import org.latheild.schedule.client.UserClient;
 import org.latheild.schedule.constant.DAOQueryMode;
 import org.latheild.schedule.dao.ScheduleRepository;
@@ -32,6 +36,9 @@ import static org.latheild.common.constant.RabbitMQQueue.SCHEDULE_QUEUE;
 public class ScheduleServiceImpl implements ScheduleService {
     @Autowired
     RabbitTemplate rabbitTemplate;
+
+    @Autowired
+    RelationClient relationClient;
 
     @Autowired
     UserClient userClient;
@@ -134,6 +141,7 @@ public class ScheduleServiceImpl implements ScheduleService {
             if (projectClient.checkProjectExistence(scheduleDTO.getProjectId())) {
                 Schedule schedule = convertFromScheduleDTOToSchedule(scheduleDTO);
                 scheduleRepository.save(schedule);
+                relationClient.addScheduleParticipant(schedule.getOwnerId(), schedule.getId());
                 return convertFromScheduleToScheduleDTO(schedule);
             } else {
                 throw new AppBusinessException(
@@ -417,6 +425,97 @@ public class ScheduleServiceImpl implements ScheduleService {
         } else {
             throw new AppBusinessException(
                     CommonErrorCode.UNAUTHORIZED
+            );
+        }
+    }
+
+    @Override
+    public void addScheduleParticipant(ScheduleParticipantOperationDTO scheduleParticipantOperationDTO) {
+        if (userClient.checkUserExistence(scheduleParticipantOperationDTO.getExecutorId())) {
+            if (userClient.checkUserExistence(scheduleParticipantOperationDTO.getParticipantId())) {
+                if (isScheduleExist(DAOQueryMode.QUERY_BY_ID, scheduleParticipantOperationDTO.getScheduleId())) {
+                    Schedule schedule = scheduleRepository.findById(scheduleParticipantOperationDTO.getScheduleId());
+                    if (schedule.getOwnerId().equals(scheduleParticipantOperationDTO.getExecutorId())) {
+                        relationClient.addScheduleParticipant(
+                                scheduleParticipantOperationDTO.getParticipantId(),
+                                scheduleParticipantOperationDTO.getScheduleId()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                            String.format("Schedule %s does not exist", scheduleParticipantOperationDTO.getScheduleId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        UserErrorCode.USER_NOT_EXIST,
+                        String.format("User %s does not exist", scheduleParticipantOperationDTO.getExecutorId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", scheduleParticipantOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public void removeScheduleParticipant(ScheduleParticipantOperationDTO scheduleParticipantOperationDTO) {
+        if (userClient.checkUserExistence(scheduleParticipantOperationDTO.getExecutorId())) {
+            if (userClient.checkUserExistence(scheduleParticipantOperationDTO.getParticipantId())) {
+                if (isScheduleExist(DAOQueryMode.QUERY_BY_ID, scheduleParticipantOperationDTO.getScheduleId())) {
+                    Schedule schedule = scheduleRepository.findById(scheduleParticipantOperationDTO.getScheduleId());
+                    if (schedule.getOwnerId().equals(scheduleParticipantOperationDTO.getExecutorId())) {
+                        relationClient.deleteScheduleParticipant(
+                                scheduleParticipantOperationDTO.getParticipantId(),
+                                scheduleParticipantOperationDTO.getScheduleId()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+                            String.format("Schedule %s does not exist", scheduleParticipantOperationDTO.getScheduleId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        UserErrorCode.USER_NOT_EXIST,
+                        String.format("User %s does not exist", scheduleParticipantOperationDTO.getExecutorId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", scheduleParticipantOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public ArrayList<ScheduleDTO> getAllSchedulesByUserId(String userId) {
+        try {
+            ArrayList<RelationDTO> relationDTOs = relationClient.getUserSchedules(userId);
+            ArrayList<ScheduleDTO> scheduleDTOs = new ArrayList<>();
+            ScheduleDTO scheduleDTO;
+            for (RelationDTO relationDTO : relationDTOs) {
+                scheduleDTO = getScheduleById(RelationDTOAnalyzer.getScheduleId(relationDTO));
+                scheduleDTOs.add(scheduleDTO);
+            }
+            return scheduleDTOs;
+        } catch (Exception e) {
+            throw new AppBusinessException(
+                    CommonErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
             );
         }
     }

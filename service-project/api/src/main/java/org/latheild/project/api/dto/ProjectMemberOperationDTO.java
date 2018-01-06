@@ -4,7 +4,7 @@ import org.latheild.common.api.CommonIdentityType;
 
 import java.io.Serializable;
 
-public class AddMemberDTO implements Serializable {
+public class ProjectMemberOperationDTO implements Serializable {
     private String projectId;
 
     private String executorId;

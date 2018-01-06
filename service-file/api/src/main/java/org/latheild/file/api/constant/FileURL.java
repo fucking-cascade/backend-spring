@@ -18,4 +18,8 @@ public interface FileURL {
     String ADMIN_DELETE_FILE_BY_ID_URL = "/admin/delete";
 
     String ADMIN_DELETE_FILES_URL = "/admin/delete/all";
+
+    String ATTACH_FILE_TO_TASK_URL = "/attach/task";
+
+    String DETACH_FILE_TO_TASK_URL = "/detach/task";
 }

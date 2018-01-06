@@ -5,11 +5,18 @@ import org.latheild.apiutils.exception.AppBusinessException;
 import org.latheild.common.api.RabbitMQMessageCreator;
 import org.latheild.common.constant.MessageType;
 import org.latheild.common.domain.Message;
+import org.latheild.file.api.constant.FileErrorCode;
 import org.latheild.progress.api.constant.ProgressErrorCode;
 import org.latheild.progress.api.dto.ProgressDTO;
+import org.latheild.relation.api.dto.RelationDTO;
+import org.latheild.relation.api.utils.RelationDTOAnalyzer;
 import org.latheild.task.api.constant.TaskErrorCode;
+import org.latheild.task.api.dto.TaskAttachmentOperationDTO;
 import org.latheild.task.api.dto.TaskDTO;
+import org.latheild.task.api.dto.TaskParticipantOperationDTO;
+import org.latheild.task.client.FileClient;
 import org.latheild.task.client.ProgressClient;
+import org.latheild.task.client.RelationClient;
 import org.latheild.task.client.UserClient;
 import org.latheild.task.constant.DAOQueryMode;
 import org.latheild.task.dao.TaskRepository;
@@ -36,10 +43,16 @@ public class TaskServiceImpl implements TaskService {
     RabbitTemplate rabbitTemplate;
 
     @Autowired
+    RelationClient relationClient;
+
+    @Autowired
     UserClient userClient;
 
     @Autowired
     ProgressClient progressClient;
+
+    @Autowired
+    FileClient fileClient;
 
     @Autowired
     TaskRepository taskRepository;
@@ -132,6 +145,7 @@ public class TaskServiceImpl implements TaskService {
                     for (Task task : tasks) {
                         task.setIndex(taskRepository.countByProgressId(task.getProgressId()));
                         taskRepository.save(task);
+                        relationClient.addTaskParticipant(task.getOwnerId(), task.getId());
 
                         rabbitTemplate.convertAndSend(
                                 TASK_FAN_OUT_EXCHANGE,
@@ -162,6 +176,11 @@ public class TaskServiceImpl implements TaskService {
     }
 
     @Override
+    public String getProjectId(String taskId) {
+        return progressClient.getProjectId(getTaskById(taskId).getProgressId());
+    }
+
+    @Override
     public boolean checkTaskExistence(String taskId) {
         return isTaskExist(DAOQueryMode.QUERY_BY_ID, taskId);
     }
@@ -173,6 +192,7 @@ public class TaskServiceImpl implements TaskService {
                 Task task = convertFromTaskDTOToTask(taskDTO);
                 task.setIndex(taskRepository.countByProgressId(task.getProgressId()));
                 taskRepository.save(task);
+                relationClient.addTaskParticipant(task.getOwnerId(), task.getId());
                 return convertFromTaskToTaskDTO(task);
             } else {
                 throw new AppBusinessException(
@@ -579,6 +599,188 @@ public class TaskServiceImpl implements TaskService {
         } else {
             throw new AppBusinessException(
                     CommonErrorCode.UNAUTHORIZED
+            );
+        }
+    }
+
+    @Override
+    public void addTaskParticipant(TaskParticipantOperationDTO taskParticipantOperationDTO) {
+        if (userClient.checkUserExistence(taskParticipantOperationDTO.getExecutorId())) {
+            if (userClient.checkUserExistence(taskParticipantOperationDTO.getParticipantId())) {
+                if (isTaskExist(DAOQueryMode.QUERY_BY_ID, taskParticipantOperationDTO.getTaskId())) {
+                    Task task = taskRepository.findById(taskParticipantOperationDTO.getTaskId());
+                    if (task.getOwnerId().equals(taskParticipantOperationDTO.getExecutorId())) {
+                        relationClient.addTaskParticipant(
+                                taskParticipantOperationDTO.getParticipantId(),
+                                taskParticipantOperationDTO.getTaskId()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            TaskErrorCode.TASK_NOT_EXIST,
+                            String.format("Task %s does not exist", taskParticipantOperationDTO.getTaskId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        UserErrorCode.USER_NOT_EXIST,
+                        String.format("User %s does not exist", taskParticipantOperationDTO.getParticipantId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", taskParticipantOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public void removeTaskParticipant(TaskParticipantOperationDTO taskParticipantOperationDTO) {
+        if (userClient.checkUserExistence(taskParticipantOperationDTO.getExecutorId())) {
+            if (userClient.checkUserExistence(taskParticipantOperationDTO.getParticipantId())) {
+                if (isTaskExist(DAOQueryMode.QUERY_BY_ID, taskParticipantOperationDTO.getTaskId())) {
+                    Task task = taskRepository.findById(taskParticipantOperationDTO.getTaskId());
+                    if (task.getOwnerId().equals(taskParticipantOperationDTO.getExecutorId())) {
+                        relationClient.deleteTaskParticipant(
+                                taskParticipantOperationDTO.getParticipantId(),
+                                taskParticipantOperationDTO.getTaskId()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            TaskErrorCode.TASK_NOT_EXIST,
+                            String.format("Task %s does not exist", taskParticipantOperationDTO.getTaskId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        UserErrorCode.USER_NOT_EXIST,
+                        String.format("User %s does not exist", taskParticipantOperationDTO.getParticipantId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", taskParticipantOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public ArrayList<TaskDTO> getAllTasksByUserId(String userId) {
+        try {
+            ArrayList<RelationDTO> relationDTOs = relationClient.getUserTasks(userId);
+            ArrayList<TaskDTO> taskDTOs = new ArrayList<>();
+            TaskDTO taskDTO;
+            for (RelationDTO relationDTO : relationDTOs) {
+                taskDTO = getTaskById(RelationDTOAnalyzer.getTaskId(relationDTO));
+                taskDTOs.add(taskDTO);
+            }
+            return taskDTOs;
+        } catch (Exception e) {
+            throw new AppBusinessException(
+                    CommonErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
+            );
+        }
+    }
+
+    @Override
+    public void addTaskAttachment(TaskAttachmentOperationDTO taskAttachmentOperationDTO) {
+        if (userClient.checkUserExistence(taskAttachmentOperationDTO.getExecutorId())) {
+            if (fileClient.checkFileExistence(taskAttachmentOperationDTO.getFileId())) {
+                if (isTaskExist(DAOQueryMode.QUERY_BY_ID, taskAttachmentOperationDTO.getTaskId())) {
+                    Task task = taskRepository.findById(taskAttachmentOperationDTO.getTaskId());
+                    if (task.getOwnerId().equals(taskAttachmentOperationDTO.getExecutorId())) {
+                        relationClient.addTaskAttachment(
+                                taskAttachmentOperationDTO.getFileId(),
+                                taskAttachmentOperationDTO.getTaskId()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            TaskErrorCode.TASK_NOT_EXIST,
+                            String.format("Task %s does not exist", taskAttachmentOperationDTO.getTaskId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        FileErrorCode.FILE_NOT_EXIST,
+                        String.format("User %s does not exist", taskAttachmentOperationDTO.getFileId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", taskAttachmentOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public void removeTaskAttachment(TaskAttachmentOperationDTO taskAttachmentOperationDTO) {
+        if (userClient.checkUserExistence(taskAttachmentOperationDTO.getExecutorId())) {
+            if (fileClient.checkFileExistence(taskAttachmentOperationDTO.getFileId())) {
+                if (isTaskExist(DAOQueryMode.QUERY_BY_ID, taskAttachmentOperationDTO.getTaskId())) {
+                    Task task = taskRepository.findById(taskAttachmentOperationDTO.getTaskId());
+                    if (task.getOwnerId().equals(taskAttachmentOperationDTO.getExecutorId())) {
+                        relationClient.deleteTaskAttachment(
+                                taskAttachmentOperationDTO.getFileId(),
+                                taskAttachmentOperationDTO.getTaskId()
+                        );
+                    } else {
+                        throw new AppBusinessException(
+                                CommonErrorCode.UNAUTHORIZED
+                        );
+                    }
+                } else {
+                    throw new AppBusinessException(
+                            TaskErrorCode.TASK_NOT_EXIST,
+                            String.format("Task %s does not exist", taskAttachmentOperationDTO.getTaskId())
+                    );
+                }
+            } else {
+                throw new AppBusinessException(
+                        FileErrorCode.FILE_NOT_EXIST,
+                        String.format("User %s does not exist", taskAttachmentOperationDTO.getFileId())
+                );
+            }
+        } else {
+            throw new AppBusinessException(
+                    UserErrorCode.USER_NOT_EXIST,
+                    String.format("User %s does not exist", taskAttachmentOperationDTO.getExecutorId())
+            );
+        }
+    }
+
+    @Override
+    public ArrayList<TaskDTO> getAllTasksByFileId(String fildId) {
+        try {
+            ArrayList<RelationDTO> relationDTOs = relationClient.getFileTasks(fildId);
+            ArrayList<TaskDTO> taskDTOs = new ArrayList<>();
+            TaskDTO taskDTO;
+            for (RelationDTO relationDTO : relationDTOs) {
+                taskDTO = getTaskById(RelationDTOAnalyzer.getTaskId(relationDTO));
+                taskDTOs.add(taskDTO);
+            }
+            return taskDTOs;
+        } catch (Exception e) {
+            throw new AppBusinessException(
+                    CommonErrorCode.INTERNAL_ERROR,
+                    e.getMessage()
             );
         }
     }
