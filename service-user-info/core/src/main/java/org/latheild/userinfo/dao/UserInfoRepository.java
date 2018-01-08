@@ -1,11 +1,11 @@
 package org.latheild.userinfo.dao;
 
 import org.latheild.userinfo.domain.UserInfo;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
+import java.lang.reflect.Array;
 import java.util.ArrayList;
 
-public interface UserInfoRepository extends MongoRepository<UserInfo, String> {
+public interface UserInfoRepository {
     UserInfo findById(String id);
 
     UserInfo findByUserId(String userId);
@@ -21,4 +21,10 @@ public interface UserInfoRepository extends MongoRepository<UserInfo, String> {
     ArrayList<UserInfo> findAllByName(String name);
 
     void deleteByUserId(String userId);
+
+    void deleteAll();
+
+    void save(UserInfo userInfo);
+
+    int count();
 }

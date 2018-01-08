@@ -1,11 +1,10 @@
 package org.latheild.file.dao;
 
 import org.latheild.file.domain.File;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
 
-public interface FileRepository extends MongoRepository<File, String> {
+public interface FileRepository {
     File findById(String id);
 
     ArrayList<File> findAllByOwnerId(String ownerId);
@@ -29,4 +28,10 @@ public interface FileRepository extends MongoRepository<File, String> {
     void deleteAllByProjectId(String projectId);
 
     void deleteAllByOwnerIdAndProjectId(String ownerId, String projectId);
+
+    void deleteAll();
+
+    void save(File file);
+
+    int count();
 }

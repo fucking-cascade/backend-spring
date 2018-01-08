@@ -15,11 +15,7 @@ import org.springframework.data.mongodb.repository.config.EnableMongoRepositorie
         "org.latheild.**.controller",
         "org.latheild.**.client"
 })
-@EnableMongoRepositories(
-        "org.latheild.**.dao"
-)
 @EnableHystrix
-@EnableMongoAuditing
 public class BaseConfiguration {
     @Bean
     public ApplicationConstant applicationConstant() {

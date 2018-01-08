@@ -1,16 +1,15 @@
 package org.latheild.comment.dao;
 
 import org.latheild.comment.domain.Comment;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
 
-public interface CommentRepository extends MongoRepository<Comment, String> {
+public interface CommentRepository {
     Comment findById(String id);
 
     ArrayList<Comment> findAllByUserId(String userId);
 
-    ArrayList<Comment> findAllByTaskId(String userId);
+    ArrayList<Comment> findAllByTaskId(String taskId);
 
     ArrayList<Comment> findAllByUserIdAndTaskId(String userId, String taskId);
 
@@ -29,4 +28,10 @@ public interface CommentRepository extends MongoRepository<Comment, String> {
     void deleteAllByTaskId(String taskId);
 
     void deleteAllByUserIdAndTaskId(String userId, String taskId);
+
+    void deleteAll();
+
+    void save(Comment comment);
+
+    int count();
 }

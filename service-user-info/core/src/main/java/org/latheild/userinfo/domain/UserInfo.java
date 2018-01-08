@@ -5,6 +5,9 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 
+//Gender -> Bool
+//Birthday -> String
+
 public class UserInfo {
     @Id
     @NotNull
@@ -25,6 +28,10 @@ public class UserInfo {
     private String job;
 
     private String avatar;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     public String getId() {
         return id;
@@ -96,5 +103,21 @@ public class UserInfo {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

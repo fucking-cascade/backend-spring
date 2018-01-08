@@ -1,11 +1,10 @@
 package org.latheild.progress.dao;
 
 import org.latheild.progress.domain.Progress;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
 
-public interface ProgressRepository extends MongoRepository<Progress, String> {
+public interface ProgressRepository {
     Progress findById(String id);
 
     ArrayList<Progress> findAllByOwnerId(String ownerId);
@@ -31,4 +30,10 @@ public interface ProgressRepository extends MongoRepository<Progress, String> {
     void deleteAllByProjectId(String projectId);
 
     void deleteAllByOwnerIdAndProjectId(String ownerId, String projectId);
+
+    void deleteAll();
+
+    void save(Progress progress);
+
+    int count();
 }

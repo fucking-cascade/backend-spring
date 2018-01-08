@@ -17,6 +17,10 @@ public class UserProjectRelation implements Serializable {
 
     private CommonIdentityType identityType;
 
+    private String createdAt;
+
+    private String updatedAt;
+
     public String getId() {
         return id;
     }
@@ -47,5 +51,21 @@ public class UserProjectRelation implements Serializable {
 
     public void setIdentityType(CommonIdentityType identityType) {
         this.identityType = identityType;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

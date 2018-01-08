@@ -2,7 +2,7 @@ package org.latheild.schedule.service;
 
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
-import org.latheild.common.api.RabbitMQMessageCreator;
+import org.latheild.common.utils.RabbitMQMessageCreator;
 import org.latheild.common.constant.MessageType;
 import org.latheild.common.domain.Message;
 import org.latheild.project.api.constant.ProjectErrorCode;

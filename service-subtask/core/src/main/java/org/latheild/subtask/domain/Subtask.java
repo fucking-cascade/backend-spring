@@ -5,6 +5,8 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 
+//state
+
 public class Subtask {
     @Id
     @NotNull
@@ -17,6 +19,10 @@ public class Subtask {
     private String content;
 
     private CommonTaskStatus taskStatus;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     public String getId() {
         return id;
@@ -56,5 +62,21 @@ public class Subtask {
 
     public void setTaskStatus(CommonTaskStatus taskStatus) {
         this.taskStatus = taskStatus;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

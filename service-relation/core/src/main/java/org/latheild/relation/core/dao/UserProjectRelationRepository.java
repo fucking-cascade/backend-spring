@@ -1,11 +1,10 @@
 package org.latheild.relation.core.dao;
 
 import org.latheild.relation.core.domain.UserProjectRelation;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
 
-public interface UserProjectRelationRepository extends MongoRepository<UserProjectRelation, String> {
+public interface UserProjectRelationRepository {
     UserProjectRelation findById(String id);
 
     ArrayList<UserProjectRelation> findAllByUserId(String userId);
@@ -31,4 +30,10 @@ public interface UserProjectRelationRepository extends MongoRepository<UserProje
     void deleteAllByProjectId(String projectId);
 
     void deleteByUserIdAndProjectId(String userId, String projectId);
+
+    void deleteAll();
+
+    void save(UserProjectRelation userProjectRelation);
+
+    int count();
 }

@@ -14,6 +14,10 @@ public class FileTaskRelation implements Serializable {
 
     private String taskId;
 
+    private String createdAt;
+
+    private String updatedAt;
+
     public String getId() {
         return id;
     }
@@ -36,5 +40,21 @@ public class FileTaskRelation implements Serializable {
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

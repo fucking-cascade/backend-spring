@@ -14,6 +14,10 @@ public class UserScheduleRelation implements Serializable {
 
     private String scheduleId;
 
+    private String createdAt;
+
+    private String updatedAt;
+
     public String getId() {
         return id;
     }
@@ -36,5 +40,21 @@ public class UserScheduleRelation implements Serializable {
 
     public void setScheduleId(String scheduleId) {
         this.scheduleId = scheduleId;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

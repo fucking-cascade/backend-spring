@@ -4,6 +4,9 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 
+//repeatedDaily -> Bool
+//repeatedWeekly -> Bool
+
 public class Schedule {
     @Id
     @NotNull
@@ -22,6 +25,10 @@ public class Schedule {
     private String endTime;
 
     private String location;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     public String getId() {
         return id;
@@ -85,5 +92,21 @@ public class Schedule {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

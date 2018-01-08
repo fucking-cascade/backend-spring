@@ -1,11 +1,10 @@
 package org.latheild.schedule.dao;
 
 import org.latheild.schedule.domain.Schedule;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
 
-public interface ScheduleRepository extends MongoRepository<Schedule, String> {
+public interface ScheduleRepository {
     Schedule findById(String id);
 
     ArrayList<Schedule> findAllByOwnerId(String ownerId);
@@ -29,4 +28,10 @@ public interface ScheduleRepository extends MongoRepository<Schedule, String> {
     void deleteAllByProjectId(String projectId);
 
     void deleteAllByOwnerIdAndProjectId(String ownerId, String projectId);
+
+    void deleteAll();
+
+    void save(Schedule schedule);
+
+    int count();
 }

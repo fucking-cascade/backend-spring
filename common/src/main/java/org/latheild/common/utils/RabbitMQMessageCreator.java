@@ -1,4 +1,4 @@
-package org.latheild.common.api;
+package org.latheild.common.utils;
 
 import org.latheild.common.constant.MessageType;
 import org.latheild.common.domain.Message;

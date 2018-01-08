@@ -1,11 +1,10 @@
 package org.latheild.relation.core.dao;
 
 import org.latheild.relation.core.domain.FileTaskRelation;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
 
-public interface FileTaskRelationRepository extends MongoRepository<FileTaskRelation, String> {
+public interface FileTaskRelationRepository {
     FileTaskRelation findById(String id);
 
     ArrayList<FileTaskRelation> findAllByFileId(String fileId);
@@ -31,4 +30,10 @@ public interface FileTaskRelationRepository extends MongoRepository<FileTaskRela
     void deleteAllByTaskId(String taskId);
 
     void deleteByFileIdAndTaskId(String fileId, String taskId);
+
+    void deleteAll();
+
+    void save(FileTaskRelation fileTaskRelation);
+
+    int count();
 }

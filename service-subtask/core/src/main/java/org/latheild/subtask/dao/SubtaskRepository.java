@@ -1,12 +1,10 @@
 package org.latheild.subtask.dao;
 
-import org.latheild.common.api.CommonTaskStatus;
 import org.latheild.subtask.domain.Subtask;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
 
-public interface SubtaskRepository extends MongoRepository<Subtask, String> {
+public interface SubtaskRepository {
     Subtask findById(String id);
 
     ArrayList<Subtask> findAllByUserId(String userId);
@@ -30,4 +28,10 @@ public interface SubtaskRepository extends MongoRepository<Subtask, String> {
     void deleteAllByTaskId(String taskId);
 
     void deleteAllByUserIdAndTaskId(String userId, String taskId);
+
+    void deleteAll();
+
+    void save(Subtask subtask);
+
+    int count();
 }

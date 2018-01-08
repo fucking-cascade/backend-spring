@@ -3,7 +3,7 @@ package org.latheild.user.service;
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.exception.AppBusinessException;
 import org.latheild.common.api.CommonIdentityType;
-import org.latheild.common.api.RabbitMQMessageCreator;
+import org.latheild.common.utils.RabbitMQMessageCreator;
 import org.latheild.common.constant.MessageType;
 import org.latheild.project.api.constant.ProjectErrorCode;
 import org.latheild.relation.api.dto.RelationDTO;

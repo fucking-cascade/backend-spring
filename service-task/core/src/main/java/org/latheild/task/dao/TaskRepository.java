@@ -1,11 +1,10 @@
 package org.latheild.task.dao;
 
 import org.latheild.task.domain.Task;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
 
-public interface TaskRepository extends MongoRepository<Task, String> {
+public interface TaskRepository {
     Task findById(String id);
 
     ArrayList<Task> findAllByOwnerId(String ownerId);
@@ -31,4 +30,10 @@ public interface TaskRepository extends MongoRepository<Task, String> {
     void deleteAllByProgressId(String progressId);
 
     void deleteAllByOwnerIdAndProgressId(String ownerId, String progressId);
+
+    void deleteAll();
+
+    void save(Task task);
+
+    int count();
 }

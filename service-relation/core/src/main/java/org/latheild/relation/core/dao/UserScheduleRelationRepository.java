@@ -1,11 +1,10 @@
 package org.latheild.relation.core.dao;
 
 import org.latheild.relation.core.domain.UserScheduleRelation;
-import org.springframework.data.mongodb.repository.MongoRepository;
 
 import java.util.ArrayList;
 
-public interface UserScheduleRelationRepository extends MongoRepository<UserScheduleRelation, String> {
+public interface UserScheduleRelationRepository {
     UserScheduleRelation findById(String id);
 
     ArrayList<UserScheduleRelation> findAllByUserId(String userId);
@@ -31,4 +30,10 @@ public interface UserScheduleRelationRepository extends MongoRepository<UserSche
     void deleteAllByScheduleId(String scheduleId);
 
     void deleteByUserIdAndScheduleId(String userId, String scheduleId);
+
+    void deleteAll();
+
+    void save(UserScheduleRelation userScheduleRelation);
+
+    int count();
 }

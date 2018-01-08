@@ -4,6 +4,8 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 
+//index -> order
+
 public class Progress {
     @Id
     @NotNull
@@ -16,6 +18,10 @@ public class Progress {
     private String projectId;
 
     private int index;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     public String getId() {
         return id;
@@ -55,5 +61,21 @@ public class Progress {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }

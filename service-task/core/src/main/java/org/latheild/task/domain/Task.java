@@ -6,6 +6,9 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 
+//state -> Bool
+//ddl -> String
+
 public class Task {
     @Id
     @NotNull
@@ -24,6 +27,10 @@ public class Task {
     private CommonPriority priority;
 
     private int index;
+
+    private String createdAt;
+
+    private String updatedAt;
 
     public String getId() {
         return id;
@@ -87,5 +94,21 @@ public class Task {
 
     public void setIndex(int index) {
         this.index = index;
+    }
+
+    public String getCreatedAt() {
+        return createdAt;
+    }
+
+    public void setCreatedAt(String createdAt) {
+        this.createdAt = createdAt;
+    }
+
+    public String getUpdatedAt() {
+        return updatedAt;
+    }
+
+    public void setUpdatedAt(String updatedAt) {
+        this.updatedAt = updatedAt;
     }
 }
