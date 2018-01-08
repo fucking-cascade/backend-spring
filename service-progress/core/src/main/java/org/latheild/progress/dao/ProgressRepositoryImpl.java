@@ -76,8 +76,8 @@ public class ProgressRepositoryImpl extends DAOResponseJSONAnalyzer implements P
     @Override
     public ArrayList<Progress> findAllByOwnerIdAndProjectId(String ownerId, String projectId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
-        fieldNames.add("projectId");
+        fieldNames.add("OwnerId");
+        fieldNames.add("ProjectId");
         Progress progress = new Progress();
         progress.setProjectId(projectId);
         progress.setOwnerId(ownerId);
@@ -189,8 +189,8 @@ public class ProgressRepositoryImpl extends DAOResponseJSONAnalyzer implements P
     @Override
     public void deleteAllByOwnerIdAndProjectId(String ownerId, String projectId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
-        fieldNames.add("projectId");
+        fieldNames.add("OwnerId");
+        fieldNames.add("ProjectId");
         Progress progress = new Progress();
         progress.setOwnerId(ownerId);
         progress.setProjectId(projectId);
@@ -217,10 +217,10 @@ public class ProgressRepositoryImpl extends DAOResponseJSONAnalyzer implements P
     @Override
     public void save(Progress progress) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
+        fieldNames.add("OwnerId");
         fieldNames.add("name");
-        fieldNames.add("projectId");
-        fieldNames.add("index");
+        fieldNames.add("ProjectId");
+        fieldNames.add("order");
         if (progress.getId() != null) {
             fieldNames.add("id");
             restTemplate.postForObject(

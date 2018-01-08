@@ -14,19 +14,17 @@ public class Task {
     @NotNull
     private String id;
 
-    private String ownerId;
+    private String OwnerId;
 
-    private String progressId;
+    private String ProgressId;
 
     private String name;
 
     private String content;
 
-    private CommonTaskStatus taskStatus;
+    private Boolean state;
 
-    private CommonPriority priority;
-
-    private int index;
+    private String ddl;
 
     private String createdAt;
 
@@ -41,19 +39,19 @@ public class Task {
     }
 
     public String getOwnerId() {
-        return ownerId;
+        return OwnerId;
     }
 
     public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
+        OwnerId = ownerId;
     }
 
     public String getProgressId() {
-        return progressId;
+        return ProgressId;
     }
 
     public void setProgressId(String progressId) {
-        this.progressId = progressId;
+        ProgressId = progressId;
     }
 
     public String getName() {
@@ -72,28 +70,20 @@ public class Task {
         this.content = content;
     }
 
-    public CommonTaskStatus getTaskStatus() {
-        return taskStatus;
+    public Boolean getState() {
+        return state;
     }
 
-    public void setTaskStatus(CommonTaskStatus taskStatus) {
-        this.taskStatus = taskStatus;
+    public void setState(Boolean state) {
+        this.state = state;
     }
 
-    public CommonPriority getPriority() {
-        return priority;
+    public String getDdl() {
+        return ddl;
     }
 
-    public void setPriority(CommonPriority priority) {
-        this.priority = priority;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
+    public void setDdl(String ddl) {
+        this.ddl = ddl;
     }
 
     public String getCreatedAt() {

@@ -63,8 +63,8 @@ public class SubtaskRepositoryImpl extends DAOResponseJSONAnalyzer implements Su
     @Override
     public ArrayList<Subtask> findAllByUserIdAndTaskId(String userId, String taskId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
         Subtask subtask = new Subtask();
         subtask.setTaskId(taskId);
         subtask.setUserId(userId);
@@ -176,8 +176,8 @@ public class SubtaskRepositoryImpl extends DAOResponseJSONAnalyzer implements Su
     @Override
     public void deleteAllByUserIdAndTaskId(String userId, String taskId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
         Subtask subtask = new Subtask();
         subtask.setTaskId(taskId);
         subtask.setUserId(userId);
@@ -204,10 +204,10 @@ public class SubtaskRepositoryImpl extends DAOResponseJSONAnalyzer implements Su
     @Override
     public void save(Subtask subtask) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
         fieldNames.add("content");
-        fieldNames.add("taskStatus");
+        fieldNames.add("state");
         if (subtask.getId() != null) {
             fieldNames.add("id");
             restTemplate.postForObject(

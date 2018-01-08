@@ -74,6 +74,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         scheduleDTO.setProjectId(schedule.getProjectId());
         scheduleDTO.setStartTime(schedule.getStartTime());
         scheduleDTO.setScheduleId(schedule.getId());
+        scheduleDTO.setRepeatDaily(schedule.getRepeatDaily());
+        scheduleDTO.setRepeatWeekly(schedule.getRepeatWeekly());
         return scheduleDTO;
     }
 
@@ -94,6 +96,8 @@ public class ScheduleServiceImpl implements ScheduleService {
         schedule.setLocation(scheduleDTO.getLocation());
         schedule.setProjectId(scheduleDTO.getProjectId());
         schedule.setOwnerId(scheduleDTO.getOwnerId());
+        schedule.setRepeatDaily(scheduleDTO.getRepeatDaily());
+        schedule.setRepeatWeekly(scheduleDTO.getRepeatWeekly());
         return schedule;
     }
 

@@ -11,13 +11,13 @@ public class Progress {
     @NotNull
     private String id;
 
-    private String ownerId;
+    private String OwnerId;
 
     private String name;
 
-    private String projectId;
+    private String ProjectId;
 
-    private int index;
+    private int order;
 
     private String createdAt;
 
@@ -32,11 +32,11 @@ public class Progress {
     }
 
     public String getOwnerId() {
-        return ownerId;
+        return OwnerId;
     }
 
     public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
+        OwnerId = ownerId;
     }
 
     public String getName() {
@@ -48,19 +48,19 @@ public class Progress {
     }
 
     public String getProjectId() {
-        return projectId;
+        return ProjectId;
     }
 
     public void setProjectId(String projectId) {
-        this.projectId = projectId;
+        ProjectId = projectId;
     }
 
-    public int getIndex() {
-        return index;
+    public int getOrder() {
+        return order;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setOrder(int order) {
+        this.order = order;
     }
 
     public String getCreatedAt() {

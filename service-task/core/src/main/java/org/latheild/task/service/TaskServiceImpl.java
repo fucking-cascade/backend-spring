@@ -77,10 +77,9 @@ public class TaskServiceImpl implements TaskService {
         taskDTO.setContent(task.getContent());
         taskDTO.setName(task.getName());
         taskDTO.setOwnerId(task.getOwnerId());
-        taskDTO.setPriority(task.getPriority());
         taskDTO.setProgressId(task.getProgressId());
-        taskDTO.setIndex(task.getIndex());
-        taskDTO.setTaskStatus(task.getTaskStatus());
+        taskDTO.setDdl(task.getDdl());
+        taskDTO.setState(task.getState());
         taskDTO.setTaskId(task.getId());
         return taskDTO;
     }
@@ -96,11 +95,10 @@ public class TaskServiceImpl implements TaskService {
     private Task convertFromTaskDTOToTask(TaskDTO taskDTO) {
         Task task = new Task();
         task.setContent(taskDTO.getContent());
-        task.setIndex(taskDTO.getIndex());
+        task.setDdl(taskDTO.getDdl());
         task.setName(taskDTO.getName());
         task.setOwnerId(taskDTO.getOwnerId());
-        task.setPriority(taskDTO.getPriority());
-        task.setTaskStatus(taskDTO.getTaskStatus());
+        task.setState(taskDTO.getState());
         task.setProgressId(taskDTO.getProgressId());
         return task;
     }
@@ -113,16 +111,16 @@ public class TaskServiceImpl implements TaskService {
         return tasks;
     }
 
-    private TaskDTO adjustIndex(TaskDTO taskDTO) {
+    /*private TaskDTO adjustIndex(TaskDTO taskDTO) {
         if (taskDTO.getIndex() >= taskRepository.countByProgressId(taskDTO.getProgressId())) {
             taskDTO.setIndex(taskRepository.countByProgressId(taskDTO.getProgressId()) - 1);
         } else if (taskDTO.getIndex() < 0) {
             taskDTO.setIndex(0);
         }
         return taskDTO;
-    }
+    }*/
 
-    private void resetIndexForTaskListOfProgress(Task task) {
+    /*private void resetIndexForTaskListOfProgress(Task task) {
         ArrayList<Task> tasks = taskRepository.findAllByProgressIdOrderByIndexAsc(task.getProgressId());
         int i = 0;
         for (Task iter : tasks) {
@@ -130,7 +128,7 @@ public class TaskServiceImpl implements TaskService {
             i++;
             taskRepository.save(iter);
         }
-    }
+    }*/
 
     @RabbitHandler
     public void eventHandler(Message message) {
@@ -138,24 +136,22 @@ public class TaskServiceImpl implements TaskService {
             case TUTORIAL_PROGRESS_CREATED:
                 ProgressDTO progressDTO = (ProgressDTO) message.getMessageBody();
 
-                if (progressDTO.getIndex() == 0) {
-                    ArrayList<Task> tasks = convertFromTaskDTOsToTasks(
-                            TutorialTaskCreator.setTutorialTasks(progressDTO.getOwnerId(), progressDTO.getProgressId())
-                    );
-                    for (Task task : tasks) {
-                        task.setIndex(taskRepository.countByProgressId(task.getProgressId()));
-                        taskRepository.save(task);
-                        relationClient.addTaskParticipant(task.getOwnerId(), task.getId());
+                ArrayList<Task> tasks = convertFromTaskDTOsToTasks(
+                        TutorialTaskCreator.setTutorialTasks(progressDTO.getOwnerId(), progressDTO.getProgressId())
+                );
+                for (Task task : tasks) {
+//                        task.setIndex(taskRepository.countByProgressId(task.getProgressId()));
+                    taskRepository.save(task);
+                    relationClient.addTaskParticipant(task.getOwnerId(), task.getId());
 
-                        rabbitTemplate.convertAndSend(
-                                TASK_FAN_OUT_EXCHANGE,
-                                "",
-                                RabbitMQMessageCreator.newInstance(
-                                        MessageType.TUTORIAL_TASK_CREATED,
-                                        convertFromTaskToTaskDTO(task)
-                                )
-                        );
-                    }
+                    rabbitTemplate.convertAndSend(
+                            TASK_FAN_OUT_EXCHANGE,
+                            "",
+                            RabbitMQMessageCreator.newInstance(
+                                    MessageType.TUTORIAL_TASK_CREATED,
+                                    convertFromTaskToTaskDTO(task)
+                            )
+                    );
                 }
                 break;
             case PROGRESS_DELETED:
@@ -190,7 +186,7 @@ public class TaskServiceImpl implements TaskService {
         if (userClient.checkUserExistence(taskDTO.getOwnerId())) {
             if (progressClient.checkProgressExistence(taskDTO.getProgressId())) {
                 Task task = convertFromTaskDTOToTask(taskDTO);
-                task.setIndex(taskRepository.countByProgressId(task.getProgressId()));
+//                task.setIndex(taskRepository.countByProgressId(task.getProgressId()));
                 taskRepository.save(task);
                 relationClient.addTaskParticipant(task.getOwnerId(), task.getId());
                 return convertFromTaskToTaskDTO(task);
@@ -214,7 +210,7 @@ public class TaskServiceImpl implements TaskService {
             Task task = taskRepository.findById(taskDTO.getTaskId());
             if (task.getOwnerId().equals(taskDTO.getOwnerId())) {
                 taskRepository.deleteById(taskDTO.getTaskId());
-                resetIndexForTaskListOfProgress(task);
+//                resetIndexForTaskListOfProgress(task);
 
                 rabbitTemplate.convertAndSend(
                         TASK_FAN_OUT_EXCHANGE,
@@ -242,7 +238,7 @@ public class TaskServiceImpl implements TaskService {
         if (isTaskExist(DAOQueryMode.QUERY_BY_ID, taskDTO.getTaskId())) {
             Task task = taskRepository.findById(taskDTO.getTaskId());
             if (task.getOwnerId().equals(taskDTO.getOwnerId())) {
-                task.setPriority(taskDTO.getPriority());
+//                task.setPriority(taskDTO.getPriority());
                 task.setName(taskDTO.getName());
                 task.setContent(taskDTO.getContent());
                 taskRepository.save(task);
@@ -265,7 +261,7 @@ public class TaskServiceImpl implements TaskService {
         if (isTaskExist(DAOQueryMode.QUERY_BY_ID, taskDTO.getTaskId())) {
             Task task = taskRepository.findById(taskDTO.getTaskId());
             if (task.getOwnerId().equals(taskDTO.getOwnerId())) {
-                task.setTaskStatus(taskDTO.getTaskStatus());
+                task.setState(taskDTO.getState());
                 taskRepository.save(task);
                 return convertFromTaskToTaskDTO(task);
             } else {
@@ -281,7 +277,7 @@ public class TaskServiceImpl implements TaskService {
         }
     }
 
-    @Override
+    /*@Override
     public TaskDTO changeTaskOrder(TaskDTO taskDTO) {
         if (isTaskExist(DAOQueryMode.QUERY_BY_ID, taskDTO.getTaskId())) {
             Task task = taskRepository.findById(taskDTO.getTaskId());
@@ -323,9 +319,9 @@ public class TaskServiceImpl implements TaskService {
                     String.format("Task %s does not exist", taskDTO.getTaskId())
             );
         }
-    }
+    }*/
 
-    @Override
+    /*@Override
     public TaskDTO changeTaskProgress(TaskDTO taskDTO) {
         if (isTaskExist(DAOQueryMode.QUERY_BY_ID, taskDTO.getTaskId())) {
             Task task = taskRepository.findById(taskDTO.getTaskId());
@@ -371,7 +367,7 @@ public class TaskServiceImpl implements TaskService {
                     String.format("Task %s does not exist", taskDTO.getTaskId())
             );
         }
-    }
+    }*/
 
     @Override
     public TaskDTO getTaskById(String id) {
@@ -449,9 +445,9 @@ public class TaskServiceImpl implements TaskService {
     public void adminDeleteTaskById(String id, String code) {
         if (code.equals(ADMIN_CODE)) {
             if (isTaskExist(DAOQueryMode.QUERY_BY_ID, id)) {
-                Task task = taskRepository.findById(id);
+//                Task task = taskRepository.findById(id);
                 taskRepository.deleteById(id);
-                resetIndexForTaskListOfProgress(task);
+//                resetIndexForTaskListOfProgress(task);
 
                 rabbitTemplate.convertAndSend(
                         TASK_FAN_OUT_EXCHANGE,
@@ -482,7 +478,7 @@ public class TaskServiceImpl implements TaskService {
                 taskRepository.deleteAllByOwnerId(ownerId);
 
                 for (Task task : tasks) {
-                    resetIndexForTaskListOfProgress(task);
+//                    resetIndexForTaskListOfProgress(task);
 
                     rabbitTemplate.convertAndSend(
                             TASK_FAN_OUT_EXCHANGE,
@@ -514,7 +510,7 @@ public class TaskServiceImpl implements TaskService {
                 taskRepository.deleteAllByProgressId(progressId);
 
                 for (Task task : tasks) {
-                    resetIndexForTaskListOfProgress(task);
+//                    resetIndexForTaskListOfProgress(task);
 
                     rabbitTemplate.convertAndSend(
                             TASK_FAN_OUT_EXCHANGE,
@@ -547,7 +543,7 @@ public class TaskServiceImpl implements TaskService {
                     taskRepository.deleteAllByOwnerIdAndProgressId(ownerId, progressId);
 
                     for (Task task : tasks) {
-                        resetIndexForTaskListOfProgress(task);
+//                        resetIndexForTaskListOfProgress(task);
 
                         rabbitTemplate.convertAndSend(
                                 TASK_FAN_OUT_EXCHANGE,

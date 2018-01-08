@@ -147,7 +147,7 @@ public class UserInfoRepositoryImpl extends DAOResponseJSONAnalyzer implements U
     @Override
     public void save(UserInfo userInfo) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
+        fieldNames.add("UserId");
         fieldNames.add("name");
         fieldNames.add("gender");
         fieldNames.add("address");
@@ -155,6 +155,7 @@ public class UserInfoRepositoryImpl extends DAOResponseJSONAnalyzer implements U
         fieldNames.add("phoneNumber");
         fieldNames.add("job");
         fieldNames.add("avatar");
+        fieldNames.add("birthday");
         if (userInfo.getId() != null) {
             fieldNames.add("id");
             restTemplate.postForObject(

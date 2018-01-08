@@ -10,7 +10,7 @@ public class TutorialProgressListCreator {
         ProgressDTO temp;
         for (int i = 0; i < 3; ++i) {
             temp = new ProgressDTO();
-            temp.setIndex(i);
+            temp.setOrder(i);
             temp.setProjectId(projectId);
             temp.setOwnerId(ownerId);
             switch (i) {

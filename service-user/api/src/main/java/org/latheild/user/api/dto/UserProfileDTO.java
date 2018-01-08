@@ -4,14 +4,24 @@ import org.latheild.common.constant.Gender;
 
 public class UserProfileDTO {
     private String userId;
+
     private String email;
+
     private String name;
-    private Gender gender;
+
+    private Boolean gender;
+
     private String phoneNumber;
+
     private String address;
+
     private String website;
+
     private String job;
+
     private String avatar;
+
+    private String birthday;
 
     public String getUserId() {
         return userId;
@@ -37,11 +47,11 @@ public class UserProfileDTO {
         this.name = name;
     }
 
-    public Gender getGender() {
+    public Boolean getGender() {
         return gender;
     }
 
-    public void setGender(Gender gender) {
+    public void setGender(Boolean gender) {
         this.gender = gender;
     }
 
@@ -83,5 +93,13 @@ public class UserProfileDTO {
 
     public void setAvatar(String avatar) {
         this.avatar = avatar;
+    }
+
+    public String getBirthday() {
+        return birthday;
+    }
+
+    public void setBirthday(String birthday) {
+        this.birthday = birthday;
     }
 }

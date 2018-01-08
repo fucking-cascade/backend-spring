@@ -63,8 +63,8 @@ public class UserTaskRelationRepositoryImpl extends DAOResponseJSONAnalyzer impl
     @Override
     public UserTaskRelation findByUserIdAndTaskId(String userId, String taskId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
         UserTaskRelation userTaskRelation = new UserTaskRelation();
         userTaskRelation.setTaskId(taskId);
         userTaskRelation.setUserId(userId);
@@ -143,8 +143,8 @@ public class UserTaskRelationRepositoryImpl extends DAOResponseJSONAnalyzer impl
     @Override
     public int countByUserIdAndTaskId(String userId, String taskId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("fileId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
         UserTaskRelation userTaskRelation = new UserTaskRelation();
         userTaskRelation.setUserId(userId);
         userTaskRelation.setTaskId(taskId);
@@ -198,8 +198,8 @@ public class UserTaskRelationRepositoryImpl extends DAOResponseJSONAnalyzer impl
     @Override
     public void deleteByUserIdAndTaskId(String userId, String taskId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("fileId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
         UserTaskRelation userTaskRelation = new UserTaskRelation();
         userTaskRelation.setUserId(userId);
         userTaskRelation.setTaskId(taskId);
@@ -226,8 +226,8 @@ public class UserTaskRelationRepositoryImpl extends DAOResponseJSONAnalyzer impl
     @Override
     public void save(UserTaskRelation userTaskRelation) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
         if (userTaskRelation.getId() != null) {
             fieldNames.add("id");
             restTemplate.postForObject(

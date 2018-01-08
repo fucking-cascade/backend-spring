@@ -7,11 +7,10 @@ import org.latheild.relation.core.domain.UserScheduleRelation;
 import org.latheild.relation.core.domain.UserTaskRelation;
 
 public class RelationCreator {
-    public static UserProjectRelation setUserProjectRelation(String userId, String projectId, CommonIdentityType identityType) {
+    public static UserProjectRelation setUserProjectRelation(String userId, String projectId) {
         UserProjectRelation userProjectRelation = new UserProjectRelation();
         userProjectRelation.setUserId(userId);
         userProjectRelation.setProjectId(projectId);
-        userProjectRelation.setIdentityType(identityType);
         return userProjectRelation;
     }
 

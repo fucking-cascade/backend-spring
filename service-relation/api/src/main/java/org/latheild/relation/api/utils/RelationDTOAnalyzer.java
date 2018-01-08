@@ -64,13 +64,4 @@ public class RelationDTOAnalyzer {
             return relationDTO.getProperty();
         }
     }
-
-    public static CommonIdentityType getIdentityType(RelationDTO relationDTO) throws Exception {
-        if (relationDTO.getRelationType() != RelationType.PROJECT_AND_USER
-                && relationDTO.getRelationType() != RelationType.USER_AND_PROJECT) {
-            throw new Exception("Relation type error: not related to project");
-        } else {
-            return relationDTO.getIdentityType();
-        }
-    }
 }

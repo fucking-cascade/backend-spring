@@ -64,8 +64,8 @@ public class UserScheduleRelationRepositoryImpl extends DAOResponseJSONAnalyzer 
     @Override
     public UserScheduleRelation findByUserIdAndScheduleId(String userId, String scheduleId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("scheduleId");
+        fieldNames.add("UserId");
+        fieldNames.add("ScheduleId");
         UserScheduleRelation userScheduleRelation = new UserScheduleRelation();
         userScheduleRelation.setScheduleId(scheduleId);
         userScheduleRelation.setUserId(userId);
@@ -144,8 +144,8 @@ public class UserScheduleRelationRepositoryImpl extends DAOResponseJSONAnalyzer 
     @Override
     public int countByUserIdAndScheduleId(String userId, String scheduleId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("fileId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("ScheduleId");
         UserScheduleRelation userScheduleRelation = new UserScheduleRelation();
         userScheduleRelation.setUserId(userId);
         userScheduleRelation.setScheduleId(scheduleId);
@@ -199,8 +199,8 @@ public class UserScheduleRelationRepositoryImpl extends DAOResponseJSONAnalyzer 
     @Override
     public void deleteByUserIdAndScheduleId(String userId, String scheduleId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("fileId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("ScheduleId");
         UserScheduleRelation userScheduleRelation = new UserScheduleRelation();
         userScheduleRelation.setUserId(userId);
         userScheduleRelation.setScheduleId(scheduleId);
@@ -227,8 +227,8 @@ public class UserScheduleRelationRepositoryImpl extends DAOResponseJSONAnalyzer 
     @Override
     public void save(UserScheduleRelation userScheduleRelation) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("ScheduleId");
         if (userScheduleRelation.getId() != null) {
             fieldNames.add("id");
             restTemplate.postForObject(

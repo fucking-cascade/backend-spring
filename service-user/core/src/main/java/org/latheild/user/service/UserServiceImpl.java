@@ -296,7 +296,7 @@ public class UserServiceImpl implements UserService {
     public void removeUserProject(UserOperationDTO userOperationDTO) {
         if (isUserCreated(DAOQueryMode.QUERY_BY_ID, userOperationDTO.getUserId())) {
             if (projectClient.checkProjectExistence(userOperationDTO.getProjectId())) {
-                if (relationClient.getMemberIdentityOfProject(userOperationDTO.getUserId(), userOperationDTO.getProjectId()) != CommonIdentityType.CREATOR) {
+                /*if (relationClient.getMemberIdentityOfProject(userOperationDTO.getUserId(), userOperationDTO.getProjectId()) != CommonIdentityType.CREATOR) {
                     relationClient.deleteProjectMember(
                             userOperationDTO.getUserId(),
                             userOperationDTO.getProjectId()
@@ -306,7 +306,7 @@ public class UserServiceImpl implements UserService {
                             CommonErrorCode.FORBIDDEN,
                             String.format("Project owner cannot quit project and can only quit after transferring project ownership or by deleting the project")
                     );
-                }
+                }*/
             } else {
                 throw new AppBusinessException(
                         ProjectErrorCode.PROJECT_NOT_EXIST,

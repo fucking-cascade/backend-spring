@@ -12,13 +12,13 @@ public class Subtask {
     @NotNull
     private String id;
 
-    private String userId;
+    private String UserId;
 
-    private String taskId;
+    private String TaskId;
 
     private String content;
 
-    private CommonTaskStatus taskStatus;
+    private Boolean state;
 
     private String createdAt;
 
@@ -33,19 +33,19 @@ public class Subtask {
     }
 
     public String getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
     public String getTaskId() {
-        return taskId;
+        return TaskId;
     }
 
     public void setTaskId(String taskId) {
-        this.taskId = taskId;
+        TaskId = taskId;
     }
 
     public String getContent() {
@@ -56,12 +56,12 @@ public class Subtask {
         this.content = content;
     }
 
-    public CommonTaskStatus getTaskStatus() {
-        return taskStatus;
+    public Boolean getState() {
+        return state;
     }
 
-    public void setTaskStatus(CommonTaskStatus taskStatus) {
-        this.taskStatus = taskStatus;
+    public void setState(Boolean state) {
+        this.state = state;
     }
 
     public String getCreatedAt() {

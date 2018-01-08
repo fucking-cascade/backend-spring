@@ -45,6 +45,4 @@ public interface RelationService {
     ArrayList<RelationDTO> getUserTasks(String userId);
 
     ArrayList<RelationDTO> getFileTasks(String fileId);
-
-    CommonIdentityType getMemberIdentityOfProject(String userId, String projectId);
 }

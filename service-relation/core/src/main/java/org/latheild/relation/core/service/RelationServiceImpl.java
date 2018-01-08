@@ -141,7 +141,7 @@ public class RelationServiceImpl implements RelationService {
                     System.out.println("Adding project member " + userId + " of project " + projectId);
                     userProjectRelationRepository.save(
                             RelationCreator.setUserProjectRelation(
-                                    userId, projectId, identityType
+                                    userId, projectId
                             )
                     );
                 } else {
@@ -402,7 +402,7 @@ public class RelationServiceImpl implements RelationService {
         } else {
             throw new AppBusinessException(
                     RelationErrorCode.RELATION_NOT_EXIST,
-                    String.format("User %s has not established any relation with tasks")
+                    "User %s has not established any relation with tasks"
             );
         }
     }
@@ -418,18 +418,6 @@ public class RelationServiceImpl implements RelationService {
             throw new AppBusinessException(
                     RelationErrorCode.RELATION_NOT_EXIST,
                     String.format("File %s has not established any relation with tasks", fileId)
-            );
-        }
-    }
-
-    @Override
-    public CommonIdentityType getMemberIdentityOfProject(String userId, String projectId) {
-        if (checkProjectMemberExistence(userId, projectId)) {
-            return userProjectRelationRepository.findByUserIdAndProjectId(userId, projectId).getIdentityType();
-        } else {
-            throw new AppBusinessException(
-                    RelationErrorCode.RELATION_NOT_EXIST,
-                    String.format("User %s is not a member of project %s", userId, projectId)
             );
         }
     }

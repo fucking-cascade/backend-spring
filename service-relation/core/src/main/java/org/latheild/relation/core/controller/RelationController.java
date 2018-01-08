@@ -171,12 +171,4 @@ public class RelationController {
     ) {
         return relationService.getFileTasks(fileId);
     }
-
-    @RequestMapping(value = GET_MEMBER_IDENTITY_OF_PROJECT_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
-    public CommonIdentityType getMemberIdentityOfProject(
-            @RequestParam(value = "userId") String userId,
-            @RequestParam(value = "projectId") String projectId
-    ) {
-        return relationService.getMemberIdentityOfProject(userId, projectId);
-    }
 }

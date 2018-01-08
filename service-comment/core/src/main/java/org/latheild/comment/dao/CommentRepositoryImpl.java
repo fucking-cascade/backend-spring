@@ -63,8 +63,8 @@ public class CommentRepositoryImpl extends DAOResponseJSONAnalyzer implements Co
     @Override
     public ArrayList<Comment> findAllByUserIdAndTaskId(String userId, String taskId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
         Comment comment = new Comment();
         comment.setUserId(userId);
         comment.setTaskId(taskId);
@@ -176,8 +176,8 @@ public class CommentRepositoryImpl extends DAOResponseJSONAnalyzer implements Co
     @Override
     public void deleteAllByUserIdAndTaskId(String userId, String taskId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
         Comment comment = new Comment();
         comment.setUserId(userId);
         comment.setTaskId(taskId);
@@ -205,8 +205,9 @@ public class CommentRepositoryImpl extends DAOResponseJSONAnalyzer implements Co
     public void save(Comment comment) {
         ArrayList<String> fieldNames = new ArrayList<>();
         fieldNames.add("content");
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("TaskId");
+        fieldNames.add("time");
         if (comment.getId() != null) {
             restTemplate.postForObject(
                     CombineURI.combineURI(

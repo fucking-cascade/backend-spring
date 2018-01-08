@@ -13,9 +13,9 @@ public class File {
 
     private String name;
 
-    private String ownerId;
+    private String UserId;
 
-    private String projectId;
+    private String ProjectId;
 
     private String content;
 
@@ -41,20 +41,20 @@ public class File {
         this.name = name;
     }
 
-    public String getOwnerId() {
-        return ownerId;
+    public String getUserId() {
+        return UserId;
     }
 
-    public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
+    public void setUserId(String userId) {
+        UserId = userId;
     }
 
     public String getProjectId() {
-        return projectId;
+        return ProjectId;
     }
 
     public void setProjectId(String projectId) {
-        this.projectId = projectId;
+        ProjectId = projectId;
     }
 
     public String getContent() {

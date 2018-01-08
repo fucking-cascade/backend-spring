@@ -12,8 +12,6 @@ public class RelationDTO implements Serializable {
 
     private RelationType relationType;
 
-    private CommonIdentityType identityType;
-
     public String getStakeHolder() {
         return stakeHolder;
     }
@@ -36,13 +34,5 @@ public class RelationDTO implements Serializable {
 
     public void setRelationType(RelationType relationType) {
         this.relationType = relationType;
-    }
-
-    public CommonIdentityType getIdentityType() {
-        return identityType;
-    }
-
-    public void setIdentityType(CommonIdentityType identityType) {
-        this.identityType = identityType;
     }
 }

@@ -76,8 +76,8 @@ public class TaskRepositoryImpl extends DAOResponseJSONAnalyzer implements TaskR
     @Override
     public ArrayList<Task> findAllByOwnerIdAndProgressId(String ownerId, String progressId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
-        fieldNames.add("progressId");
+        fieldNames.add("OwnerId");
+        fieldNames.add("ProgressId");
         Task task = new Task();
         task.setProgressId(progressId);
         task.setOwnerId(ownerId);
@@ -189,8 +189,8 @@ public class TaskRepositoryImpl extends DAOResponseJSONAnalyzer implements TaskR
     @Override
     public void deleteAllByOwnerIdAndProgressId(String ownerId, String progressId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
-        fieldNames.add("progressId");
+        fieldNames.add("OwnerId");
+        fieldNames.add("ProgressId");
         Task task = new Task();
         task.setProgressId(progressId);
         task.setOwnerId(ownerId);
@@ -217,13 +217,12 @@ public class TaskRepositoryImpl extends DAOResponseJSONAnalyzer implements TaskR
     @Override
     public void save(Task task) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
-        fieldNames.add("progressId");
+        fieldNames.add("OwnerId");
+        fieldNames.add("ProgressId");
         fieldNames.add("name");
         fieldNames.add("content");
-        fieldNames.add("taskStatus");
-        fieldNames.add("priority");
-        fieldNames.add("index");
+        fieldNames.add("state");
+        fieldNames.add("ddl");
         if (task.getId() != null) {
             fieldNames.add("id");
             restTemplate.postForObject(

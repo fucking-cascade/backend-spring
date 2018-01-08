@@ -10,9 +10,9 @@ public class FileTaskRelation implements Serializable {
     @NotNull
     private String id;
 
-    private String fileId;
+    private String FileId;
 
-    private String taskId;
+    private String TaskId;
 
     private String createdAt;
 
@@ -27,19 +27,19 @@ public class FileTaskRelation implements Serializable {
     }
 
     public String getFileId() {
-        return fileId;
+        return FileId;
     }
 
     public void setFileId(String fileId) {
-        this.fileId = fileId;
+        FileId = fileId;
     }
 
     public String getTaskId() {
-        return taskId;
+        return TaskId;
     }
 
     public void setTaskId(String taskId) {
-        this.taskId = taskId;
+        TaskId = taskId;
     }
 
     public String getCreatedAt() {

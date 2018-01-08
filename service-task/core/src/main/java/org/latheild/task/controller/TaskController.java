@@ -4,6 +4,7 @@ import org.latheild.apiutils.api.BaseResponseBody;
 import org.latheild.apiutils.api.CommonErrorCode;
 import org.latheild.apiutils.api.ExceptionResponseBody;
 import org.latheild.apiutils.exception.AppBusinessException;
+import org.latheild.task.api.dto.TaskAttachmentOperationDTO;
 import org.latheild.task.api.dto.TaskDTO;
 import org.latheild.task.api.dto.TaskParticipantOperationDTO;
 import org.latheild.task.service.TaskService;
@@ -81,7 +82,7 @@ public class TaskController {
         }
     }
 
-    @RequestMapping(value = CHANGE_TASK_ORDER_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    /*@RequestMapping(value = CHANGE_TASK_ORDER_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
     @ResponseBody
     public Object changeTaskOrder(
             @RequestBody TaskDTO taskDTO
@@ -103,7 +104,7 @@ public class TaskController {
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
         }
-    }
+    }*/
 
     @RequestMapping(value = GET_TASK_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
@@ -212,6 +213,32 @@ public class TaskController {
     ) {
         try {
             taskService.removeTaskParticipant(taskParticipantOperationDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = ADD_TASK_ATTACHMENT_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object addTaskAttachment(
+            @RequestBody TaskAttachmentOperationDTO taskAttachmentOperationDTO
+    ) {
+        try {
+            taskService.addTaskAttachment(taskAttachmentOperationDTO);
+            return new BaseResponseBody(CommonErrorCode.SUCCESS);
+        } catch (AppBusinessException e) {
+            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
+        }
+    }
+
+    @RequestMapping(value = REMOVE_TASK_ATTACHMENT_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
+    @ResponseBody
+    public Object removeTaskAttachment(
+            @RequestBody TaskAttachmentOperationDTO taskAttachmentOperationDTO
+    ) {
+        try {
+            taskService.removeTaskAttachment(taskAttachmentOperationDTO);
             return new BaseResponseBody(CommonErrorCode.SUCCESS);
         } catch (AppBusinessException e) {
             return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());

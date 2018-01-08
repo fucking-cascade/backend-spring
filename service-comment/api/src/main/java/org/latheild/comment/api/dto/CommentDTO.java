@@ -11,6 +11,8 @@ public class CommentDTO implements Serializable {
 
     private String taskId;
 
+    private String time;
+
     public String getCommentId() {
         return commentId;
     }
@@ -41,5 +43,13 @@ public class CommentDTO implements Serializable {
 
     public void setTaskId(String taskId) {
         this.taskId = taskId;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 }

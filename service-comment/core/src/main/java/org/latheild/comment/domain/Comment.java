@@ -13,9 +13,11 @@ public class Comment {
 
     private String content;
 
-    private String userId;
+    private String UserId;
 
-    private String taskId;
+    private String TaskId;
+
+    private String time;
 
     private String createdAt;
 
@@ -38,19 +40,27 @@ public class Comment {
     }
 
     public String getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
     public String getTaskId() {
-        return taskId;
+        return TaskId;
     }
 
     public void setTaskId(String taskId) {
-        this.taskId = taskId;
+        TaskId = taskId;
+    }
+
+    public String getTime() {
+        return time;
+    }
+
+    public void setTime(String time) {
+        this.time = time;
     }
 
     public String getCreatedAt() {

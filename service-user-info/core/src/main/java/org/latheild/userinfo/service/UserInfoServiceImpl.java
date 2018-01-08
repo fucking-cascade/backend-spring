@@ -51,7 +51,8 @@ public class UserInfoServiceImpl implements UserInfoService {
                 userInfo.getWebsite(),
                 userInfo.getPhoneNumber(),
                 userInfo.getJob(),
-                userInfo.getAvatar()
+                userInfo.getAvatar(),
+                userInfo.getBirthday()
         );
     }
 
@@ -73,6 +74,7 @@ public class UserInfoServiceImpl implements UserInfoService {
         userInfo.setPhoneNumber(registerDTO.getPhoneNumber());
         userInfo.setJob(registerDTO.getJob());
         userInfo.setAvatar(registerDTO.getAvatar());
+        userInfo.setBirthday(registerDTO.getBirthday());
         return userInfo;
     }
 
@@ -129,6 +131,7 @@ public class UserInfoServiceImpl implements UserInfoService {
             userInfo.setPhoneNumber(userInfoDTO.getPhoneNumber());
             userInfo.setJob(userInfoDTO.getJob());
             userInfo.setAvatar(userInfoDTO.getAvatar());
+            userInfo.setBirthday(userInfoDTO.getBirthday());
             userInfoRepository.save(userInfo);
             return userInfoDTO;
         } else {

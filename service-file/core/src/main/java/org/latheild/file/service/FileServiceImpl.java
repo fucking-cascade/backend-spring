@@ -73,7 +73,7 @@ public class FileServiceImpl implements FileService {
         FileDTO fileDTO = new FileDTO();
         fileDTO.setName(file.getName());
         fileDTO.setContent(file.getContent());
-        fileDTO.setOwnerId(file.getOwnerId());
+        fileDTO.setOwnerId(file.getUserId());
         fileDTO.setProjectId(file.getProjectId());
         fileDTO.setUploadTime(file.getUploadTime());
         fileDTO.setFileId(file.getId());
@@ -92,7 +92,7 @@ public class FileServiceImpl implements FileService {
         File file = new File();
         file.setContent(fileDTO.getContent());
         file.setName(fileDTO.getName());
-        file.setOwnerId(fileDTO.getOwnerId());
+        file.setUserId(fileDTO.getOwnerId());
         file.setProjectId(fileDTO.getProjectId());
         file.setUploadTime(fileDTO.getUploadTime());
         return file;
@@ -161,7 +161,7 @@ public class FileServiceImpl implements FileService {
     public FileDTO renameFile(FileDTO fileDTO) {
         if (isFileExist(DAOQueryMode.QUERY_BY_ID, fileDTO.getFileId())) {
             File file = fileRepository.findById(fileDTO.getFileId());
-            if (file.getOwnerId().equals(fileDTO.getOwnerId())) {
+            if (file.getUserId().equals(fileDTO.getOwnerId())) {
                 file.setName(fileDTO.getName());
                 fileRepository.save(file);
                 return convertFromFileToFileDTO(file);
@@ -182,7 +182,7 @@ public class FileServiceImpl implements FileService {
     public void deleteFileById(FileDTO fileDTO) {
         if (isFileExist(DAOQueryMode.QUERY_BY_ID, fileDTO.getFileId())) {
             File file = fileRepository.findById(fileDTO.getFileId());
-            if (file.getOwnerId().equals(fileDTO.getOwnerId())) {
+            if (file.getUserId().equals(fileDTO.getOwnerId())) {
                 fileRepository.deleteById(file.getId());
 
                 rabbitTemplate.convertAndSend(
@@ -434,7 +434,7 @@ public class FileServiceImpl implements FileService {
             if (taskClient.checkTaskExistence(attachmentOperationDTO.getTaskId())) {
                 if (isFileExist(DAOQueryMode.QUERY_BY_ID, attachmentOperationDTO.getFileId())) {
                     File file = fileRepository.findById(attachmentOperationDTO.getFileId());
-                    if (file.getOwnerId().equals(attachmentOperationDTO.getExecutorId())) {
+                    if (file.getUserId().equals(attachmentOperationDTO.getExecutorId())) {
                         relationClient.addTaskAttachment(
                                 attachmentOperationDTO.getFileId(),
                                 attachmentOperationDTO.getTaskId()
@@ -470,7 +470,7 @@ public class FileServiceImpl implements FileService {
             if (taskClient.checkTaskExistence(attachmentOperationDTO.getTaskId())) {
                 if (isFileExist(DAOQueryMode.QUERY_BY_ID, attachmentOperationDTO.getFileId())) {
                     File file = fileRepository.findById(attachmentOperationDTO.getFileId());
-                    if (file.getOwnerId().equals(attachmentOperationDTO.getExecutorId())) {
+                    if (file.getUserId().equals(attachmentOperationDTO.getExecutorId())) {
                         relationClient.deleteTaskAttachment(
                                 attachmentOperationDTO.getFileId(),
                                 attachmentOperationDTO.getTaskId()

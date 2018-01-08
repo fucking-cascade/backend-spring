@@ -56,6 +56,7 @@ public class CommentServiceImpl implements CommentService {
         commentDTO.setContent(comment.getContent());
         commentDTO.setTaskId(comment.getTaskId());
         commentDTO.setUserId(comment.getUserId());
+        commentDTO.setTime(comment.getTime());
         return commentDTO;
     }
 
@@ -72,6 +73,7 @@ public class CommentServiceImpl implements CommentService {
         comment.setContent(commentDTO.getContent());
         comment.setTaskId(commentDTO.getTaskId());
         comment.setUserId(commentDTO.getUserId());
+        comment.setTime(commentDTO.getTime());
         return comment;
     }
 

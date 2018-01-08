@@ -9,7 +9,7 @@ public class Project {
     @NotNull
     private String id;
 
-    private String ownerId;
+    private String OwnerId;
 
     private String name;
 
@@ -28,11 +28,11 @@ public class Project {
     }
 
     public String getOwnerId() {
-        return ownerId;
+        return OwnerId;
     }
 
     public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
+        OwnerId = ownerId;
     }
 
     public String getName() {

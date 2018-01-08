@@ -62,7 +62,7 @@ public class ProgressServiceImpl implements ProgressService {
     private ProgressDTO convertFromProgressToProgressDTO(Progress progress) {
         ProgressDTO progressDTO = new ProgressDTO();
         progressDTO.setName(progress.getName());
-        progressDTO.setIndex(progress.getIndex());
+        progressDTO.setOrder(progress.getOrder());
         progressDTO.setOwnerId(progress.getOwnerId());
         progressDTO.setProjectId(progress.getProjectId());
         progressDTO.setProgressId(progress.getId());
@@ -80,7 +80,7 @@ public class ProgressServiceImpl implements ProgressService {
     private Progress convertFromProgressDTOToProgress(ProgressDTO progressDTO) {
         Progress progress = new Progress();
         progress.setName(progressDTO.getName());
-        progress.setIndex(progressDTO.getIndex());
+        progress.setOrder(progressDTO.getOrder());
         progress.setOwnerId(progressDTO.getOwnerId());
         progress.setProjectId(progressDTO.getProjectId());
         return progress;
@@ -95,10 +95,10 @@ public class ProgressServiceImpl implements ProgressService {
     }
 
     private ProgressDTO adjustIndex(ProgressDTO progressDTO) {
-        if (progressDTO.getIndex() >= progressRepository.countByProjectId(progressDTO.getProjectId())) {
-            progressDTO.setIndex(progressRepository.countByProjectId(progressDTO.getProjectId()));
-        } else if (progressDTO.getIndex() < 0) {
-            progressDTO.setIndex(0);
+        if (progressDTO.getOrder() >= progressRepository.countByProjectId(progressDTO.getProjectId())) {
+            progressDTO.setOrder(progressRepository.countByProjectId(progressDTO.getProjectId()));
+        } else if (progressDTO.getOrder() < 0) {
+            progressDTO.setOrder(0);
         }
         return progressDTO;
     }
@@ -107,7 +107,7 @@ public class ProgressServiceImpl implements ProgressService {
         ArrayList<Progress> progressList = progressRepository.findAllByProjectIdOrderByIndexAsc(progress.getProjectId());
         int i = 0;
         for (Progress iter : progressList) {
-            iter.setIndex(i);
+            iter.setOrder(i);
             i++;
             progressRepository.save(iter);
         }
@@ -123,7 +123,7 @@ public class ProgressServiceImpl implements ProgressService {
                         TutorialProgressListCreator.setTutorialProgressList(projectDTO.getOwnerId(), projectDTO.getProjectId())
                 );
                 for (Progress progress : progressList) {
-                    progress.setIndex(progressRepository.countByProjectId(progress.getProjectId()));
+                    progress.setOrder(progressRepository.countByProjectId(progress.getProjectId()));
                     progressRepository.save(progress);
 
                     rabbitTemplate.convertAndSend(
@@ -163,7 +163,7 @@ public class ProgressServiceImpl implements ProgressService {
         if (userClient.checkUserExistence(progressDTO.getOwnerId())) {
             if (projectClient.checkProjectExistence(progressDTO.getProjectId())) {
                 Progress progress = convertFromProgressDTOToProgress(progressDTO);
-                progress.setIndex(progressRepository.countByProjectId(progress.getProjectId()));
+                progress.setOrder(progressRepository.countByProjectId(progress.getProjectId()));
                 progressRepository.save(progress);
                 return convertFromProgressToProgressDTO(progress);
             } else {
@@ -236,28 +236,28 @@ public class ProgressServiceImpl implements ProgressService {
             Progress progress = progressRepository.findById(progressDTO.getProgressId());
             if (progress.getId().equals(progressDTO.getProgressId())) {
                 progressDTO = adjustIndex(progressDTO);
-                if (progress.getIndex() < progressDTO.getIndex()) {
+                if (progress.getOrder() < progressDTO.getOrder()) {
                     ArrayList<Progress> progressList = progressRepository.findAllByProjectIdOrderByIndexAsc(progress.getProjectId());
                     for (Progress iter : progressList) {
-                        if (iter.getIndex() > progress.getIndex() && iter.getIndex() <= progressDTO.getIndex()) {
-                            iter.setIndex(iter.getIndex() - 1);
+                        if (iter.getOrder() > progress.getOrder() && iter.getOrder() <= progressDTO.getOrder()) {
+                            iter.setOrder(iter.getOrder() - 1);
                             progressRepository.save(iter);
-                        } else if (iter.getIndex() > progressDTO.getIndex()) {
+                        } else if (iter.getOrder() > progressDTO.getOrder()) {
                             break;
                         }
                     }
                 } else {
                     ArrayList<Progress> progressList = progressRepository.findAllByProjectIdOrderByIndexAsc(progress.getProjectId());
                     for (Progress iter : progressList) {
-                        if (iter.getIndex() >= progressDTO.getIndex() && iter.getIndex() < progress.getIndex()) {
-                            iter.setIndex(iter.getIndex() + 1);
+                        if (iter.getOrder() >= progressDTO.getOrder() && iter.getOrder() < progress.getOrder()) {
+                            iter.setOrder(iter.getOrder() + 1);
                             progressRepository.save(iter);
-                        } else if (iter.getIndex() > progress.getIndex()) {
+                        } else if (iter.getOrder() > progress.getOrder()) {
                             break;
                         }
                     }
                 }
-                progress.setIndex(progressDTO.getIndex());
+                progress.setOrder(progressDTO.getOrder());
                 progressRepository.save(progress);
                 resetIndexForProgressListOfProject(progress);
                 progress = progressRepository.findById(progress.getId());

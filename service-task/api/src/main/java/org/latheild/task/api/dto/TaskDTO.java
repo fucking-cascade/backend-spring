@@ -16,11 +16,9 @@ public class TaskDTO implements Serializable {
 
     private String content;
 
-    private CommonTaskStatus taskStatus;
+    private Boolean state;
 
-    private CommonPriority priority;
-
-    private int index;
+    private String ddl;
 
     public String getTaskId() {
         return taskId;
@@ -62,27 +60,19 @@ public class TaskDTO implements Serializable {
         this.content = content;
     }
 
-    public CommonTaskStatus getTaskStatus() {
-        return taskStatus;
+    public Boolean getState() {
+        return state;
     }
 
-    public void setTaskStatus(CommonTaskStatus taskStatus) {
-        this.taskStatus = taskStatus;
+    public void setState(Boolean state) {
+        this.state = state;
     }
 
-    public CommonPriority getPriority() {
-        return priority;
+    public String getDdl() {
+        return ddl;
     }
 
-    public void setPriority(CommonPriority priority) {
-        this.priority = priority;
-    }
-
-    public int getIndex() {
-        return index;
-    }
-
-    public void setIndex(int index) {
-        this.index = index;
+    public void setDdl(String ddl) {
+        this.ddl = ddl;
     }
 }

@@ -10,9 +10,9 @@ public class UserTaskRelation implements Serializable {
     @NotNull
     private String id;
 
-    private String userId;
+    private String UserId;
 
-    private String taskId;
+    private String TaskId;
 
     private String createdAt;
 
@@ -27,19 +27,19 @@ public class UserTaskRelation implements Serializable {
     }
 
     public String getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
     public String getTaskId() {
-        return taskId;
+        return TaskId;
     }
 
     public void setTaskId(String taskId) {
-        this.taskId = taskId;
+        TaskId = taskId;
     }
 
     public String getCreatedAt() {

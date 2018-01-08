@@ -64,8 +64,8 @@ public class UserProjectRelationRepositoryImpl extends DAOResponseJSONAnalyzer i
     @Override
     public UserProjectRelation findByUserIdAndProjectId(String userId, String projectId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("projectId");
+        fieldNames.add("UserId");
+        fieldNames.add("ProjectId");
         UserProjectRelation userProjectRelation = new UserProjectRelation();
         userProjectRelation.setProjectId(projectId);
         userProjectRelation.setUserId(userId);
@@ -144,8 +144,8 @@ public class UserProjectRelationRepositoryImpl extends DAOResponseJSONAnalyzer i
     @Override
     public int countByUserIdAndProjectId(String userId, String projectId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("fileId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("ProjectId");
         UserProjectRelation userProjectRelation = new UserProjectRelation();
         userProjectRelation.setUserId(userId);
         userProjectRelation.setProjectId(projectId);
@@ -199,8 +199,8 @@ public class UserProjectRelationRepositoryImpl extends DAOResponseJSONAnalyzer i
     @Override
     public void deleteByUserIdAndProjectId(String userId, String projectId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("fileId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("ProjectId");
         UserProjectRelation userProjectRelation = new UserProjectRelation();
         userProjectRelation.setUserId(userId);
         userProjectRelation.setProjectId(projectId);
@@ -227,8 +227,8 @@ public class UserProjectRelationRepositoryImpl extends DAOResponseJSONAnalyzer i
     @Override
     public void save(UserProjectRelation userProjectRelation) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("userId");
-        fieldNames.add("taskId");
+        fieldNames.add("UserId");
+        fieldNames.add("ProjectId");
         if (userProjectRelation.getId() != null) {
             fieldNames.add("id");
             restTemplate.postForObject(

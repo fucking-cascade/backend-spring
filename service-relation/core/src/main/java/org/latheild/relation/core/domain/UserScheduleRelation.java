@@ -10,9 +10,9 @@ public class UserScheduleRelation implements Serializable {
     @NotNull
     private String id;
 
-    private String userId;
+    private String UserId;
 
-    private String scheduleId;
+    private String ScheduleId;
 
     private String createdAt;
 
@@ -27,19 +27,19 @@ public class UserScheduleRelation implements Serializable {
     }
 
     public String getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
     public String getScheduleId() {
-        return scheduleId;
+        return ScheduleId;
     }
 
     public void setScheduleId(String scheduleId) {
-        this.scheduleId = scheduleId;
+        ScheduleId = scheduleId;
     }
 
     public String getCreatedAt() {

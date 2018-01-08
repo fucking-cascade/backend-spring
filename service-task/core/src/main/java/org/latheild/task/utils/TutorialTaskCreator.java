@@ -11,11 +11,10 @@ public class TutorialTaskCreator {
         ArrayList<TaskDTO> taskDTOs = new ArrayList<>();
         for (int i = 0; i < 3; ++i) {
             TaskDTO taskDTO = new TaskDTO();
-            taskDTO.setIndex(i);
             taskDTO.setOwnerId(ownerId);
             taskDTO.setProgressId(progressId);
-            taskDTO.setTaskStatus(CommonTaskStatus.ONGOING);
-            taskDTO.setPriority(CommonPriority.HIGH_PRIORITY);
+            taskDTO.setState(false);
+            taskDTO.setDdl("mingtian");
             switch (i) {
                 case 0:
                     taskDTO.setName("Tutorial task v0.00001");

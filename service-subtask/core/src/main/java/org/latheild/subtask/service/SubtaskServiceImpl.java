@@ -57,7 +57,7 @@ public class SubtaskServiceImpl implements SubtaskService {
         subtaskDTO.setContent(subtask.getContent());
         subtaskDTO.setTaskId(subtask.getTaskId());
         subtaskDTO.setUserId(subtask.getUserId());
-        subtaskDTO.setTaskStatus(subtask.getTaskStatus());
+        subtaskDTO.setState(subtask.getState());
         subtaskDTO.setSubtaskId(subtask.getId());
         return subtaskDTO;
     }
@@ -73,7 +73,7 @@ public class SubtaskServiceImpl implements SubtaskService {
     private Subtask convertFromSubtaskDTOToSubtask(SubtaskDTO subtaskDTO) {
         Subtask subtask = new Subtask();
         subtask.setContent(subtaskDTO.getContent());
-        subtask.setTaskStatus(subtaskDTO.getTaskStatus());
+        subtask.setState(subtaskDTO.getState());
         subtask.setUserId(subtaskDTO.getUserId());
         subtask.setTaskId(subtaskDTO.getTaskId());
         return subtask;
@@ -97,11 +97,11 @@ public class SubtaskServiceImpl implements SubtaskService {
             case TUTORIAL_TASK_CREATED:
                 TaskDTO taskDTO = (TaskDTO) message.getMessageBody();
 
-                if (taskDTO.getIndex() == 0) {
-                    ArrayList<Subtask> subtasks = convertFromSubtaskDTOsToSubtasks(
-                            TutorialSubtaskCreator.setTutorialSubtasks(taskDTO.getOwnerId(), taskDTO.getTaskId())
-                    );
-                    subtaskRepository.save(subtasks);
+                ArrayList<Subtask> subtasks = convertFromSubtaskDTOsToSubtasks(
+                        TutorialSubtaskCreator.setTutorialSubtasks(taskDTO.getOwnerId(), taskDTO.getTaskId())
+                );
+                for (Subtask subtask : subtasks) {
+                    subtaskRepository.save(subtask);
                 }
                 break;
             case TASK_DELETED:
@@ -187,7 +187,7 @@ public class SubtaskServiceImpl implements SubtaskService {
         if (isSubtaskCreated(DAOQueryMode.QUERY_BY_ID, subtaskDTO.getSubtaskId())) {
             Subtask subtask = subtaskRepository.findById(subtaskDTO.getSubtaskId());
             if (subtaskDTO.getUserId().equals(subtask.getUserId())) {
-                subtask.setTaskStatus(subtaskDTO.getTaskStatus());
+                subtask.setState(subtaskDTO.getState());
                 subtaskRepository.save(subtask);
                 return convertFromSubtaskToSubtaskDTO(subtask);
             } else {

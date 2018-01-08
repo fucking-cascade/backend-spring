@@ -12,7 +12,7 @@ public class TutorialSubtaskCreator {
             SubtaskDTO subtaskDTO = new SubtaskDTO();
             subtaskDTO.setUserId(userId);
             subtaskDTO.setTaskId(taskId);
-            subtaskDTO.setTaskStatus(CommonTaskStatus.ONGOING);
+            subtaskDTO.setState(false);
             switch (i) {
                 case 0:
                     subtaskDTO.setContent("Tutorial subtask v0.00000001 by Emoin LANYU");

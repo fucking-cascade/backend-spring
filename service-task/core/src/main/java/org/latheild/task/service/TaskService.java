@@ -19,9 +19,9 @@ public interface TaskService {
 
     TaskDTO updateTaskState(TaskDTO taskDTO);
 
-    TaskDTO changeTaskOrder(TaskDTO taskDTO);
+    /*TaskDTO changeTaskOrder(TaskDTO taskDTO);
 
-    TaskDTO changeTaskProgress(TaskDTO taskDTO);
+    TaskDTO changeTaskProgress(TaskDTO taskDTO);*/
 
     TaskDTO getTaskById(String id);
 

@@ -13,7 +13,7 @@ public class SubtaskDTO implements Serializable {
 
     private String content;
 
-    private CommonTaskStatus taskStatus;
+    private Boolean state;
 
     public String getSubtaskId() {
         return subtaskId;
@@ -47,11 +47,11 @@ public class SubtaskDTO implements Serializable {
         this.content = content;
     }
 
-    public CommonTaskStatus getTaskStatus() {
-        return taskStatus;
+    public Boolean getState() {
+        return state;
     }
 
-    public void setTaskStatus(CommonTaskStatus taskStatus) {
-        this.taskStatus = taskStatus;
+    public void setState(Boolean state) {
+        this.state = state;
     }
 }

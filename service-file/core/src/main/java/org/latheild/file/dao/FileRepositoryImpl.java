@@ -41,7 +41,7 @@ public class FileRepositoryImpl extends DAOResponseJSONAnalyzer implements FileR
                         CombineURI.combineURI(
                                 SERVICE_URI, BASE_FIND
                         ),
-                        DAORequestJSONWrapper.setFindRequestJSON("OwnerId", ownerId, DAORequestJSONWrapper.FIND_ALL),
+                        DAORequestJSONWrapper.setFindRequestJSON("UserId", ownerId, DAORequestJSONWrapper.FIND_ALL),
                         DAOResponse.class
                 )
         );
@@ -63,10 +63,10 @@ public class FileRepositoryImpl extends DAOResponseJSONAnalyzer implements FileR
     @Override
     public ArrayList<File> findAllByOwnerIdAndProjectId(String ownerId, String projectId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
-        fieldNames.add("projectId");
+        fieldNames.add("UserId");
+        fieldNames.add("ProjectId");
         File file = new File();
-        file.setOwnerId(ownerId);
+        file.setUserId(ownerId);
         file.setProjectId(projectId);
         return (ArrayList<File>) analyzer.analyze(
                 restTemplate.postForObject(
@@ -114,7 +114,7 @@ public class FileRepositoryImpl extends DAOResponseJSONAnalyzer implements FileR
                 CombineURI.combineURI(
                         SERVICE_URI, BASE_COUNT
                 ),
-                DAORequestJSONWrapper.setCountRequestJSON("OwnerId", ownerId),
+                DAORequestJSONWrapper.setCountRequestJSON("UserId", ownerId),
                 DAOResponse.class
         );
         if (checkError(daoResponse)) {
@@ -157,7 +157,7 @@ public class FileRepositoryImpl extends DAOResponseJSONAnalyzer implements FileR
                 CombineURI.combineURI(
                         SERVICE_URI, BASE_DELETE
                 ),
-                DAORequestJSONWrapper.setDeleteRequestJSON("OwnerId", ownerId),
+                DAORequestJSONWrapper.setDeleteRequestJSON("UserId", ownerId),
                 DAOResponse.class
         );
     }
@@ -176,10 +176,10 @@ public class FileRepositoryImpl extends DAOResponseJSONAnalyzer implements FileR
     @Override
     public void deleteAllByOwnerIdAndProjectId(String ownerId, String projectId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
-        fieldNames.add("projectId");
+        fieldNames.add("UserId");
+        fieldNames.add("ProjectId");
         File file = new File();
-        file.setOwnerId(ownerId);
+        file.setUserId(ownerId);
         file.setProjectId(projectId);
         restTemplate.postForObject(
                 CombineURI.combineURI(
@@ -205,8 +205,8 @@ public class FileRepositoryImpl extends DAOResponseJSONAnalyzer implements FileR
     public void save(File file) {
         ArrayList<String> fieldNames = new ArrayList<>();
         fieldNames.add("name");
-        fieldNames.add("ownerId");
-        fieldNames.add("projectId");
+        fieldNames.add("UserId");
+        fieldNames.add("ProjectId");
         fieldNames.add("content");
         fieldNames.add("uploadTime");
         if (file.getId() != null) {

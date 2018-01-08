@@ -11,7 +11,7 @@ public class ProgressDTO implements Serializable {
 
     private String projectId;
 
-    private int index;
+    private int order;
 
     public String getProgressId() {
         return progressId;
@@ -45,11 +45,11 @@ public class ProgressDTO implements Serializable {
         this.projectId = projectId;
     }
 
-    public int getIndex() {
-        return index;
+    public int getOrder() {
+        return order;
     }
 
-    public void setIndex(int index) {
-        this.index = index;
+    public void setOrder(int order) {
+        this.order = order;
     }
 }

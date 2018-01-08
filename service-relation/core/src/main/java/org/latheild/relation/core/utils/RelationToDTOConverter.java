@@ -44,7 +44,6 @@ public class RelationToDTOConverter {
                             CommonErrorCode.INTERNAL_ERROR
                     );
             }
-            relationDTO.setIdentityType(userProjectRelation.getIdentityType());
             relationDTOs.add(relationDTO);
         }
         return relationDTOs;

@@ -128,7 +128,7 @@ public class ProjectRepositoryImpl extends DAOResponseJSONAnalyzer implements Pr
     @Override
     public void save(Project project) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
+        fieldNames.add("OwnerId");
         fieldNames.add("name");
         fieldNames.add("description");
         if (project.getId() != null) {

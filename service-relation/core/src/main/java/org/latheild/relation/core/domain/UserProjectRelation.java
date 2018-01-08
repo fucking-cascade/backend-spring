@@ -11,11 +11,9 @@ public class UserProjectRelation implements Serializable {
     @NotNull
     private String id;
 
-    private String userId;
+    private String UserId;
 
-    private String projectId;
-
-    private CommonIdentityType identityType;
+    private String ProjectId;
 
     private String createdAt;
 
@@ -30,27 +28,19 @@ public class UserProjectRelation implements Serializable {
     }
 
     public String getUserId() {
-        return userId;
+        return UserId;
     }
 
     public void setUserId(String userId) {
-        this.userId = userId;
+        UserId = userId;
     }
 
     public String getProjectId() {
-        return projectId;
+        return ProjectId;
     }
 
     public void setProjectId(String projectId) {
-        this.projectId = projectId;
-    }
-
-    public CommonIdentityType getIdentityType() {
-        return identityType;
-    }
-
-    public void setIdentityType(CommonIdentityType identityType) {
-        this.identityType = identityType;
+        ProjectId = projectId;
     }
 
     public String getCreatedAt() {

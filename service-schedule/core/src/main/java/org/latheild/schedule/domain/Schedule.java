@@ -14,9 +14,9 @@ public class Schedule {
 
     private String name;
 
-    private String projectId;
+    private String ProjectId;
 
-    private String ownerId;
+    private String OwnerId;
 
     private String content;
 
@@ -25,6 +25,10 @@ public class Schedule {
     private String endTime;
 
     private String location;
+
+    private Boolean repeatDaily;
+
+    private Boolean repeatWeekly;
 
     private String createdAt;
 
@@ -47,19 +51,19 @@ public class Schedule {
     }
 
     public String getProjectId() {
-        return projectId;
+        return ProjectId;
     }
 
     public void setProjectId(String projectId) {
-        this.projectId = projectId;
+        ProjectId = projectId;
     }
 
     public String getOwnerId() {
-        return ownerId;
+        return OwnerId;
     }
 
     public void setOwnerId(String ownerId) {
-        this.ownerId = ownerId;
+        OwnerId = ownerId;
     }
 
     public String getContent() {
@@ -92,6 +96,22 @@ public class Schedule {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Boolean getRepeatDaily() {
+        return repeatDaily;
+    }
+
+    public void setRepeatDaily(Boolean repeatDaily) {
+        this.repeatDaily = repeatDaily;
+    }
+
+    public Boolean getRepeatWeekly() {
+        return repeatWeekly;
+    }
+
+    public void setRepeatWeekly(Boolean repeatWeekly) {
+        this.repeatWeekly = repeatWeekly;
     }
 
     public String getCreatedAt() {

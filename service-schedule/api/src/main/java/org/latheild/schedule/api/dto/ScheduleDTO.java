@@ -19,6 +19,10 @@ public class ScheduleDTO implements Serializable {
 
     private String location;
 
+    private Boolean repeatDaily;
+
+    private Boolean repeatWeekly;
+
     public String getScheduleId() {
         return scheduleId;
     }
@@ -81,5 +85,21 @@ public class ScheduleDTO implements Serializable {
 
     public void setLocation(String location) {
         this.location = location;
+    }
+
+    public Boolean getRepeatDaily() {
+        return repeatDaily;
+    }
+
+    public void setRepeatDaily(Boolean repeatDaily) {
+        this.repeatDaily = repeatDaily;
+    }
+
+    public Boolean getRepeatWeekly() {
+        return repeatWeekly;
+    }
+
+    public void setRepeatWeekly(Boolean repeatWeekly) {
+        this.repeatWeekly = repeatWeekly;
     }
 }

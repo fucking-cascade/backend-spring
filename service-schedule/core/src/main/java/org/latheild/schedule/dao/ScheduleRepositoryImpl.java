@@ -63,8 +63,8 @@ public class ScheduleRepositoryImpl extends DAOResponseJSONAnalyzer implements S
     @Override
     public ArrayList<Schedule> findAllByOwnerIdAndProjectId(String ownerId, String projectId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
-        fieldNames.add("projectId");
+        fieldNames.add("OwnerId");
+        fieldNames.add("ProjectId");
         Schedule schedule = new Schedule();
         schedule.setOwnerId(ownerId);
         schedule.setProjectId(projectId);
@@ -176,8 +176,8 @@ public class ScheduleRepositoryImpl extends DAOResponseJSONAnalyzer implements S
     @Override
     public void deleteAllByOwnerIdAndProjectId(String ownerId, String projectId) {
         ArrayList<String> fieldNames = new ArrayList<>();
-        fieldNames.add("ownerId");
-        fieldNames.add("projectId");
+        fieldNames.add("OwnerId");
+        fieldNames.add("ProjectId");
         Schedule schedule = new Schedule();
         schedule.setOwnerId(ownerId);
         schedule.setProjectId(projectId);
@@ -211,6 +211,8 @@ public class ScheduleRepositoryImpl extends DAOResponseJSONAnalyzer implements S
         fieldNames.add("startTime");
         fieldNames.add("endTime");
         fieldNames.add("location");
+        fieldNames.add("repeatDaily");
+        fieldNames.add("repeatWeekly");
         if (schedule.getId() != null) {
             fieldNames.add("id");
             restTemplate.postForObject(
