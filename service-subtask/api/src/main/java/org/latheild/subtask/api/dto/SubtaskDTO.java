@@ -1,7 +1,5 @@
 package org.latheild.subtask.api.dto;
 
-import org.latheild.common.api.CommonTaskStatus;
-
 import java.io.Serializable;
 
 public class SubtaskDTO implements Serializable {

@@ -239,13 +239,16 @@ public class FileTaskRelationRepositoryImpl extends DAOResponseJSONAnalyzer impl
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, fileTaskRelation),
-                    DAOResponse.class
+            FileTaskRelation response = (FileTaskRelation) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, fileTaskRelation),
+                            DAOResponse.class
+                    )
             );
+            fileTaskRelation.setId(response.getId());
         }
     }
 

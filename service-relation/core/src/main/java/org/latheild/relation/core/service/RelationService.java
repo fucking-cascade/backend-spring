@@ -14,7 +14,7 @@ public interface RelationService {
 
     boolean checkTaskAttachmentExistence(String fileId, String taskId);
 
-    void addProjectMember(String userId, String projectId, CommonIdentityType identityType);
+    void addProjectMember(String userId, String projectId);
 
     void addScheduleParticipant(String userId, String scheduleId);
 

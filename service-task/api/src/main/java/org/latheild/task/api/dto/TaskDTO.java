@@ -1,8 +1,5 @@
 package org.latheild.task.api.dto;
 
-import org.latheild.common.api.CommonPriority;
-import org.latheild.common.api.CommonTaskStatus;
-
 import java.io.Serializable;
 
 public class TaskDTO implements Serializable {

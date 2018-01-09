@@ -96,7 +96,7 @@ public class ProjectServiceImpl implements ProjectService {
                         TutorialProjectCreator.setTutorialProject(registerDTO.getUserId())
                 );
                 projectRepository.save(project);
-                relationClient.addProjectMember(project.getOwnerId(), project.getId(), CommonIdentityType.CREATOR);
+                //relationClient.addProjectMember(project.getOwnerId(), project.getId());
 
                 rabbitTemplate.convertAndSend(
                         PROJECT_FAN_OUT_EXCHANGE,
@@ -134,7 +134,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (userClient.checkUserExistence(projectDTO.getOwnerId())) {
             Project project = convertFromProjectDTOToProject(projectDTO);
             projectRepository.save(project);
-            relationClient.addProjectMember(project.getOwnerId(), project.getId(), CommonIdentityType.CREATOR);
+            relationClient.addProjectMember(project.getOwnerId(), project.getId());
             return convertFromProjectToProjectDTO(project);
         } else {
             throw new AppBusinessException(
@@ -367,8 +367,7 @@ public class ProjectServiceImpl implements ProjectService {
                     if (project.getOwnerId().equals(projectMemberOperationDTO.getExecutorId())) {
                         relationClient.addProjectMember(
                                 projectMemberOperationDTO.getMemberId(),
-                                projectMemberOperationDTO.getProjectId(),
-                                projectMemberOperationDTO.getIdentityType()
+                                projectMemberOperationDTO.getProjectId()
                         );
                     } else {
                         throw new AppBusinessException(

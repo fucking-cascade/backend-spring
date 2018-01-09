@@ -13,10 +13,6 @@ public interface TaskURL {
 
     String UPDATE_TASK_STATE_URL = "/update/state";
 
-    String CHANGE_TASK_ORDER_URL = "/update/order";
-
-    String CHANGE_TASK_PROGRESS_URL = "/update/progress";
-
     String GET_TASK_BY_ID_URL = "/retrieve";
 
     String GET_TASKS_URL = "/retrieve/all";

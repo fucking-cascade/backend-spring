@@ -1,12 +1,8 @@
 package org.latheild.userinfo.domain;
 
-import org.latheild.common.constant.Gender;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
-
-//Gender -> Bool
-//Birthday -> String
 
 public class UserInfo {
     @Id
@@ -129,5 +125,23 @@ public class UserInfo {
 
     public void setUpdatedAt(String updatedAt) {
         this.updatedAt = updatedAt;
+    }
+
+    @Override
+    public String toString() {
+        return "UserInfo{" +
+                "id='" + id + '\'' +
+                ", UserId='" + UserId + '\'' +
+                ", name='" + name + '\'' +
+                ", gender=" + gender +
+                ", address='" + address + '\'' +
+                ", website='" + website + '\'' +
+                ", phoneNumber='" + phoneNumber + '\'' +
+                ", job='" + job + '\'' +
+                ", avatar='" + avatar + '\'' +
+                ", birthday='" + birthday + '\'' +
+                ", createdAt='" + createdAt + '\'' +
+                ", updatedAt='" + updatedAt + '\'' +
+                '}';
     }
 }

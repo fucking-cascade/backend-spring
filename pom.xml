@@ -13,10 +13,10 @@
     <modules>
         <module>apiutils</module>
         <module>common</module>
-        <!--<module>eureka</module>
+        <module>eureka</module>
         <module>config</module>
         <module>turbine</module>
-        <module>zuul</module>-->
+        <module>zuul</module>
         <module>service-user</module>
         <module>service-user-info</module>
         <module>service-project</module>

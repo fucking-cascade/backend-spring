@@ -1,11 +1,8 @@
 package org.latheild.subtask.domain;
 
-import org.latheild.common.api.CommonTaskStatus;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
-
-//state
 
 public class Subtask {
     @Id

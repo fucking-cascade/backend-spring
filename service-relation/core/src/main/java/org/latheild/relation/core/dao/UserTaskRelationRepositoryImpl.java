@@ -238,13 +238,16 @@ public class UserTaskRelationRepositoryImpl extends DAOResponseJSONAnalyzer impl
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, userTaskRelation),
-                    DAOResponse.class
+            UserTaskRelation response = (UserTaskRelation) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, userTaskRelation),
+                            DAOResponse.class
+                    )
             );
+            userTaskRelation.setId(response.getId());
         }
     }
 

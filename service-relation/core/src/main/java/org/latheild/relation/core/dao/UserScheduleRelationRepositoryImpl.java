@@ -239,13 +239,16 @@ public class UserScheduleRelationRepositoryImpl extends DAOResponseJSONAnalyzer 
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, userScheduleRelation),
-                    DAOResponse.class
+            UserScheduleRelation response = (UserScheduleRelation) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, userScheduleRelation),
+                            DAOResponse.class
+                    )
             );
+            userScheduleRelation.setId(response.getId());
         }
     }
 

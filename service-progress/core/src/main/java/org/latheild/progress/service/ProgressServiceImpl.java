@@ -242,8 +242,6 @@ public class ProgressServiceImpl implements ProgressService {
                         if (iter.getOrder() > progress.getOrder() && iter.getOrder() <= progressDTO.getOrder()) {
                             iter.setOrder(iter.getOrder() - 1);
                             progressRepository.save(iter);
-                        } else if (iter.getOrder() > progressDTO.getOrder()) {
-                            break;
                         }
                     }
                 } else {
@@ -252,8 +250,6 @@ public class ProgressServiceImpl implements ProgressService {
                         if (iter.getOrder() >= progressDTO.getOrder() && iter.getOrder() < progress.getOrder()) {
                             iter.setOrder(iter.getOrder() + 1);
                             progressRepository.save(iter);
-                        } else if (iter.getOrder() > progress.getOrder()) {
-                            break;
                         }
                     }
                 }

@@ -217,13 +217,16 @@ public class CommentRepositoryImpl extends DAOResponseJSONAnalyzer implements Co
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, comment),
-                    DAOResponse.class
+            Comment response = (Comment) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, comment),
+                            DAOResponse.class
+                    )
             );
+            comment.setId(response.getId());
         }
     }
 

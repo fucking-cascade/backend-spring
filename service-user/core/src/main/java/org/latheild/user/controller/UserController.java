@@ -42,6 +42,7 @@ public class UserController {
             userProfileDTO.setPhoneNumber(registerDTO.getPhoneNumber());
             userProfileDTO.setWebsite(registerDTO.getWebsite());
             userProfileDTO.setName(registerDTO.getName());
+            userProfileDTO.setBirthday(registerDTO.getBirthday());
 
             return new BaseResponseBody(CommonErrorCode.SUCCESS, userProfileDTO);
         } catch (AppBusinessException e) {

@@ -22,35 +22,70 @@ public class DAOResponseJSONAnalyzer {
         }
     }
 
+    public static boolean checkId(String key) {
+        return  (
+                key.equals("UserId")
+                || key.equals("TaskId")
+                || key.equals("ProjectId")
+                || key.equals("ProgressId")
+                || key.equals("SubtaskId")
+                || key.equals("ScheduleId")
+                || key.equals("CommentId")
+                || key.equals("FileId")
+                || key.equals("OwnerId")
+                || key.equals("id")
+        );
+    }
+
     @SuppressWarnings("unchecked")
     public static class Wrapper<T> {
         private T ob;
 
+        private Class classTemplate;
+
         public Wrapper(T ob) {
             super();
             this.ob = ob;
+            this.classTemplate = ob.getClass();
         }
 
         private T analyzeLinkedHashMap(LinkedHashMap linkedHashMap) {
+            //System.out.println("Check LinkedHashMap---------------");
+            //System.out.println(linkedHashMap.toString());
             Set set = linkedHashMap.keySet();
             try {
+                ob = (T) classTemplate.newInstance();
                 for (Iterator iterator = set.iterator(); iterator.hasNext();) {
                     Object key = iterator.next();
                     Field field = ob.getClass().getDeclaredField(key.toString());
                     field.setAccessible(true);
-                    field.set(ob, linkedHashMap.get(key).toString());
+                    if (linkedHashMap.get(key).getClass().getTypeName().equals(String.class.getTypeName())
+                            || checkId(key.toString())) {
+                        field.set(ob, linkedHashMap.get(key).toString());
+                    } else {
+                        field.set(ob, linkedHashMap.get(key));
+                    }
+                    //System.out.println(field.get(ob));
+                    //System.out.println(key.toString() + " : " + linkedHashMap.get(key).toString() + "      - " + linkedHashMap.get(key).getClass());
                 }
-            } catch (Exception e) {
-                e.printStackTrace();
+                return ob;
+            } catch (Exception excep) {
+                excep.printStackTrace();
             }
             return ob;
         }
 
         private ArrayList<T> analyzeArrayList(ArrayList<LinkedHashMap> linkedHashMaps) {
+            //System.out.println("Check ArrayList================================");
+            //System.out.println(linkedHashMaps.toString());
             ArrayList<T> arrayList = new ArrayList<>();
             for (LinkedHashMap linkedHashMap : linkedHashMaps) {
+                //System.out.println("Check LinkedHashMap----------------------");
+                //System.out.println(linkedHashMap.toString());
                 arrayList.add(analyzeLinkedHashMap(linkedHashMap));
             }
+            //System.out.println("CHeck final arraylist!=======");
+            //System.out.println(arrayList.toString());
             return arrayList;
         }
 
@@ -59,31 +94,11 @@ public class DAOResponseJSONAnalyzer {
                 return null;
             }
             if (daoResponse.getData().getClass().getTypeName().equals(ArrayList.class.getTypeName())) {
-                /*Test<ArrayList<T>> returnedObject = new Test<>(new ArrayList<T>());
-                returnedObject.set(analyzeArrayList((ArrayList) object));
-                return returnedObject;*/
                 return analyzeArrayList((ArrayList) daoResponse.getData());
             } else {
                 return analyzeLinkedHashMap((LinkedHashMap) daoResponse.getData());
             }
         }
-
-        /*public static class Test<S> {
-            private S test;
-
-            private Test(S test) {
-                super();
-                this.test = test;
-            }
-
-            private void set(S test) {
-                this.test = test;
-            }
-
-            public S get() {
-                return this.test;
-            }
-        }*/
     }
 
 }

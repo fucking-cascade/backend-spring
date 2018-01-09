@@ -4,8 +4,6 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 
-//ownerId -> userId
-
 public class File {
     @Id
     @NotNull

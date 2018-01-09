@@ -134,124 +134,124 @@ public class RelationServiceImpl implements RelationService {
     }
 
     @Override
-    public void addProjectMember(String userId, String projectId, CommonIdentityType identityType) {
-        if (userClient.checkUserExistence(userId)) {
-            if (projectClient.checkProjectExistence(projectId)) {
-                if (!checkProjectMemberExistence(userId, projectId)) {
+    public void addProjectMember(String userId, String projectId) {
+//        if (userClient.checkUserExistence(userId)) {
+//            if (projectClient.checkProjectExistence(projectId)) {
+//                if (!checkProjectMemberExistence(userId, projectId)) {
                     System.out.println("Adding project member " + userId + " of project " + projectId);
                     userProjectRelationRepository.save(
                             RelationCreator.setUserProjectRelation(
                                     userId, projectId
                             )
                     );
-                } else {
-                    throw new AppBusinessException(
-                            RelationErrorCode.RELATION_EXIST,
-                            String.format("User %s is already a member of project %s", userId, projectId)
-                    );
-                }
-            } else {
-                throw new AppBusinessException(
-                        ProjectErrorCode.PROJECT_NOT_EXIST,
-                        String.format("Project %s does not exist", projectId)
-                );
-            }
-        } else {
-            throw new AppBusinessException(
-                    UserErrorCode.USER_NOT_EXIST,
-                    String.format("User %s does not exist", userId)
-            );
-        }
+//                } else {
+//                    throw new AppBusinessException(
+//                            RelationErrorCode.RELATION_EXIST,
+//                            String.format("User %s is already a member of project %s", userId, projectId)
+//                    );
+//                }
+//            } else {
+//                throw new AppBusinessException(
+//                        ProjectErrorCode.PROJECT_NOT_EXIST,
+//                        String.format("Project %s does not exist", projectId)
+//                );
+//            }
+//        } else {
+//            throw new AppBusinessException(
+//                    UserErrorCode.USER_NOT_EXIST,
+//                    String.format("User %s does not exist", userId)
+//            );
+//        }
     }
 
     @Override
     public void addScheduleParticipant(String userId, String scheduleId) {
-        if (userClient.checkUserExistence(userId)) {
-            if (scheduleClient.checkScheduleExistence(scheduleId)) {
-                if (!checkScheduleParticipantExistence(userId, scheduleId)) {
+//        if (userClient.checkUserExistence(userId)) {
+//            if (scheduleClient.checkScheduleExistence(scheduleId)) {
+//                if (!checkScheduleParticipantExistence(userId, scheduleId)) {
                     userScheduleRelationRepository.save(
                             RelationCreator.setUserScheduleRelation(
                                     userId, scheduleId
                             )
                     );
-                } else {
-                    throw new AppBusinessException(
-                            RelationErrorCode.RELATION_EXIST,
-                            String.format("User %s is already a participant of schedule %s", userId, scheduleId)
-                    );
-                }
-            } else {
-                throw new AppBusinessException(
-                        ScheduleErrorCode.SCHEDULE_NOT_EXIST,
-                        String.format("Schedule %s does not exist", scheduleId)
-                );
-            }
-        } else {
-            throw new AppBusinessException(
-                    UserErrorCode.USER_NOT_EXIST,
-                    String.format("User %s does not exist", userId)
-            );
-        }
+//                } else {
+//                    throw new AppBusinessException(
+//                            RelationErrorCode.RELATION_EXIST,
+//                            String.format("User %s is already a participant of schedule %s", userId, scheduleId)
+//                    );
+//                }
+//            } else {
+//                throw new AppBusinessException(
+//                        ScheduleErrorCode.SCHEDULE_NOT_EXIST,
+//                        String.format("Schedule %s does not exist", scheduleId)
+//                );
+//            }
+//        } else {
+//            throw new AppBusinessException(
+//                    UserErrorCode.USER_NOT_EXIST,
+//                    String.format("User %s does not exist", userId)
+//            );
+//        }
     }
 
     @Override
     public void addTaskParticipant(String userId, String taskId) {
-        if (userClient.checkUserExistence(userId)) {
-            if (taskClient.checkTaskExistence(taskId)) {
-                if (!checkTaskParticipantExistence(userId, taskId)) {
+//        if (userClient.checkUserExistence(userId)) {
+//            if (taskClient.checkTaskExistence(taskId)) {
+//                if (!checkTaskParticipantExistence(userId, taskId)) {
                     userTaskRelationRepository.save(
                             RelationCreator.setUserTaskRelation(
                                     userId, taskId
                             )
                     );
-                } else {
-                    throw new AppBusinessException(
-                            RelationErrorCode.RELATION_EXIST,
-                            String.format("User %s is already a participant of task %s", userId, taskId)
-                    );
-                }
-            } else {
-                throw new AppBusinessException(
-                        TaskErrorCode.TASK_NOT_EXIST,
-                        String.format("Task %s does not exist", taskId)
-                );
-            }
-        } else {
-            throw new AppBusinessException(
-                    UserErrorCode.USER_NOT_EXIST,
-                    String.format("User %s does not exist", userId)
-            );
-        }
+//                } else {
+//                    throw new AppBusinessException(
+//                            RelationErrorCode.RELATION_EXIST,
+//                            String.format("User %s is already a participant of task %s", userId, taskId)
+//                    );
+//                }
+//            } else {
+//                throw new AppBusinessException(
+//                        TaskErrorCode.TASK_NOT_EXIST,
+//                        String.format("Task %s does not exist", taskId)
+//                );
+//            }
+//        } else {
+//            throw new AppBusinessException(
+//                    UserErrorCode.USER_NOT_EXIST,
+//                    String.format("User %s does not exist", userId)
+//            );
+//        }
     }
 
     @Override
     public void addTaskAttachment(String fileId, String taskId) {
-        if (fileClient.checkFileExistence(fileId)) {
-            if (taskClient.checkTaskExistence(taskId)) {
-                if (!checkTaskAttachmentExistence(fileId, taskId)) {
+//        if (fileClient.checkFileExistence(fileId)) {
+//            if (taskClient.checkTaskExistence(taskId)) {
+//                if (!checkTaskAttachmentExistence(fileId, taskId)) {
                     fileTaskRelationRepository.save(
                             RelationCreator.setFileTaskRelation(
                                     fileId, taskId
                             )
                     );
-                } else {
-                    throw new AppBusinessException(
-                            RelationErrorCode.RELATION_EXIST,
-                            String.format("File %s is already attached to task %s", fileId, taskId)
-                    );
-                }
-            } else {
-                throw new AppBusinessException(
-                        TaskErrorCode.TASK_NOT_EXIST,
-                        String.format("Task %s does not exist", taskId)
-                );
-            }
-        } else {
-            throw new AppBusinessException(
-                    FileErrorCode.FILE_NOT_EXIST,
-                    String.format("File %s does not exist", fileId)
-            );
-        }
+//                } else {
+//                    throw new AppBusinessException(
+//                            RelationErrorCode.RELATION_EXIST,
+//                            String.format("File %s is already attached to task %s", fileId, taskId)
+//                    );
+//                }
+//            } else {
+//                throw new AppBusinessException(
+//                        TaskErrorCode.TASK_NOT_EXIST,
+//                        String.format("Task %s does not exist", taskId)
+//                );
+//            }
+//        } else {
+//            throw new AppBusinessException(
+//                    FileErrorCode.FILE_NOT_EXIST,
+//                    String.format("File %s does not exist", fileId)
+//            );
+//        }
     }
 
     @Override

@@ -141,13 +141,16 @@ public class ProjectRepositoryImpl extends DAOResponseJSONAnalyzer implements Pr
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, project),
-                    DAOResponse.class
+            Project response = (Project) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, project),
+                            DAOResponse.class
+                    )
             );
+            project.setId(response.getId());
         }
     }
 

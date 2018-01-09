@@ -4,9 +4,6 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 
-//repeatedDaily -> Bool
-//repeatedWeekly -> Bool
-
 public class Schedule {
     @Id
     @NotNull

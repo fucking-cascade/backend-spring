@@ -218,13 +218,16 @@ public class SubtaskRepositoryImpl extends DAOResponseJSONAnalyzer implements Su
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, subtask),
-                    DAOResponse.class
+            Subtask response = (Subtask) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, subtask),
+                            DAOResponse.class
+                    )
             );
+            subtask.setId(response.getId());
         }
     }
 

@@ -54,10 +54,9 @@ public class RelationController {
     @RequestMapping(value = ADD_PROJECT_MEMBER_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     public void addProjectMember(
             @RequestParam(value = "userId") String userId,
-            @RequestParam(value = "projectId") String projectId,
-            @RequestParam(value = "identityType") CommonIdentityType identityType
+            @RequestParam(value = "projectId") String projectId
     ) {
-        relationService.addProjectMember(userId, projectId, identityType);
+        relationService.addProjectMember(userId, projectId);
     }
 
     @RequestMapping(value = ADD_SCHEDULE_PARTICIPANT_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)

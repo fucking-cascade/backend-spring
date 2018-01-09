@@ -11,8 +11,6 @@ public interface TaskRepository {
 
     ArrayList<Task> findAllByProgressId(String progressId);
 
-    ArrayList<Task> findAllByProgressIdOrderByIndexAsc(String progressId);
-
     ArrayList<Task> findAllByOwnerIdAndProgressId(String ownerId, String progressId);
 
     ArrayList<Task> findAll();

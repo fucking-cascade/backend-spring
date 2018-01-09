@@ -1,13 +1,8 @@
 package org.latheild.task.domain;
 
-import org.latheild.common.api.CommonPriority;
-import org.latheild.common.api.CommonTaskStatus;
 import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
-
-//state -> Bool
-//ddl -> String
 
 public class Task {
     @Id

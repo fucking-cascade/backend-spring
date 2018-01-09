@@ -61,19 +61,6 @@ public class TaskRepositoryImpl extends DAOResponseJSONAnalyzer implements TaskR
     }
 
     @Override
-    public ArrayList<Task> findAllByProgressIdOrderByIndexAsc(String progressId) {
-        return (ArrayList<Task>) analyzer.analyze(
-                restTemplate.postForObject(
-                        CombineURI.combineURI(
-                                SERVICE_URI, BASE_FIND
-                        ),
-                        "",
-                        DAOResponse.class
-                )
-        );
-    }
-
-    @Override
     public ArrayList<Task> findAllByOwnerIdAndProgressId(String ownerId, String progressId) {
         ArrayList<String> fieldNames = new ArrayList<>();
         fieldNames.add("OwnerId");
@@ -233,14 +220,16 @@ public class TaskRepositoryImpl extends DAOResponseJSONAnalyzer implements TaskR
                     DAOResponse.class
             );
         } else {
-            fieldNames.add("id");
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, task),
-                    DAOResponse.class
+            Task response = (Task) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, task),
+                            DAOResponse.class
+                    )
             );
+            task.setId(response.getId());
         }
     }
 

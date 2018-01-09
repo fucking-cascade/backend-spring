@@ -1,6 +1,5 @@
 package org.latheild.subtask.utils;
 
-import org.latheild.common.api.CommonTaskStatus;
 import org.latheild.subtask.api.dto.SubtaskDTO;
 
 import java.util.ArrayList;
@@ -15,13 +14,13 @@ public class TutorialSubtaskCreator {
             subtaskDTO.setState(false);
             switch (i) {
                 case 0:
-                    subtaskDTO.setContent("Tutorial subtask v0.00000001 by Emoin LANYU");
+                    subtaskDTO.setContent("Tutorial LANYU");
                     break;
                 case 1:
-                    subtaskDTO.setContent("Tutorial subtask v0.00000002 by Emoin LANYU");
+                    subtaskDTO.setContent("Tutorial subLANYU");
                     break;
                 case 2:
-                    subtaskDTO.setContent("Tutorial subtask v0.00000003 by Emoin LANYU");
+                    subtaskDTO.setContent("TutoriLANYU");
                     break;
             }
             subtaskDTOs.add(subtaskDTO);

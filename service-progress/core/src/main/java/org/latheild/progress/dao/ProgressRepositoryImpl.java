@@ -231,13 +231,16 @@ public class ProgressRepositoryImpl extends DAOResponseJSONAnalyzer implements P
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, progress),
-                    DAOResponse.class
+            Progress response = (Progress) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, progress),
+                            DAOResponse.class
+                    )
             );
+            progress.setId(response.getId());
         }
     }
 

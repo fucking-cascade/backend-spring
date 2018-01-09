@@ -82,30 +82,6 @@ public class TaskController {
         }
     }
 
-    /*@RequestMapping(value = CHANGE_TASK_ORDER_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
-    @ResponseBody
-    public Object changeTaskOrder(
-            @RequestBody TaskDTO taskDTO
-    ) {
-        try {
-            return new BaseResponseBody(CommonErrorCode.SUCCESS, taskService.changeTaskOrder(taskDTO));
-        } catch (AppBusinessException e) {
-            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
-        }
-    }
-
-    @RequestMapping(value = CHANGE_TASK_PROGRESS_URL, method = RequestMethod.POST, produces = PRODUCE_JSON)
-    @ResponseBody
-    public Object changeTaskProgress(
-            @RequestBody TaskDTO taskDTO
-    ) {
-        try {
-            return new BaseResponseBody(CommonErrorCode.SUCCESS, taskService.changeTaskProgress(taskDTO));
-        } catch (AppBusinessException e) {
-            return new ExceptionResponseBody(e.getHttpStatus(), e.getCode(), e.getExceptionType(), e.getMessage());
-        }
-    }*/
-
     @RequestMapping(value = GET_TASK_BY_ID_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     @ResponseBody
     public Object getTaskById(
@@ -123,7 +99,8 @@ public class TaskController {
     public Object getTasks(
             @RequestParam(value = "ownerId", required = false) String ownerId,
             @RequestParam(value = "progressId", required = false) String progressId,
-            @RequestParam(value = "userId", required = false) String userId
+            @RequestParam(value = "userId", required = false) String userId,
+            @RequestParam(value = "fileId", required = false) String fileId
     ) {
         try {
             if (ownerId != null && progressId != null) {
@@ -134,7 +111,9 @@ public class TaskController {
                 return new BaseResponseBody(CommonErrorCode.SUCCESS, taskService.getTasksByProgressId(progressId));
             } else if (userId != null) {
                 return new BaseResponseBody(CommonErrorCode.SUCCESS, taskService.getAllTasksByUserId(userId));
-            } else {
+            } else if (fileId != null) {
+                return new BaseResponseBody(CommonErrorCode.SUCCESS, taskService.getAllTasksByFileId(fileId));
+            } else  {
                 throw new AppBusinessException(
                         CommonErrorCode.INVALID_ARGUMENT
                 );

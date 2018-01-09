@@ -1,6 +1,5 @@
 package org.latheild.userinfo.api.util;
 
-import org.latheild.common.constant.Gender;
 import org.latheild.userinfo.api.dto.UserInfoDTO;
 
 public class UserInfoDTOCreator {

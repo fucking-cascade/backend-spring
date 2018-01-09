@@ -219,13 +219,16 @@ public class FileRepositoryImpl extends DAOResponseJSONAnalyzer implements FileR
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, file),
-                    DAOResponse.class
+            File response = (File) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, file),
+                            DAOResponse.class
+                    )
             );
+            file.setId(response.getId());
         }
     }
 

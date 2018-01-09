@@ -35,8 +35,7 @@ public interface RelationClient {
     @RequestMapping(value = ADD_PROJECT_MEMBER_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
     void addProjectMember(
             @RequestParam(value = "userId") String userId,
-            @RequestParam(value = "projectId") String projectId,
-            @RequestParam(value = "identityType") CommonIdentityType identityType
+            @RequestParam(value = "projectId") String projectId
     );
 
     @RequestMapping(value = GET_PROJECT_MEMBERS_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
@@ -82,11 +81,5 @@ public interface RelationClient {
     void deleteTaskParticipant(
             @RequestParam(value = "userId") String userId,
             @RequestParam(value = "taskId") String taskId
-    );
-
-    @RequestMapping(value = GET_MEMBER_IDENTITY_OF_PROJECT_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
-    CommonIdentityType getMemberIdentityOfProject(
-            @RequestParam(value = "userId") String userId,
-            @RequestParam(value = "projectId") String projectId
     );
 }

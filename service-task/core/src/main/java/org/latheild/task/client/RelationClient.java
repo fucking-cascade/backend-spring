@@ -59,10 +59,4 @@ public interface RelationClient {
     ArrayList<RelationDTO> getFileTasks(
             @RequestParam(value = "fileId") String fileId
     );
-
-    @RequestMapping(value = GET_MEMBER_IDENTITY_OF_PROJECT_URL, method = RequestMethod.GET, produces = PRODUCE_JSON)
-    CommonIdentityType getMemberIdentityOfProject(
-            @RequestParam(value = "userId") String userId,
-            @RequestParam(value = "projectId") String projectId
-    );
 }

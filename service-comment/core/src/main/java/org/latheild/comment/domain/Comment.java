@@ -4,8 +4,6 @@ import org.springframework.data.annotation.Id;
 
 import javax.validation.constraints.NotNull;
 
-//time -> String
-
 public class Comment {
     @Id
     @NotNull

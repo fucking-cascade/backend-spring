@@ -69,7 +69,7 @@ public class FileServiceImpl implements FileService {
         }
     }
 
-    public FileDTO convertFromFileToFileDTO(File file) {
+    private FileDTO convertFromFileToFileDTO(File file) {
         FileDTO fileDTO = new FileDTO();
         fileDTO.setName(file.getName());
         fileDTO.setContent(file.getContent());
@@ -80,7 +80,7 @@ public class FileServiceImpl implements FileService {
         return fileDTO;
     }
 
-    public ArrayList<FileDTO> convertFromFilesToFileDTOs(ArrayList<File> files) {
+    private ArrayList<FileDTO> convertFromFilesToFileDTOs(ArrayList<File> files) {
         ArrayList<FileDTO> fileDTOs = new ArrayList<>();
         for (File file : files) {
             fileDTOs.add(convertFromFileToFileDTO(file));
@@ -88,7 +88,7 @@ public class FileServiceImpl implements FileService {
         return fileDTOs;
     }
 
-    public File convertFromFileDTOToFile(FileDTO fileDTO) {
+    private File convertFromFileDTOToFile(FileDTO fileDTO) {
         File file = new File();
         file.setContent(fileDTO.getContent());
         file.setName(fileDTO.getName());

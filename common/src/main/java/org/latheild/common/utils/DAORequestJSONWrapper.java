@@ -9,47 +9,22 @@ import java.util.Set;
 public class DAORequestJSONWrapper {
     private static final String STRING_TYPE = String.class.getTypeName();
 
-    private static final String INT_TYPE = Integer.class.getTypeName();
-
     public static final String FIND_ONE = "one";
 
     public static final String FIND_ALL = "all";
 
-    public static String checkException(String key) {
-        if (key.equals("userId")) {
-            key = "UserId";
-        } else if (key.equals("taskId")) {
-            key = "TaskId";
-        } else if (key.equals("projectId")) {
-            key = "ProjectId";
-        } else if (key.equals("progressId")) {
-            key = "ProgressId";
-        } else if (key.equals("subtaskId")) {
-            key = "SubtaskId";
-        } else if (key.equals("scheduleId")) {
-            key = "ScheduleId";
-        } else if (key.equals("commentId")) {
-            key = "CommentId";
-        } else if (key.equals("fileId")) {
-            key = "FileId";
-        } else if (key.equals("ownerId")) {
-            key = "OwnerId";
-        }
-        return key;
-    }
-
-    public static String generateJSON(HashMap<String, Object> kvPairs) {
+    private static String generateJSON(HashMap<String, Object> kvPairs) {
+        //System.out.println("Check KVPAIRS!_______________");
+        //System.out.println(kvPairs.toString());
         StringBuilder builder = new StringBuilder("{");
         Set set = kvPairs.keySet();
         for (Iterator iterator = set.iterator(); iterator.hasNext();) {
             String key = (String) iterator.next();
             Object value = kvPairs.get(key);
-            key = checkException(key);
             builder.append("\"").append(key).append("\" : ");
-            if (value.getClass().getTypeName().equals(STRING_TYPE)) {
+            if (value.getClass().getTypeName().equals(STRING_TYPE)
+                    && !DAOResponseJSONAnalyzer.checkId(key)) {
                 builder.append("\"").append(value).append("\"");
-            } else if (value.getClass().getTypeName().equals(INT_TYPE)) {
-                builder.append(value);
             } else {
                 builder.append(value);
             }
@@ -58,17 +33,24 @@ public class DAORequestJSONWrapper {
             }
         }
         builder.append("}");
+        //System.out.println("CHeck builder---------");
+        //System.out.println(builder.toString());
 
         return builder.toString();
     }
 
     private static HashMap<String, Object> generateKVPairs(ArrayList<String> fieldNames, Object object) {
         HashMap<String, Object> kvPairs = new HashMap<>();
+        //System.out.println("DEBUG REQUEST JSON BUILDER=========================");
+        //System.out.println(fieldNames.toString());
+        //System.out.println(object.toString());
         try {
             for (String fieldName : fieldNames) {
                 Field field = object.getClass().getDeclaredField(fieldName);
                 field.setAccessible(true);
                 kvPairs.put(fieldName, field.get(object));
+                //System.out.println("debug field names===-------------==");
+                //System.out.println(fieldName + " : " + field.get(object).toString() + "   - " + field.get(object).getClass());
             }
         } catch (Exception e) {
             e.printStackTrace();

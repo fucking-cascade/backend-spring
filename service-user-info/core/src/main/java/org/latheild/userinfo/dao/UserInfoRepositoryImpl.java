@@ -166,13 +166,16 @@ public class UserInfoRepositoryImpl extends DAOResponseJSONAnalyzer implements U
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, userInfo),
-                    DAOResponse.class
+            UserInfo response = (UserInfo) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, userInfo),
+                            DAOResponse.class
+                    )
             );
+            userInfo.setId(response.getId());
         }
     }
 

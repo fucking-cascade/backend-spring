@@ -1,7 +1,5 @@
 package org.latheild.user.api.dto;
 
-import org.latheild.common.constant.Gender;
-
 import java.io.Serializable;
 
 public class RegisterDTO implements Serializable {

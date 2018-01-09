@@ -223,13 +223,16 @@ public class ScheduleRepositoryImpl extends DAOResponseJSONAnalyzer implements S
                     DAOResponse.class
             );
         } else {
-            restTemplate.postForObject(
-                    CombineURI.combineURI(
-                            SERVICE_URI, BASE_CREATE
-                    ),
-                    DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, schedule),
-                    DAOResponse.class
+            Schedule response = (Schedule) analyzer.analyze(
+                    restTemplate.postForObject(
+                            CombineURI.combineURI(
+                                    SERVICE_URI, BASE_CREATE
+                            ),
+                            DAORequestJSONWrapper.setCreateRequestJSON(fieldNames, schedule),
+                            DAOResponse.class
+                    )
             );
+            schedule.setId(response.getId());
         }
     }
 
