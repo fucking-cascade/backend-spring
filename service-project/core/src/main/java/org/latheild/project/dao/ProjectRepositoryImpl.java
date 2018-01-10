@@ -41,7 +41,7 @@ public class ProjectRepositoryImpl extends DAOResponseJSONAnalyzer implements Pr
                         CombineURI.combineURI(
                                 SERVICE_URI, BASE_FIND
                         ),
-                        DAORequestJSONWrapper.setFindRequestJSON("OwnerId", ownerId, DAORequestJSONWrapper.FIND_ONE),
+                        DAORequestJSONWrapper.setFindRequestJSON("OwnerId", ownerId, DAORequestJSONWrapper.FIND_ALL),
                         DAOResponse.class
                 )
         );

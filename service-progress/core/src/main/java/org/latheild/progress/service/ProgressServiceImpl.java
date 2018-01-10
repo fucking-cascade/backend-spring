@@ -23,6 +23,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
 import java.util.ArrayList;
+import java.util.Comparator;
 
 import static org.latheild.apiutils.constant.Constants.ADMIN_CODE;
 import static org.latheild.apiutils.constant.Constants.ADMIN_DELETE_ALL;
@@ -95,7 +96,7 @@ public class ProgressServiceImpl implements ProgressService {
     }
 
     private ProgressDTO adjustIndex(ProgressDTO progressDTO) {
-        if (progressDTO.getOrder() >= progressRepository.countByProjectId(progressDTO.getProjectId())) {
+        if (progressDTO.getOrder() > progressRepository.countByProjectId(progressDTO.getProjectId())) {
             progressDTO.setOrder(progressRepository.countByProjectId(progressDTO.getProjectId()));
         } else if (progressDTO.getOrder() < 0) {
             progressDTO.setOrder(0);
@@ -105,6 +106,15 @@ public class ProgressServiceImpl implements ProgressService {
 
     private void resetIndexForProgressListOfProject(Progress progress) {
         ArrayList<Progress> progressList = progressRepository.findAllByProjectIdOrderByIndexAsc(progress.getProjectId());
+        progressList.sort((Progress o1, Progress o2) -> {
+            if (o1.getOrder() > o2.getOrder()) {
+                return 1;
+            } else if (o1.getOrder() < o2.getOrder()) {
+                return -1;
+            } else {
+                return 0;
+            }
+        } );
         int i = 0;
         for (Progress iter : progressList) {
             iter.setOrder(i);
@@ -184,7 +194,7 @@ public class ProgressServiceImpl implements ProgressService {
     public void deleteProgressById(ProgressDTO progressDTO) {
         if (isProgressExist(DAOQueryMode.QUERY_BY_ID, progressDTO.getProgressId())) {
             Progress progress = progressRepository.findById(progressDTO.getProgressId());
-            if (progress.getId().equals(progressDTO.getProgressId())) {
+            if (progress.getOwnerId().equals(progressDTO.getOwnerId())) {
                 progressRepository.deleteById(progressDTO.getProgressId());
                 resetIndexForProgressListOfProject(progress);
 
@@ -213,7 +223,7 @@ public class ProgressServiceImpl implements ProgressService {
     public ProgressDTO updateProgressName(ProgressDTO progressDTO) {
         if (isProgressExist(DAOQueryMode.QUERY_BY_ID, progressDTO.getProgressId())) {
             Progress progress = progressRepository.findById(progressDTO.getProgressId());
-            if (progress.getId().equals(progressDTO.getProgressId())) {
+            if (progress.getOwnerId().equals(progressDTO.getOwnerId())) {
                 progress.setName(progressDTO.getName());
                 progressRepository.save(progress);
                 return convertFromProgressToProgressDTO(progress);
@@ -234,7 +244,8 @@ public class ProgressServiceImpl implements ProgressService {
     public ProgressDTO changeProgressOrder(ProgressDTO progressDTO) {
         if (isProgressExist(DAOQueryMode.QUERY_BY_ID, progressDTO.getProgressId())) {
             Progress progress = progressRepository.findById(progressDTO.getProgressId());
-            if (progress.getId().equals(progressDTO.getProgressId())) {
+            if (progress.getOwnerId().equals(progressDTO.getOwnerId())) {
+                progressDTO.setProjectId(progress.getProjectId());
                 progressDTO = adjustIndex(progressDTO);
                 if (progress.getOrder() < progressDTO.getOrder()) {
                     ArrayList<Progress> progressList = progressRepository.findAllByProjectIdOrderByIndexAsc(progress.getProjectId());

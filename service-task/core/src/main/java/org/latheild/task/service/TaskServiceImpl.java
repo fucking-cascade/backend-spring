@@ -167,7 +167,7 @@ public class TaskServiceImpl implements TaskService {
             if (progressClient.checkProgressExistence(taskDTO.getProgressId())) {
                 Task task = convertFromTaskDTOToTask(taskDTO);
                 taskRepository.save(task);
-                relationClient.addTaskParticipant(task.getOwnerId(), task.getId());
+                //relationClient.addTaskParticipant(task.getOwnerId(), task.getId());
                 return convertFromTaskToTaskDTO(task);
             } else {
                 throw new AppBusinessException(
@@ -218,6 +218,7 @@ public class TaskServiceImpl implements TaskService {
             if (task.getOwnerId().equals(taskDTO.getOwnerId())) {
                 task.setName(taskDTO.getName());
                 task.setContent(taskDTO.getContent());
+                task.setDdl(taskDTO.getDdl());
                 taskRepository.save(task);
                 return convertFromTaskToTaskDTO(task);
             } else {

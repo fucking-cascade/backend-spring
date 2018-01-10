@@ -143,9 +143,9 @@ public class UserServiceImpl implements UserService {
     @Override
     public boolean checkPassword(RegisterDTO registerDTO) {
         User user;
-        if (isUserCreated(DAOQueryMode.QUERY_BY_EMAIL, registerDTO.getEmail())) {
+        if (registerDTO.getEmail() != null && isUserCreated(DAOQueryMode.QUERY_BY_EMAIL, registerDTO.getEmail())) {
             user = userRepository.findByEmail(registerDTO.getEmail());
-        } else if (isUserCreated(DAOQueryMode.QUERY_BY_ID, registerDTO.getUserId())) {
+        } else if (registerDTO.getUserId() != null && isUserCreated(DAOQueryMode.QUERY_BY_ID, registerDTO.getUserId())) {
             user = userRepository.findById(registerDTO.getUserId());
         } else {
             throw new AppBusinessException(

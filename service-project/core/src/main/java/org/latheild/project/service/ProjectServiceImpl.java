@@ -134,7 +134,7 @@ public class ProjectServiceImpl implements ProjectService {
         if (userClient.checkUserExistence(projectDTO.getOwnerId())) {
             Project project = convertFromProjectDTOToProject(projectDTO);
             projectRepository.save(project);
-            relationClient.addProjectMember(project.getOwnerId(), project.getId());
+            //relationClient.addProjectMember(project.getOwnerId(), project.getId());
             return convertFromProjectToProjectDTO(project);
         } else {
             throw new AppBusinessException(
