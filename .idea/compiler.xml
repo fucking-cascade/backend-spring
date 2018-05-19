@@ -8,10 +8,26 @@
         <outputRelativeToContentRoot value="true" />
         <module name="api" />
         <module name="apiutils" />
+        <module name="comment-service-api" />
+        <module name="comment-service-core" />
         <module name="common" />
         <module name="config" />
         <module name="core" />
         <module name="eureka" />
+        <module name="file-service-api" />
+        <module name="file-service-core" />
+        <module name="progress-service-api" />
+        <module name="progress-service-core" />
+        <module name="project-service-api" />
+        <module name="project-service-core" />
+        <module name="relation-service-api" />
+        <module name="relation-service-core" />
+        <module name="schedule-service-api" />
+        <module name="schedule-service-core" />
+        <module name="subtask-service-api" />
+        <module name="subtask-service-core" />
+        <module name="task-service-api" />
+        <module name="task-service-core" />
         <module name="turbine" />
         <module name="user-info-service-api" />
         <module name="user-info-service-core" />
@@ -23,11 +39,35 @@
     <bytecodeTargetLevel>
       <module name="api" target="1.8" />
       <module name="apiutils" target="1.8" />
+      <module name="comment-service" target="1.8" />
+      <module name="comment-service-api" target="1.8" />
+      <module name="comment-service-core" target="1.8" />
       <module name="common" target="1.8" />
       <module name="config" target="1.8" />
       <module name="core" target="1.8" />
       <module name="eureka" target="1.8" />
+      <module name="file-service" target="1.8" />
+      <module name="file-service-api" target="1.8" />
+      <module name="file-service-core" target="1.8" />
+      <module name="progress-service" target="1.8" />
+      <module name="progress-service-api" target="1.8" />
+      <module name="progress-service-core" target="1.8" />
       <module name="Project Cascade" target="1.8" />
+      <module name="project-service" target="1.8" />
+      <module name="project-service-api" target="1.8" />
+      <module name="project-service-core" target="1.8" />
+      <module name="relation-service" target="1.8" />
+      <module name="relation-service-api" target="1.8" />
+      <module name="relation-service-core" target="1.8" />
+      <module name="schedule-service" target="1.8" />
+      <module name="schedule-service-api" target="1.8" />
+      <module name="schedule-service-core" target="1.8" />
+      <module name="subtask-service" target="1.8" />
+      <module name="subtask-service-api" target="1.8" />
+      <module name="subtask-service-core" target="1.8" />
+      <module name="task-service" target="1.8" />
+      <module name="task-service-api" target="1.8" />
+      <module name="task-service-core" target="1.8" />
       <module name="turbine" target="1.8" />
       <module name="user-info-service" target="1.8" />
       <module name="user-info-service-api" target="1.8" />

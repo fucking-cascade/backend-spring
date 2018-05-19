@@ -4,9 +4,33 @@
     <modules>
       <module fileurl="file://$PROJECT_DIR$/Project Cascade.iml" filepath="$PROJECT_DIR$/Project Cascade.iml" />
       <module fileurl="file://$PROJECT_DIR$/apiutils/apiutils.iml" filepath="$PROJECT_DIR$/apiutils/apiutils.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-comment/comment-service.iml" filepath="$PROJECT_DIR$/service-comment/comment-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-comment/api/comment-service-api.iml" filepath="$PROJECT_DIR$/service-comment/api/comment-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-comment/core/comment-service-core.iml" filepath="$PROJECT_DIR$/service-comment/core/comment-service-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/common/common.iml" filepath="$PROJECT_DIR$/common/common.iml" />
       <module fileurl="file://$PROJECT_DIR$/config/config.iml" filepath="$PROJECT_DIR$/config/config.iml" />
       <module fileurl="file://$PROJECT_DIR$/eureka/eureka.iml" filepath="$PROJECT_DIR$/eureka/eureka.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-file/file-service.iml" filepath="$PROJECT_DIR$/service-file/file-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-file/api/file-service-api.iml" filepath="$PROJECT_DIR$/service-file/api/file-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-file/core/file-service-core.iml" filepath="$PROJECT_DIR$/service-file/core/file-service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-progress/progress-service.iml" filepath="$PROJECT_DIR$/service-progress/progress-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-progress/api/progress-service-api.iml" filepath="$PROJECT_DIR$/service-progress/api/progress-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-progress/core/progress-service-core.iml" filepath="$PROJECT_DIR$/service-progress/core/progress-service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-project/project-service.iml" filepath="$PROJECT_DIR$/service-project/project-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-project/api/project-service-api.iml" filepath="$PROJECT_DIR$/service-project/api/project-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-project/core/project-service-core.iml" filepath="$PROJECT_DIR$/service-project/core/project-service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-relation/relation-service.iml" filepath="$PROJECT_DIR$/service-relation/relation-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-relation/api/relation-service-api.iml" filepath="$PROJECT_DIR$/service-relation/api/relation-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-relation/core/relation-service-core.iml" filepath="$PROJECT_DIR$/service-relation/core/relation-service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-schedule/schedule-service.iml" filepath="$PROJECT_DIR$/service-schedule/schedule-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-schedule/api/schedule-service-api.iml" filepath="$PROJECT_DIR$/service-schedule/api/schedule-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-schedule/core/schedule-service-core.iml" filepath="$PROJECT_DIR$/service-schedule/core/schedule-service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-subtask/subtask-service.iml" filepath="$PROJECT_DIR$/service-subtask/subtask-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-subtask/api/subtask-service-api.iml" filepath="$PROJECT_DIR$/service-subtask/api/subtask-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-subtask/core/subtask-service-core.iml" filepath="$PROJECT_DIR$/service-subtask/core/subtask-service-core.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-task/task-service.iml" filepath="$PROJECT_DIR$/service-task/task-service.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-task/api/task-service-api.iml" filepath="$PROJECT_DIR$/service-task/api/task-service-api.iml" />
+      <module fileurl="file://$PROJECT_DIR$/service-task/core/task-service-core.iml" filepath="$PROJECT_DIR$/service-task/core/task-service-core.iml" />
       <module fileurl="file://$PROJECT_DIR$/turbine/turbine.iml" filepath="$PROJECT_DIR$/turbine/turbine.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-user-info/user-info-service.iml" filepath="$PROJECT_DIR$/service-user-info/user-info-service.iml" />
       <module fileurl="file://$PROJECT_DIR$/service-user-info/api/user-info-service-api.iml" filepath="$PROJECT_DIR$/service-user-info/api/user-info-service-api.iml" />
